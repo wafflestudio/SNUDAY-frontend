@@ -1,0 +1,64 @@
+* {
+  box-sizing: border-box;
+}
+body {
+  font-family: 'Noto Sans', 'Noto Sans CJK KR', sans-serif;
+}
+button {
+  padding: 0.25em 0.5em;
+  border-radius: 1.5em;
+  border: 0;
+  background-color: rgb(59, 119, 255);
+  color: white;
+  outline: none;
+}
+button:active {
+  opacity: 0.8;
+}
+.Calendar {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  border: 0;
+}
+.week {
+  display: flex;
+  border-bottom: 1px rgb(221, 221, 221) solid;
+  justify-content: space-around;
+}
+.week:last-child {
+  border-bottom: 0;
+}
+.day,
+.weekday {
+  flex: 1;
+  text-align: center;
+}
+.weekday {
+  font-weight: bold;
+}
+.weekday:first-child,
+.day:first-child {
+  color: rgb(217, 75, 75);
+}
+.weekday:last-child,
+.day:last-child {
+  color: rgb(60, 105, 227);
+  border-right: 0;
+}
+.weekday, .date {
+  padding: 0.25em 0;
+}
+.today .date span {
+  padding: 0 0.25em;
+  color: white;
+  background-color: rgb(59, 119, 255);
+  border-radius: 4pt;
+}
+.day .date.past,
+.day .date.next {
+  opacity: 0.5;
+}
+.day-todo-box {
+  height: 6em;
+}
