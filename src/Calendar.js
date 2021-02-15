@@ -1,10 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import Day from './Day';
+import TagBar from './TagBar';
 import './Calendar.css';
+import axios from 'axios';
+import Modal from './Modal';
+const APIKey =
+  'C999S9lrGatXtG1ca1uIereQgN1hYdXTmIn7%2BV2434fMXvTdPwerX8yVdCHLpJERfJAYmXW7RtWErekwnsZ3Pw%3D%3D';
+const getHolidays = (year, month) => {
+  axios
+    .get(
+      `http://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getRestDeInfo?solYear=${year}&solMonth=${
+        month < 9 ? '0' + (month + 1) : month + 1
+      }&ServiceKey=${APIKey}&_type=json&numOfRows=30`
+    )
+    .then((response) => {
+      console.log(response);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
 const getNumDays = (year, month) => {
   return 32 - new Date(year, month, 32).getDate();
 };
-
 const Calendar = () => {
   const today = new Date();
   const [year, setYear] = useState(today.getFullYear());
@@ -14,8 +32,16 @@ const Calendar = () => {
     new Date(year, month).getDay()
   );
   const [numDays, setNumDays] = useState(getNumDays(year, month));
-  console.log(numDays, firstDayOfTheWeek);
-  console.log(year, month);
+  const moveMonth = (event) => {
+    if (event.deltaY < 0) {
+      chooseDay(0);
+      return;
+    }
+    if (event.deltaY > 0) {
+      chooseDay(32);
+      return;
+    }
+  };
   const findToday = () => {
     if (year !== today.getFullYear()) {
       return;
@@ -47,7 +73,11 @@ const Calendar = () => {
   useEffect(() => {
     findToday();
   }, [numDays]);
-
+  const chooseMonth = (value) => {
+    const date = value.split('-');
+    setYear(parseInt(date[0]));
+    setMonth(parseInt(date[1]) - 1);
+  };
   const chooseDay = (day) => {
     if (day < 1) {
       setDay(getNumDays(year, month - 1) + day);
@@ -75,13 +105,21 @@ const Calendar = () => {
     setMonth(today.getMonth());
   };
   return (
-    <>
-      <h3>
-        {year === today.getFullYear() ? '' : `${year}년 `}
-        {month + 1}월
-      </h3>
-      <button onClick={() => goToday()}>오늘</button>
-      <div className='Calendar'>
+    <div className='Calendar'>
+      <div className='Calendar-header'>
+        <h3 className='Calendar-title'>
+          {year === today.getFullYear() ? '' : `${year}년 `}
+          {month + 1}월
+          <input
+            type='month'
+            className='Calendar-date-select'
+            onChange={(e) => chooseMonth(e.target.value)}
+          />
+        </h3>
+        <button onClick={() => goToday()}>오늘</button>
+      </div>
+      <TagBar />
+      <div className='Calendar-body' onWheel={(e) => moveMonth(e)}>
         <div className='week'>
           <div className='weekday'>일</div>
           <div className='weekday'>월</div>
@@ -116,7 +154,7 @@ const Calendar = () => {
           )
         )}
       </div>
-    </>
+    </div>
   );
 };
 export default Calendar;

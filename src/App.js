@@ -1,10 +1,12 @@
 import Home from './Home';
+import Navigation from './Navigation';
 function App() {
   return (
-    <div>
+    <>
       <header></header>
       <Home />
-    </div>
+      <Navigation />
+    </>
   );
 }
 
