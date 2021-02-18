@@ -6,10 +6,16 @@
   background-color: rgba(0, 0, 0, 0.5);
 }
 .modal-container {
+  /*align center*/
+  margin: 0;
   position: absolute;
-  top: 25%;
-  left: 12.5%;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+
   width: 75%;
+  max-width: 720px;
   min-height: 50%;
   max-height: 60%;
   padding: 2rem 2rem 2rem 2.5rem;
