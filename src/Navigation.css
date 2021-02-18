@@ -1,5 +1,5 @@
 .nav-container {
-  height: 68pt;
+  height: 4.5rem;
   width: 100vw;
   display: flex;
   justify-content: space-around;
@@ -29,5 +29,5 @@
 }
 .nav-item p {
   margin: 0;
-  padding-top: 0.5rem;
+  padding-top: 0.25rem;
 }
