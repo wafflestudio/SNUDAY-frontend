@@ -1,8 +1,8 @@
 import Modal from './Modal';
 
-const AddScheduleModal = () => {
+const AddScheduleModal = ({ isActive }) => {
   return (
-    <Modal>
+    <Modal isActive={isActive}>
       <h3>새로운 일정</h3>
     </Modal>
   );
