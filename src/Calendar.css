@@ -22,6 +22,22 @@ button {
 button:active {
   opacity: 0.8;
 }
+.button-add-container {
+  position: fixed;
+  bottom: 4.5rem;
+  right: 0;
+  z-index: 1;
+}
+.button-add {
+  position: relative;
+  top: 0;
+  left: 0;
+}
+.button-add-circle {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
 .tagbar {
   display: flex;
   align-items: center;
@@ -113,7 +129,7 @@ button:active {
   padding: 0.25em 0;
 }
 .today .date span {
-  padding: 0 0.25em;
+  padding: 0.1em 0.25em;
   color: white;
   background-color: rgb(59, 119, 255);
   border-radius: 4pt;

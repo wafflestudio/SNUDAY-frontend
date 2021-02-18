@@ -4,6 +4,7 @@ import TagBar from './TagBar';
 import './Calendar.css';
 import axios from 'axios';
 import Modal from './Modal';
+import AddButton from './AddButton';
 const APIKey =
   'C999S9lrGatXtG1ca1uIereQgN1hYdXTmIn7%2BV2434fMXvTdPwerX8yVdCHLpJERfJAYmXW7RtWErekwnsZ3Pw%3D%3D';
 const getHolidays = (year, month) => {
@@ -106,6 +107,7 @@ const Calendar = () => {
   };
   return (
     <div className='Calendar'>
+      <AddButton />
       <div className='Calendar-header'>
         <h3 className='Calendar-title'>
           {year === today.getFullYear() ? '' : `${year}년 `}
