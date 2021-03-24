@@ -1,10 +1,16 @@
 import React, { useState } from 'react';
-import AddScheduleModal from './AddScheduleModal';
+import AddEventModal from './AddEventModal';
 const AddButton = () => {
   const [add, setAdd] = useState(false);
+  const shrink = (e) => {
+    e.target.parentElement.parentElement.classList.add('button-shrink');
+  };
+  const unshrink = (e) => {
+    e.target.parentElement.parentElement.classList.remove('button-shrink');
+  };
   return (
     <>
-      <div className='button-add-container'>
+      <div className='button-add-container' id='add-button'>
         <img
           className='button-add'
           src='/resources/button-add.png'
@@ -22,11 +28,14 @@ const AddButton = () => {
             cy='47'
             r='38.69'
             onClick={() => setAdd(true)}
+            onPointerDown={(e) => shrink(e)}
+            onPointerUp={(e) => unshrink(e)}
+            onPointerLeave={(e) => unshrink(e)}
           />
         </svg>
       </div>
 
-      {add ? <AddScheduleModal isActive={setAdd} /> : <></>}
+      {add ? <AddEventModal isActive={setAdd} /> : <></>}
     </>
   );
 };

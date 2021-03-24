@@ -1,9 +1,19 @@
 .modal-background {
   position: fixed;
+  top: 0;
+  left: 0;
   width: 100vw;
   height: 100vh;
   z-index: 100;
-  background-color: rgba(0, 0, 0, 0.5);
+  animation: dim 0.2s forwards;
+}
+@keyframes dim {
+  from {
+    background-color: transparent;
+  }
+  to {
+    background-color: rgba(0, 0, 0, 0.3);
+  }
 }
 .modal-container {
   /*align center*/
@@ -13,13 +23,122 @@
   left: 50%;
   -ms-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
+  user-select: auto;
 
-  width: 75%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 85%;
   max-width: 720px;
-  min-height: 50%;
-  max-height: 60%;
-  padding: 2rem 2rem 2rem 2.5rem;
+  height: fit-content;
+  max-height: 70%;
   z-index: 101;
   background-color: white;
+  color: black;
   border-radius: 1rem;
+}
+.modal-container input {
+  padding: 0;
+}
+.modal-container * {
+  font-size: 1rem;
+}
+.modal-container > * {
+  width: 100%;
+}
+.title {
+  font-size: 120%;
+  text-align: center;
+  margin: 0;
+  padding-top: 0.8rem;
+}
+input {
+  border: none;
+  border-radius: 0;
+  background-color: transparent;
+  outline: none;
+}
+.input-datetime-container {
+  padding-bottom: 2px;
+  border-bottom: 1px solid #b8b8b8;
+  display: flex;
+  justify-content: space-between;
+}
+.event-input-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  align-content: stretch;
+  padding: 0 3rem;
+  overflow-y: auto;
+}
+.event-input-container > * {
+  width: 100%;
+  margin-bottom: 1rem;
+  outline: none;
+  transition: border 0.5s;
+}
+.event-input-container > *:focus {
+  border-color: black;
+}
+.input-title {
+  font-size: 1.2rem;
+  margin: 1.5rem 0;
+}
+.event-memo {
+  width: 100%;
+  min-height: 6rem;
+  border: none;
+  -webkit-appearance: none;
+  box-shadow: none !important;
+  border-top: 1px solid #b8b8b8;
+  border-bottom: 1px solid #b8b8b8;
+  padding: 2px 0;
+}
+.button-save {
+  display: block;
+  margin: 0 auto 0.8rem;
+  font-size: 133.3%;
+  border-radius: 1.925rem;
+  width: 70%;
+  padding: 1rem;
+}
+/*EventModal*/
+.event-modal-header {
+  padding: 2rem 1.5rem 0;
+  display: flex;
+}
+.event-modal-content {
+  padding: 0 2rem;
+  margin-bottom: 2rem;
+  text-align: left;
+}
+.event-title {
+  font-size: 1.666rem;
+  margin: 0.5rem 0 1rem;
+}
+/*DayEventsModal*/
+.day-events-modal-header {
+  text-align: left;
+  padding: 2rem 2rem 0;
+}
+.day-events-modal-header > hr {
+  margin: 1rem 0;
+}
+.date-title {
+  font-size: 166.6%;
+  margin: 0;
+}
+.date-small {
+  font-size: 75%;
+  color: #6a6a6a;
+}
+.date-events-modal-content {
+  text-align: left;
+  padding: 0 2rem;
+  margin-bottom: 2rem;
+}
+.date-events-modal-content > .event-container {
+  margin-bottom: 0.67rem;
 }

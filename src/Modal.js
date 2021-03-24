@@ -1,11 +1,19 @@
 import React, { useState } from 'react';
 import './Modal.css';
 
-const Modal = ({ children, isActive }) => {
+const Modal = ({ header, content, button, isActive }) => {
   return (
-    <div className='modal-background' onClick={() => isActive(false)}>
+    <div
+      className='modal-background'
+      onClick={(e) => {
+        e.stopPropagation();
+        isActive(() => false);
+      }}
+    >
       <div className='modal-container' onClick={(e) => e.stopPropagation()}>
-        {children}
+        {header}
+        {content}
+        {button}
       </div>
     </div>
   );

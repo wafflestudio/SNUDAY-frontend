@@ -1,4 +1,5 @@
 .nav-container {
+  z-index: 10;
   height: 4.5rem;
   width: 100vw;
   display: flex;
@@ -7,6 +8,8 @@
   bottom: 0;
   border-top: 1pt rgb(221, 221, 221) solid;
   background-color: white;
+  transition: bottom 0.3s;
+  user-select: none;
 }
 .nav-item {
   display: flex;
@@ -14,7 +17,8 @@
   justify-content: center;
   flex: 1;
   text-align: center;
-  font-size: 0.75rem;
+  font-size: min(0.75rem, 4vw);
+  font-weight: bold;
 }
 .nav-item svg {
   margin: 0 auto;

@@ -1,16 +1,44 @@
-import React from 'react';
-const Day = ({ year, month, day, numDays }) => {
-  const date = new Date(year, month, day);
-  let className = 'date';
-  if (day < 1) className += ' past';
-  if (day > numDays) className += ' next';
+import React, { useContext, useState } from 'react';
+import CalendarContext from './CalendarContext';
+import DayEventsModal from './DayEventsModal';
+import EventBar from './EventBar';
+const Day = ({ year, monthIndex, day }) => {
+  const date = new Date(year, monthIndex, day);
+  const [showEvent, setShowEvent] = useState(false);
+  const { calendar, getNumDays, day: selectedDay, setDay } = useContext(
+    CalendarContext
+  );
+  let dayClass = 'day';
+  if (day < 1) dayClass += ' past';
+  if (day > getNumDays(year, monthIndex)) dayClass += ' next';
+  const holiday = calendar.getHoliday(date);
+  let dateClass = 'date';
+  if (holiday) dateClass += ' holiday';
   return (
-    <>
-      <div className={className}>
-        <span>{date.getDate()}</span>
+    <div
+      id={`${year}-${monthIndex}-${date.toLocaleDateString('ko-KR')}`}
+      className={dayClass}
+      onClick={() => {
+        if (day !== selectedDay) {
+          setDay(day);
+        }
+        setShowEvent(true);
+      }}
+    >
+      <div className={dateClass}>
+        <span>
+          {date.getDate()} {holiday}
+        </span>
       </div>
-      <div className='day-todo-box'></div>
-    </>
+      <div className='day-todo-box'>
+        <EventBar />
+      </div>
+      {showEvent ? (
+        <DayEventsModal isActive={setShowEvent} date={date} />
+      ) : (
+        <></>
+      )}
+    </div>
   );
 };
 export default Day;
