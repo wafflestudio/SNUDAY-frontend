@@ -62,7 +62,7 @@ export const checkDuplicateID = (username) =>
         resolve(e === 'duplicate' ? true : false);
       });
   });
-  export const getMyEvents = (userInfo) =>
+export const getMyEvents = (userInfo) =>
   new Promise((resolve, reject) => {
     axios
       .get(`users/me/events/`)
@@ -71,7 +71,7 @@ export const checkDuplicateID = (username) =>
       })
       .catch(logError);
   });
-  export const postMyEvents = (event) =>
+export const postMyEvents = (event) =>
   new Promise((resolve, reject) => {
     axios
       .put(`users/me/events/`, event)

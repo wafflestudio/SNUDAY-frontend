@@ -14,7 +14,7 @@ const Day = ({ year, monthIndex, day }) => {
   const holiday = calendar.getHoliday(date);
   let dateClass = 'date';
   if (holiday) dateClass += ' holiday';
-  
+
   //api/v1/channels/{channel_id}/events/?date=2021-03-16
   return (
     <div

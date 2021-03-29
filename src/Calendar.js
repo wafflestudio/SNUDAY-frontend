@@ -20,10 +20,10 @@ const Calendar = () => {
   const [day, setDay] = useState(today.getDate());
   const [numDays, setNumDays] = useState(getNumDays(year, monthIndex));
   const [events, setEvents] = useState([]);
-  console.log(events)
+  console.log(events);
   useEffect(() => {
     getMyEvents().then(setEvents);
-  },[year, monthIndex]);
+  }, [year, monthIndex]);
   const moveMonth = (event) => {
     if (event.deltaY < 0) {
       chooseDay(1 - getNumDays(year, monthIndex - 1));

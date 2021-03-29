@@ -11,10 +11,13 @@ const MyPage = () => {
     setToken({ undefined, undefined });
     setIsLoggedIn(false);
   };
-  console.log(userInfo)
+  console.log(userInfo);
   return isLoggedIn ? (
     <>
-      <h1>{userInfo?.last_name}{userInfo?.first_name}님, 환영합니다!</h1>
+      <h1>
+        {userInfo?.last_name}
+        {userInfo?.first_name}님, 환영합니다!
+      </h1>
       <p onClick={logout}>로그아웃</p>
     </>
   ) : (

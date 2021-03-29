@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import './Signup.css';
 import { checkDuplicateID, postUser } from './API';
-import {InputBox, InputButtonBox} from './Input'
+import { InputBox, InputButtonBox } from './Input';
 const Signup = () => {
   const [id, setId] = useState('');
   const [isDuplicateId, setIsDuplicateId] = useState(false);
@@ -35,7 +35,7 @@ const Signup = () => {
     checkAgreement();
   }, [agreementChecked.service, agreementChecked.privacy]);
   useEffect(() => {
-    checkDuplicateID(id).then(setIsDuplicateId)
+    checkDuplicateID(id).then(setIsDuplicateId);
   }, [id]);
   const sendForm = (e) => {
     e.preventDefault();

@@ -19,14 +19,16 @@ const ChannelMainTab = ({ activeTab, setActiveTab }) => {
         className={
           activeTab === 'subscribed' ? 'channel-tab active' : 'channel-tab'
         }
-        onClick={()=>setActiveTab(()=>'subscribed')}
+        onClick={() => setActiveTab(() => 'subscribed')}
       >
         구독 채널
       </li>
-      <li className={
-          activeTab === 'my' ? 'channel-tab active' : 'channel-tab'
-        }
-        onClick={()=>setActiveTab(()=>'my')}>내 채널</li>
+      <li
+        className={activeTab === 'my' ? 'channel-tab active' : 'channel-tab'}
+        onClick={() => setActiveTab(() => 'my')}
+      >
+        내 채널
+      </li>
     </ul>
   );
 };
