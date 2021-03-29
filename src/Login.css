@@ -25,6 +25,9 @@
   max-width: 640px;
   margin: auto;
 }
+.login-form > p {
+  padding-left: 1rem;
+}
 .login-helper {
   display: flex;
   justify-content: center;

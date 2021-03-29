@@ -1,50 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './Signup.css';
-import { postUser } from './API';
-export const InputBox = ({
-  button,
-  label,
-  value,
-  setValue,
-  type,
-  pattern,
-  message,
-}) => {
-  return (
-    <div className='input-box'>
-      <div className='input-box-label-container'>
-        <label>{label}</label>
-        <span className='input-condition-message'>
-          {value.match(pattern) ? ' ' : message}
-        </span>
-      </div>
-      <div className='input-box-input-container'>
-        <input
-          className={button ? 'input-round input-with-button' : 'input-round'}
-          type={type}
-          pattern='[a-z0-9]{5,}'
-          value={value}
-          onChange={(e) => {
-            setValue(e.target.value);
-          }}
-          autoCapitalize='none'
-        ></input>
-        {button}
-      </div>
-    </div>
-  );
-};
-const InputButtonBox = ({ name, submit, ...props }) => {
-  const button = (
-    <button className='button-in-input' onClick={submit}>
-      {name}
-    </button>
-  );
-  return <InputBox button={button} {...props} />;
-};
+import { checkDuplicateID, postUser } from './API';
+import {InputBox, InputButtonBox} from './Input'
 const Signup = () => {
   const [id, setId] = useState('');
-  const idPattern = /^[a-z0-9]{5,}$/;
+  const [isDuplicateId, setIsDuplicateId] = useState(false);
+  const idPattern = isDuplicateId ? /^$/ : /^[a-z0-9]{5,}$/;
   const pwPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,16}$/;
   const namePattern = /^[A-Za-z가-힣]+$/;
   const [pw, setPw] = useState('');
@@ -54,6 +15,28 @@ const Signup = () => {
   const [email, setEmail] = useState('');
   const [authNumber, setAuthNumber] = useState('');
   const [authNumberInput, setAuthNumberInput] = useState('');
+  const [isValid, setIsValid] = useState(false);
+  const [agreementChecked, setAgreementChecked] = useState({
+    all: false,
+    service: false,
+    privacy: false,
+  });
+  const checkAgreement = () => {
+    const { all, ...rest } = agreementChecked;
+    for (const checkbox of Object.values(rest)) {
+      if (!checkbox) {
+        setAgreementChecked((prev) => ({ ...prev, all: false }));
+        return;
+      }
+    }
+    setAgreementChecked((prev) => ({ ...prev, all: true }));
+  };
+  useEffect(() => {
+    checkAgreement();
+  }, [agreementChecked.service, agreementChecked.privacy]);
+  useEffect(() => {
+    checkDuplicateID(id).then(setIsDuplicateId)
+  }, [id]);
   const sendForm = (e) => {
     e.preventDefault();
     const form = {
@@ -83,7 +66,11 @@ const Signup = () => {
           value={id}
           setValue={setId}
           pattern={idPattern}
-          message='5글자 이상의 영소문자 또는 숫자'
+          message={
+            isDuplicateId
+              ? '이미 사용 중인 아이디입니다.'
+              : '5글자 이상의 영소문자 또는 숫자'
+          }
         />
         <InputBox
           label='비밀번호'
@@ -98,7 +85,7 @@ const Signup = () => {
           type='password'
           value={pwAgain}
           setValue={setPwAgain}
-          pattern={pw}
+          pattern={'^' + pw + '$'}
           message='비밀번호가 일치하지 않습니다.'
         />
         <div className='input-fullname-container'>
@@ -142,30 +129,64 @@ const Signup = () => {
           type='number'
           value={authNumber}
           setValue={setAuthNumber}
-          pattern={namePattern}
+          pattern={/\d+/}
           message='인증 메일을 확인하세요.'
         />
         <div className='agreement-container'>
           <label className='label-agreement'>
-            <input type='checkbox' />
+            <input
+              type='checkbox'
+              checked={agreementChecked['all']}
+              onChange={(e) => {
+                const newState = { ...agreementChecked };
+                for (const [k, v] of Object.entries(newState)) {
+                  newState[k] = e.target.checked;
+                }
+                setAgreementChecked(() => newState);
+              }}
+            />
             <div>
-              스누데이 이용약관, 개인정보 수집 및 이용에{' '}
+              {`스누데이 이용약관, 개인정보 수집 및 이용에 `}
               <span style={{ textDecoration: 'underline' }}>모두 동의</span>
               합니다.
             </div>
           </label>
           <label className='label-agreement'>
-            <input type='checkbox' />
-            스누데이 이용약관 동의{' '}
+            <input
+              id='service'
+              type='checkbox'
+              checked={agreementChecked['service']}
+              onChange={(e) => {
+                setAgreementChecked((prev) => ({
+                  ...prev,
+                  service: e.target.checked,
+                }));
+              }}
+            />
+            스누데이 이용약관 동의
             <span style={{ color: '#3b77ff' }}>(필수)</span>
           </label>
           <label className='label-agreement'>
-            <input type='checkbox' />
-            개인정보 수집 및 이용 동의{' '}
+            <input
+              id='privacy'
+              type='checkbox'
+              checked={agreementChecked['privacy']}
+              onChange={(e) => {
+                setAgreementChecked((prev) => ({
+                  ...prev,
+                  privacy: e.target.checked,
+                }));
+              }}
+            />
+            개인정보 수집 및 이용 동의
             <span style={{ color: '#3b77ff' }}>(필수)</span>
           </label>
         </div>
-        <button className='button-big' onClick={(e) => sendForm(e)}>
+        <button
+          disabled={!agreementChecked.all}
+          className='button-big'
+          onClick={(e) => sendForm(e)}
+        >
           가입하기
         </button>
       </form>
