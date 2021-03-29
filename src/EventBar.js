@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import './EventBar.css';
-import EventModal from './EventModal';
+import { EventModal } from './Event';
 const EventBar = ({ event }) => {
   let className = 'eventbar';
   const [showEvent, setShowEvent] = useState(false);

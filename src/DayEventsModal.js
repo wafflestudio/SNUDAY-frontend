@@ -1,4 +1,4 @@
-import Event from './Event';
+import { EventList } from './Event';
 import Modal from './Modal';
 
 const DayEventsModalHeader = ({ date }) => {
@@ -24,7 +24,7 @@ const DayEventsModalContent = ({ events }) => {
   return (
     <div className='date-events-modal-content'>
       {events.map((event) => (
-        <Event key={event.id} event={event} />
+        <EventList key={event.id} event={event} />
       ))}
     </div>
   );
