@@ -1,4 +1,4 @@
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 
 import './Navigation.css';
 import { ReactComponent as MyCal } from './resources/nav-1.svg';
@@ -9,9 +9,12 @@ import { ReactComponent as MyPage } from './resources/nav-5.svg';
 const Menu = ({ name, image, route }) => {
   const Icon = image;
   let history = useHistory();
+  const location = useLocation();
+  let className = 'nav-item';
+  if (location.pathname.split('/')[1] === route) className += ' active';
   return (
     <div
-      className='nav-item'
+      className={className}
       onClick={() => {
         history.push(route);
       }}
@@ -23,11 +26,11 @@ const Menu = ({ name, image, route }) => {
 };
 const Navigation = () => {
   const menuList = [
-    { name: '내 일정', image: MyCal, route: '/' },
-    { name: '공지사항', image: Notice, route: '/notice' },
-    { name: '검색', image: Search, route: '/search' },
-    { name: '채널', image: Channel, route: '/channel' },
-    { name: 'My Page', image: MyPage, route: '/mypage' },
+    { name: '내 일정', image: MyCal, route: '' },
+    { name: '공지사항', image: Notice, route: 'notice' },
+    { name: '검색', image: Search, route: 'search' },
+    { name: '채널', image: Channel, route: 'channel' },
+    { name: 'My Page', image: MyPage, route: 'mypage' },
   ];
   return (
     <div className='nav-container' id='navigation-bar'>

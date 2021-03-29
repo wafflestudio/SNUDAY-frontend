@@ -27,7 +27,7 @@
 .nav-item:hover {
   background-color: rgb(237, 237, 237);
 }
-.nav-item:active {
+.nav-item:active, .nav-item.active {
   color: #3b77ff;
   fill: #3b77ff;
 }
