@@ -16,6 +16,9 @@ button {
   color: white;
   outline: none;
 }
+button:disabled{
+  opacity: 0.5;
+}
 .button-big {
   height: 2.5rem;
   font-size: 1.2rem;
