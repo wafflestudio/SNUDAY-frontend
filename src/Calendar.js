@@ -4,7 +4,9 @@ import TagBar from './TagBar';
 import './Calendar.css';
 import AddButton from './AddButton';
 import { Calendar as cal } from './cal';
-import CalendarContext from './CalendarContext';
+import CalendarContext from './context/CalendarContext';
+import { getMyEvents } from './API';
+import { useAuthContext } from './context/AuthContext';
 
 const getNumDays = (year, month) => {
   return 32 - new Date(year, month, 32).getDate();
@@ -17,7 +19,11 @@ const Calendar = () => {
   const [monthIndex, setMonthIndex] = useState(today.getMonth());
   const [day, setDay] = useState(today.getDate());
   const [numDays, setNumDays] = useState(getNumDays(year, monthIndex));
-
+  const [events, setEvents] = useState([]);
+  console.log(events)
+  useEffect(() => {
+    getMyEvents().then(setEvents);
+  },[year, monthIndex]);
   const moveMonth = (event) => {
     if (event.deltaY < 0) {
       chooseDay(1 - getNumDays(year, monthIndex - 1));

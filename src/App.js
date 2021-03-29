@@ -6,6 +6,8 @@ import Navigation from './Navigation';
 import Signup from './Signup';
 import './App.css';
 import MyPage from './MyPage';
+import { AuthProvider } from './context/AuthContext';
+import ChannelMain from './ChannelMain';
 function copyTouch({ identifier, pageX, pageY }) {
   return { identifier, pageX, pageY };
 }
@@ -81,16 +83,17 @@ function App() {
     }
   };
   return (
-    <>
+    <AuthProvider>
       <header></header>
       <Switch>
         <Route exact path='/' component={Home} />
         <Route exact path='/mypage' component={MyPage} />
+        <Route exact path='/channel' component={ChannelMain} />
         <Route exact path='/signup' component={Signup} />
         <Route exact path='/signin' component={Login} />
       </Switch>
       <Navigation />
-    </>
+    </AuthProvider>
   );
 }
 

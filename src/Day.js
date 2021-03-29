@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import CalendarContext from './CalendarContext';
+import CalendarContext from './context/CalendarContext';
 import DayEventsModal from './DayEventsModal';
 import EventBar from './EventBar';
 const Day = ({ year, monthIndex, day }) => {
@@ -14,6 +14,8 @@ const Day = ({ year, monthIndex, day }) => {
   const holiday = calendar.getHoliday(date);
   let dateClass = 'date';
   if (holiday) dateClass += ' holiday';
+  
+  //api/v1/channels/{channel_id}/events/?date=2021-03-16
   return (
     <div
       id={`${year}-${monthIndex}-${date.toLocaleDateString('ko-KR')}`}
