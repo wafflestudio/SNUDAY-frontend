@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { postMyEvents } from './API';
 import DateTimePicker from './DateTimePicker';
 import Modal from './Modal';
 import ToggleButton from './ToggleButton';
@@ -79,10 +80,14 @@ const AddEventModalContent = ({ date }) => {
   );
 };
 const AddEventModalButton = () => {
+  const addEvent = () => {
+    const event = {}
+    postMyEvents(event)
+  }
   return (
     <div>
       <hr />
-      <button className='button-save'>저장하기</button>
+      <button className='button-save' onClick={addEvent}>저장하기</button>
     </div>
   );
 };
