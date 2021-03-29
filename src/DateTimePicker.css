@@ -1,0 +1,36 @@
+.input-date-container {
+  position: relative;
+  top: 0;
+  margin-right: 0.5rem;
+}
+input[type='date'],
+input[type='time'] {
+  border: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  opacity: 0;
+}
+input[type='date']::-webkit-calendar-picker-indicator,
+input[type='time']::-webkit-calendar-picker-indicator {
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+.input-datetime {
+  display: flex;
+  flex-flow: row wrap;
+  width: fit-content;
+
+  align-content: flex-end;
+}
+.input-datetime > * {
+  flex: 1 1 max-content;
+}

@@ -1,0 +1,91 @@
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+label {
+  padding-right: 0.5rem;
+  font-weight: 500;
+  min-width: fit-content;
+}
+button {
+  font-size: 1rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 1.5rem;
+  border: 0;
+  background-color: rgb(59, 119, 255);
+  color: white;
+  outline: none;
+}
+button:disabled{
+  opacity: 0.5;
+}
+.button-big {
+  height: 2.5rem;
+  font-size: 1.2rem;
+  margin: 0.66rem 0;
+}
+.button-in-input {
+  height: 80%;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  margin-right: 0.3rem;
+  min-width: 5rem;
+}
+button:active {
+  opacity: 0.8;
+}
+textarea {
+  resize: none;
+  border-radius: 0;
+}
+input:not([type='checkbox']):not([type='radio']) {
+  -webkit-appearance: none;
+}
+.input-box {
+  margin-bottom: 0.5rem;
+}
+.input-box-label-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.25rem;
+}
+.input-box-input-container {
+  position: relative;
+}
+.input-box label,
+input {
+  padding-left: 1rem;
+  height: 1.5rem;
+}
+.input-box input {
+  margin: 0;
+  width: 100%;
+}
+.input-round {
+  border: 1px solid #dddddd;
+  border-radius: 1.5rem;
+  padding: 0 1rem;
+  font: inherit;
+  margin-bottom: 0.66rem;
+  height: 3rem;
+}
+.input-flat {
+  border-top: 0;
+  border-left: 0;
+  border-right: 0;
+  border-bottom: 1px solid #b8b8b8;
+}
+.input-with-button {
+  padding-right: 6rem;
+}
+.input-condition-message {
+  color: red;
+  font-size: 0.75rem;
+  line-height: 0.75rem;
+  height: fit-content;
+  margin: 0;
+  overflow-wrap: break-word;
+}

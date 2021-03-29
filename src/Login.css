@@ -1,0 +1,40 @@
+.login-logo {
+  animation: fadeIn ease-out 1s;
+}
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    margin-top: -200px;
+    padding-bottom: 200px;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+.login-header {
+  position: relative;
+  padding: 4rem;
+  display: flex;
+  justify-content: center;
+}
+.login-form {
+  display: flex;
+  flex-direction: column;
+  padding: 0 min(10%, 80px);
+
+  max-width: 640px;
+  margin: auto;
+}
+.login-form > p {
+  padding-left: 1rem;
+}
+.login-helper {
+  display: flex;
+  justify-content: center;
+}
+.login-helper > * {
+  margin: 0.5rem 1rem;
+  background-color: transparent;
+  color: #b8b8b8;
+  text-decoration: underline;
+}
