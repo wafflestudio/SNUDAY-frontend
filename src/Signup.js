@@ -2,17 +2,20 @@ import { useEffect, useState } from 'react';
 import './Signup.css';
 import { checkDuplicateID, postUser } from './API';
 import { InputBox, InputButtonBox } from './Input';
+import { useHistory } from 'react-router-dom';
 const Signup = () => {
+  const history = useHistory();
   const [id, setId] = useState('');
   const [isDuplicateId, setIsDuplicateId] = useState(false);
   const idPattern = isDuplicateId ? /^$/ : /^[a-z0-9]{5,}$/;
-  const pwPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,16}$/;
-  const namePattern = /^[A-Za-z가-힣]+$/;
   const [pw, setPw] = useState('');
+  const pwPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,16}$/;
   const [pwAgain, setPwAgain] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
+  const namePattern = /^[A-Za-z가-힣]+$/;
   const [email, setEmail] = useState('');
+  const emailPattern = /^\S+@snu.ac.kr$/;
   const [authNumber, setAuthNumber] = useState('');
   const [authNumberInput, setAuthNumberInput] = useState('');
   const [isValid, setIsValid] = useState(false);
@@ -21,6 +24,16 @@ const Signup = () => {
     service: false,
     privacy: false,
   });
+  const checkValidForm = () => {
+    return (
+      id.match(idPattern) &&
+      pw.match(pwPattern) &&
+      pw === pwAgain &&
+      firstName.match(namePattern) &&
+      lastName.match(namePattern) &&
+      email.match(emailPattern)
+    );
+  };
   const checkAgreement = () => {
     const { all, ...rest } = agreementChecked;
     for (const checkbox of Object.values(rest)) {
@@ -47,7 +60,12 @@ const Signup = () => {
       email,
     };
     console.log(form);
-    postUser(form).then(console.log).catch(console.log);
+    postUser(form)
+      .then((response) => {
+        alert('가입을 축하합니다!');
+        history.push('/signin');
+      })
+      .catch(console.log);
   };
   const sendVerification = (e) => {
     console.log('email:' + email);
@@ -183,7 +201,7 @@ const Signup = () => {
           </label>
         </div>
         <button
-          disabled={!agreementChecked.all}
+          disabled={!agreementChecked.all || !checkValidForm()}
           className='button-big'
           onClick={(e) => sendForm(e)}
         >
