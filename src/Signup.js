@@ -3,6 +3,7 @@ import './Signup.css';
 import { checkDuplicateID, postUser } from './API';
 import { InputBox, InputButtonBox } from './Input';
 import { useHistory } from 'react-router-dom';
+import { ReactComponent as Uncheckedbox } from './resources/checkbox_unchecked.svg';
 const Signup = () => {
   const history = useHistory();
   const [id, setId] = useState('');
@@ -77,7 +78,7 @@ const Signup = () => {
     <>
       <header className='signup-header'>회원가입</header>
       <form className='signup-form'>
-        <h3>스누데이에 오신 것을 환영합니다.</h3>
+        <h3>SNUDAY에 오신 것을 환영합니다.</h3>
         <InputBox
           label='아이디'
           type='text'
@@ -163,6 +164,7 @@ const Signup = () => {
                 setAgreementChecked(() => newState);
               }}
             />
+            <Uncheckedbox className='checkmark' />
             <div>
               {`스누데이 이용약관, 개인정보 수집 및 이용에 `}
               <span style={{ textDecoration: 'underline' }}>모두 동의</span>
@@ -181,6 +183,7 @@ const Signup = () => {
                 }));
               }}
             />
+            <Uncheckedbox className='checkmark' />
             스누데이 이용약관 동의
             <span style={{ color: '#3b77ff' }}>(필수)</span>
           </label>
@@ -196,6 +199,7 @@ const Signup = () => {
                 }));
               }}
             />
+            <Uncheckedbox className='checkmark' />
             개인정보 수집 및 이용 동의
             <span style={{ color: '#3b77ff' }}>(필수)</span>
           </label>

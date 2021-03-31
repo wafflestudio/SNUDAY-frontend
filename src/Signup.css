@@ -5,7 +5,7 @@ input::-webkit-inner-spin-button {
   margin: 0;
 }
 /* Firefox */
-input[type=number] {
+input[type='number'] {
   -moz-appearance: textfield;
 }
 
@@ -41,6 +41,27 @@ input[type=number] {
 }
 .label-agreement {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
+  justify-content: flex-start;
   font-size: 0.8rem;
+  min-height: 2rem;
+  line-height: 1rem;
+}
+.label-agreement input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+.checkmark {
+  margin-right: 7px;
+  width: initial;
+  height: 23px;
+  min-width: 23px;
+}
+.label-agreement input:checked ~ .checkmark circle {
+  fill: #3b77ff;
+  stroke: none;
+}
+.label-agreement input:checked ~ .checkmark path {
+  fill: #fff;
 }
