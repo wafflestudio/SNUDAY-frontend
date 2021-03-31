@@ -47,10 +47,13 @@
   width: 100%;
 }
 .title {
-  font-size: 120%;
+  font-size: 1.5rem;
+  font-weight: bold;
   text-align: center;
   margin: 0;
-  padding-top: 0.8rem;
+  height: 4rem;
+  line-height: 4rem;
+  border-bottom: 1px solid #dddddd;
 }
 input {
   border: none;

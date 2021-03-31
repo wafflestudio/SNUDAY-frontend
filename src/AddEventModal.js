@@ -5,10 +5,9 @@ import Modal from './Modal';
 import ToggleButton from './ToggleButton';
 const AddEventModalHeader = () => {
   return (
-    <h3 className='title'>
-      새로운 일정
-      <hr />
-    </h3>
+    <>
+      <h3 className='title'>새로운 일정</h3>
+    </>
   );
 };
 const AddEventModalContent = ({ date }) => {
@@ -81,13 +80,15 @@ const AddEventModalContent = ({ date }) => {
 };
 const AddEventModalButton = () => {
   const addEvent = () => {
-    const event = {}
-    postMyEvents(event)
-  }
+    const event = {};
+    postMyEvents(event);
+  };
   return (
     <div>
       <hr />
-      <button className='button-save' onClick={addEvent}>저장하기</button>
+      <button className='button-save' onClick={addEvent}>
+        저장하기
+      </button>
     </div>
   );
 };
