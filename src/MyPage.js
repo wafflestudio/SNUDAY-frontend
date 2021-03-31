@@ -16,7 +16,9 @@ const MyPage = () => {
     <>
       <h1>
         {userInfo?.last_name}
-        {userInfo?.first_name}님, 환영합니다!
+        {userInfo?.first_name}님,
+        <br />
+        환영합니다!
       </h1>
       <p onClick={logout}>로그아웃</p>
     </>

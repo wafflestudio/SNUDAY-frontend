@@ -16,7 +16,11 @@ const Menu = ({ name, image, route }) => {
     <div
       className={className}
       onClick={() => {
-        history.push(route);
+        const currentRoute = location.pathname.split('/')[1];
+        if (currentRoute !== route) {
+          if (currentRoute === 'signin' && route === 'mypage') return;
+          history.push(route);
+        }
       }}
     >
       <Icon />
