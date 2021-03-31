@@ -30,13 +30,7 @@ const Login = () => {
   return (
     <>
       <div className='login-header'>
-        <img
-          className=' login-logo'
-          width='94.202'
-          height='82.214'
-          src='/resources/logo.svg'
-          alt='SNUDAY'
-        />
+        <Logo className='login-logo' />
       </div>
       <form className='login-form'>
         <InputBox

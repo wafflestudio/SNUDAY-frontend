@@ -1,11 +1,10 @@
 .login-logo {
-  animation: fadeIn ease-out 1s;
+  animation: fadeIn ease-out 0.82s;
 }
 @keyframes fadeIn {
   0% {
     opacity: 0;
-    margin-top: -200px;
-    padding-bottom: 200px;
+    margin-top: -82px;
   }
   100% {
     opacity: 1;
@@ -13,9 +12,10 @@
 }
 .login-header {
   position: relative;
-  padding: 4rem;
+  height: 200px;
   display: flex;
   justify-content: center;
+  align-items: center;
 }
 .login-form {
   display: flex;
