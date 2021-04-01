@@ -1,0 +1,38 @@
+.channel-card {
+  display: flex;
+  align-items: center;
+  padding: 15px 20px;
+  border-bottom: 1px solid #dddddd;
+}
+.channel-card-image {
+  clip-path: circle();
+  height: 60px;
+  width: 60px;
+}
+.channel-card-info {
+  flex-basis: 100%;
+  padding-left: 10px;
+}
+.channel-card-info-row {
+  display: flex;
+  align-items: center;
+}
+.channel-card-info-row > *:not(:last-child) {
+  margin-right: 0.5rem;
+}
+.channel-card-info-row svg {
+  height: 100%;
+}
+.channel-card-name {
+  font-weight: 500;
+  padding: 0.25rem 0.5rem;
+  border-radius: 1.25rem;
+  border: 1px solid #dddddd;
+  background-color: white;
+}
+.channel-card-subscribers {
+  font-size: 0.8rem;
+  color: #4d4d4d;
+  padding-left: 0.5rem;
+  flex-basis: 100%;
+}
