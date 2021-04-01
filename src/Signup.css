@@ -10,12 +10,21 @@ input[type='number'] {
 }
 
 .signup-header {
+  position: relative;
   height: 4rem;
   line-height: 4rem;
   border-bottom: 1px solid #dddddd;
   text-align: center;
   font-size: 1.4rem;
   font-weight: bold;
+}
+.arrow-button {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  -ms-transform: translate(0, -50%);
+  transform: translate(0, -50%);
+  margin-left: 10px;
 }
 .signup-form {
   display: flex;
@@ -46,6 +55,9 @@ input[type='number'] {
   font-size: 0.8rem;
   min-height: 2rem;
   line-height: 1rem;
+}
+.label-agreement * {
+  word-break: keep-all;
 }
 .label-agreement input {
   position: absolute;

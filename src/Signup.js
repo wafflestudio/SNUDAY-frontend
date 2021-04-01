@@ -4,6 +4,7 @@ import { checkDuplicateID, postUser } from './API';
 import { InputBox, InputButtonBox } from './Input';
 import { useHistory } from 'react-router-dom';
 import { ReactComponent as Uncheckedbox } from './resources/checkbox_unchecked.svg';
+import { ReactComponent as BackArrow } from './resources/arrow-back.svg';
 const Signup = () => {
   const history = useHistory();
   const [id, setId] = useState('');
@@ -76,7 +77,10 @@ const Signup = () => {
   };
   return (
     <>
-      <header className='signup-header'>회원가입</header>
+      <header className='signup-header'>
+        <BackArrow className='arrow-button' onClick={history.goBack} />
+        회원가입
+      </header>
       <form className='signup-form'>
         <h3>SNUDAY에 오신 것을 환영합니다.</h3>
         <InputBox
