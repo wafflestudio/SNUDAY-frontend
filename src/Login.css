@@ -20,10 +20,12 @@
 .login-form {
   display: flex;
   flex-direction: column;
-  padding: 0 min(10%, 80px);
-
-  max-width: 640px;
+  padding: 0 48px;
+  max-width: 480px;
   margin: auto;
+}
+.login-form > * {
+  margin-bottom: 8px;
 }
 .login-form > p {
   padding-left: 1rem;
@@ -35,6 +37,7 @@
 .login-helper > * {
   margin: 0.5rem 1rem;
   background-color: transparent;
+  border: none;
   color: #b8b8b8;
   text-decoration: underline;
 }

@@ -19,11 +19,9 @@ export class Calendar {
       ''
     ).padStart(2, '0')}-${(date.getDate() + '').padStart(2, '0')}`;
     if (this.holiday[date.getFullYear()] === undefined) return;
-    for (let holiday of this.holiday[date.getFullYear()]) {
-      if (dateString === holiday['날짜']) {
-        return holiday['이름'];
-      }
-    }
+    for (let holiday of this.holiday[date.getFullYear()])
+      if (dateString === holiday['날짜']) return holiday['이름'];
+
     return '';
   }
 }

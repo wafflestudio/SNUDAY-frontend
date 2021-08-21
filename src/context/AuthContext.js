@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { getUserMe } from '../API';
+import { getManagingChannels, getSubscribedChannels, getUserMe } from '../API';
 const AuthContext = React.createContext();
 const AuthProvider = (props) => {
   const setToken = ({ access, refresh }) => {
@@ -13,23 +13,38 @@ const AuthProvider = (props) => {
     newState.value.isLoggedIn = isLoggedIn;
     setState((prev) => ({ ...prev, value: { ...prev.value, isLoggedIn } }));
   };
-
-  const setUserInfo = () => {
-    getUserMe().then((userInfo) => {
-      console.log(userInfo);
-      setState((prev) => ({ ...prev, value: { ...prev.value, userInfo } }));
-    });
+  const setUserInfo = (userInfo) => {
+    let newState = { ...state };
+    newState.value.userInfo = userInfo;
+    setState((prev) => ({ ...prev, value: { ...prev.value, userInfo } }));
+  };
+  const initUserInfo = async () => {
+    const userInfo = await getUserMe();
+    const managingChannels = await getManagingChannels();
+    const subscribingChannels = await getSubscribedChannels();
+    const myChannel = managingChannels.find((channel) => channel.is_personal);
+    const newUserInfo = {
+      ...userInfo,
+      managing_channels: new Set(managingChannels.map((ch) => ch.id)),
+      subscribing_channels: new Set(subscribingChannels.map((ch) => ch.id)),
+      my_channel: myChannel.id,
+    };
+    console.log(newUserInfo);
+    setState((prev) => ({
+      ...prev,
+      value: { ...prev.value, userInfo: newUserInfo },
+    }));
   };
   const defaultValue = {
     isLoggedIn: false,
     access: undefined,
     refresh: undefined,
-    userInfo: {},
+    userInfo: null,
   };
-  const action = { setToken, setIsLoggedIn };
+  const action = { setToken, setIsLoggedIn, setUserInfo };
   const [state, setState] = useState({ value: defaultValue, action });
   useEffect(() => {
-    setUserInfo();
+    initUserInfo();
   }, [state.value.access]);
   console.log(state);
   return (

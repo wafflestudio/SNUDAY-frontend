@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import CalendarContext from './context/CalendarContext';
 import DayEventsModal from './DayEventsModal';
 import EventBar from './EventBar';
-const Day = ({ year, monthIndex, day }) => {
+const Day = ({ events, year, monthIndex, day }) => {
   const date = new Date(year, monthIndex, day);
   const [showEvent, setShowEvent] = useState(false);
   const { calendar, getNumDays, day: selectedDay, setDay } = useContext(
@@ -14,26 +14,24 @@ const Day = ({ year, monthIndex, day }) => {
   const holiday = calendar.getHoliday(date);
   let dateClass = 'date';
   if (holiday) dateClass += ' holiday';
-
   //api/v1/channels/{channel_id}/events/?date=2021-03-16
+
   return (
     <div
       id={`${year}-${monthIndex}-${date.toLocaleDateString('ko-KR')}`}
       className={dayClass}
       onClick={() => {
-        if (day !== selectedDay) {
-          setDay(day);
-        }
+        if (day !== selectedDay) setDay(day);
+
         setShowEvent(true);
       }}
     >
       <div className={dateClass}>
-        <span>
-          {date.getDate()} {holiday}
-        </span>
+        <span>{date.getDate()}</span>
+        <span className="holiday"> {holiday}</span>
       </div>
-      <div className='day-todo-box'>
-        <EventBar />
+      <div className="day-todo-box">
+        {events ? events.map((event) => <EventBar event={event} />) : <></>}
       </div>
       {showEvent ? (
         <DayEventsModal isActive={setShowEvent} date={date} />

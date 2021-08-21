@@ -15,6 +15,9 @@
     background-color: rgba(0, 0, 0, 0.3);
   }
 }
+.modal-background ~ * {
+  filter: blur(4px);
+}
 .modal-container {
   /*align center*/
   margin: 0;
@@ -36,9 +39,6 @@
   background-color: white;
   color: black;
   border-radius: 1rem;
-}
-.modal-container input {
-  padding: 0;
 }
 .modal-container * {
   font-size: 1rem;
@@ -63,7 +63,7 @@ input {
 }
 .input-datetime-container {
   padding-bottom: 2px;
-  border-bottom: 1px solid #b8b8b8;
+  border-bottom: 1px solid #dddddd;
   display: flex;
   justify-content: space-between;
 }
@@ -73,7 +73,7 @@ input {
   justify-content: space-between;
   align-items: center;
   align-content: stretch;
-  padding: 0 3rem;
+  padding: 0 32px;
   overflow-y: auto;
 }
 .event-input-container > * {
@@ -89,15 +89,10 @@ input {
   font-size: 1.2rem;
   margin: 1.5rem 0;
 }
+.input-invalid {
+  border-color: red;
+}
 .event-memo {
-  width: 100%;
-  min-height: 6rem;
-  border: none;
-  -webkit-appearance: none;
-  box-shadow: none !important;
-  border-top: 1px solid #b8b8b8;
-  border-bottom: 1px solid #b8b8b8;
-  padding: 2px 0;
 }
 .button-save {
   display: block;

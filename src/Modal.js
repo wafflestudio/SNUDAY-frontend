@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 import './Modal.css';
-
+//!!!Modal should come first of all siblings in order to blur the background content
 const Modal = ({ header, content, button, isActive }) => {
   return (
     <div
-      className='modal-background'
+      className="modal-background"
       onClick={(e) => {
         e.stopPropagation();
         isActive(() => false);
       }}
     >
-      <div className='modal-container' onClick={(e) => e.stopPropagation()}>
+      <div className="modal-container" onClick={(e) => e.stopPropagation()}>
         {header}
         {content}
         {button}

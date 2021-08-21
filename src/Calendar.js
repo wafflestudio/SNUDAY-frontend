@@ -5,8 +5,9 @@ import './Calendar.css';
 import AddButton from './AddButton';
 import { Calendar as cal } from './cal';
 import CalendarContext from './context/CalendarContext';
-import { getMyEvents } from './API';
+import { getMyEvents, getSubscribedChannels } from './API';
 import { useAuthContext } from './context/AuthContext';
+import AddEventModal from './AddEventModal';
 
 const getNumDays = (year, month) => {
   return 32 - new Date(year, month, 32).getDate();
@@ -20,9 +21,24 @@ const Calendar = () => {
   const [day, setDay] = useState(today.getDate());
   const [numDays, setNumDays] = useState(getNumDays(year, monthIndex));
   const [events, setEvents] = useState([]);
-  console.log(events);
+  console.log('events:', events);
+
+  getSubscribedChannels().then((response) =>
+    console.log('subscribed channels:', response)
+  );
+
   useEffect(() => {
-    getMyEvents().then(setEvents);
+    getMyEvents().then((events) => {
+      setEvents(
+        events.map((event) => ({
+          ...event,
+          start_date: new Date(
+            event.start_date + 'T' + event.start_time + '+09:00'
+          ),
+          due_date: new Date(event.due_date + 'T' + event.due_time + '+09:00'),
+        }))
+      );
+    });
   }, [year, monthIndex]);
   const moveMonth = (event) => {
     if (event.deltaY < 0) {
@@ -59,9 +75,8 @@ const Calendar = () => {
       if (monthIndex < 1) {
         setYear(year - 1);
         setMonthIndex(11);
-      } else {
-        setMonthIndex(monthIndex - 1);
-      }
+      } else setMonthIndex(monthIndex - 1);
+
       setDay(getNumDays(year, monthIndex - 1) + d);
       return;
     }
@@ -70,9 +85,8 @@ const Calendar = () => {
       if (monthIndex > 10) {
         setYear(year + 1);
         setMonthIndex(0);
-      } else {
-        setMonthIndex(monthIndex + 1);
-      }
+      } else setMonthIndex(monthIndex + 1);
+
       return;
     }
     setDay(d);
@@ -90,62 +104,100 @@ const Calendar = () => {
     //document.getElementById(today.toLocaleDateString('ko-KR'))?.classList.remove('active');
   };
   return (
-    <div className='Calendar'>
-      <div className='Calendar-header'>
-        <h3 className='Calendar-title'>
-          {year === today.getFullYear() ? '' : `${year}년 `}
-          {monthIndex + 1}월
-          <input
-            type='month'
-            className='Calendar-date-select'
-            value={year + '-' + (monthIndex + 1 + '').padStart(2, '0')}
-            onChange={(e) => {
-              console.log(e.target.value);
-              chooseMonth(e.target.value);
+    <>
+      <AddButton component={AddEventModal} />
+      <div className="Calendar">
+        <div className="Calendar-header">
+          <h3 className="Calendar-title">
+            {year === today.getFullYear() ? '' : `${year}년 `}
+            {monthIndex + 1}월
+            <input
+              type="month"
+              className="Calendar-date-select"
+              value={year + '-' + (monthIndex + 1 + '').padStart(2, '0')}
+              onChange={(e) => {
+                console.log(e.target.value);
+                chooseMonth(e.target.value);
+              }}
+            />
+          </h3>
+          <button onClick={() => goToday()}>오늘</button>
+        </div>
+        <TagBar />
+        <div className="weekdays">
+          <div className="weekday">일</div>
+          <div className="weekday">월</div>
+          <div className="weekday">화</div>
+          <div className="weekday">수</div>
+          <div className="weekday">목</div>
+          <div className="weekday">금</div>
+          <div className="weekday">토</div>
+        </div>
+        <div className="Calendar-body" onWheel={(e) => moveMonth(e)}>
+          <CalendarContext.Provider
+            value={{
+              calendar,
+              getNumDays,
+              day,
+              setDay: chooseDay,
+              calendar,
             }}
-          />
-        </h3>
-        <button onClick={() => goToday()}>오늘</button>
-      </div>
-      <TagBar />
-      <div className='week weekdays'>
-        <div className='weekday'>일</div>
-        <div className='weekday'>월</div>
-        <div className='weekday'>화</div>
-        <div className='weekday'>수</div>
-        <div className='weekday'>목</div>
-        <div className='weekday'>금</div>
-        <div className='weekday'>토</div>
-      </div>
-      <div className='Calendar-body' onWheel={(e) => moveMonth(e)}>
-        <CalendarContext.Provider
-          value={{ calendar, getNumDays, day, setDay: chooseDay }}
-        >
-          <div
-            id='Calendar-content'
-            className='Calendar-content'
-            onScroll={(e) => e.preventDefault()}
           >
-            <Month
-              key={`${year}-${monthIndex - 1}-`}
-              year={year}
-              monthIndex={monthIndex - 1}
-            />
-            <Month
-              key={`${year}-${monthIndex}-`}
-              year={year}
-              monthIndex={monthIndex}
-            />
-            <Month
-              key={`${year}-${monthIndex + 1}-`}
-              year={year}
-              monthIndex={monthIndex + 1}
-            />
-          </div>
-        </CalendarContext.Provider>
+            <div
+              id="Calendar-content"
+              className="Calendar-content"
+              onScroll={(e) => e.preventDefault()}
+            >
+              {/* <div
+                style={{
+                  minWidth: '100vw',
+                  height: '100%',
+                  textAlign: 'center',
+                  backgroundColor: 'pink',
+                }}
+              >
+                1
+              </div>
+              <div
+                style={{
+                  minWidth: '100vw',
+                  height: '100%',
+                  textAlign: 'center',
+                  backgroundColor: 'yellowgreen',
+                }}
+              >
+                2
+              </div>
+              <div
+                style={{
+                  minWidth: '100vw',
+                  height: '100%',
+                  textAlign: 'center',
+                  backgroundColor: 'lightblue',
+                }}
+              >
+                3
+              </div> */}
+              {/* <Month
+                key={`${year}-${monthIndex - 1}-`}
+                year={year}
+                monthIndex={monthIndex - 1}
+              /> */}
+              <Month
+                key={`${year}-${monthIndex}-`}
+                year={year}
+                monthIndex={monthIndex}
+              />
+              {/* <Month
+                key={`${year}-${monthIndex + 1}-`}
+                year={year}
+                monthIndex={monthIndex + 1}
+              /> */}
+            </div>
+          </CalendarContext.Provider>
+        </div>
       </div>
-      <AddButton />
-    </div>
+    </>
   );
 };
 export default Calendar;

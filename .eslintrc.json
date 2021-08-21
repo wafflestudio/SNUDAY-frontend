@@ -1,0 +1,14 @@
+{
+  "extends": ["react-app", "react-app/jest"],
+  "rules": { "curly": [2, "multi"] },
+  "overrides": [
+    {
+      "files": ["**/*.js?(x)"],
+      "rules": {
+        "react/prop-types": 0,
+        "no-unused-vars": "warn"
+      }
+    }
+  ],
+  "parser": "babel-eslint"
+}

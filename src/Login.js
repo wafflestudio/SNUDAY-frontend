@@ -29,37 +29,37 @@ const Login = () => {
   }, [username, password]);
   return (
     <>
-      <div className='login-header'>
-        <Logo className='login-logo' />
+      <div className="login-header">
+        <Logo className="login-logo" />
       </div>
-      <form className='login-form'>
+      <form className="login-form">
         <InputBox
           value={username}
           setValue={setUsername}
-          type='text'
+          type="text"
           message={showMessage ? '아이디를 입력하세요.' : undefined}
           showMessage={true}
           pattern={/^.+$/}
-          placeholder='아이디'
+          placeholder="아이디"
         ></InputBox>
         <InputBox
           value={password}
           setValue={setPassword}
-          type='password'
+          type="password"
           message={showMessage ? '비밀번호를 입력하세요.' : undefined}
           showMessage={showMessage}
           pattern={/^.+$/}
-          placeholder='비밀번호'
+          placeholder="비밀번호"
         ></InputBox>
         {showMessage && username !== '' && password !== '' ? (
-          <p className='input-condition-message'>
+          <p className="input-condition-message">
             존재하지 않는 아이디이거나 잘못된 비밀번호입니다.
           </p>
         ) : (
           <></>
         )}
         <button
-          className='button-big'
+          className="button-big"
           onClick={(e) => {
             e.preventDefault();
             login();
@@ -68,8 +68,8 @@ const Login = () => {
           로그인
         </button>
       </form>
-      <div className='login-helper'>
-        <button>아이디 찾기</button>
+      <div className="login-helper">
+        <button onClick={() => history.push('./findmyid')}>아이디 찾기</button>
         <button onClick={() => history.push('/signup')}>회원가입</button>
       </div>
     </>
