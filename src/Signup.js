@@ -10,7 +10,7 @@ import { InputBox, InputButtonBox } from './Input';
 import { useHistory } from 'react-router-dom';
 import { ReactComponent as Uncheckedbox } from './resources/checkbox_unchecked.svg';
 import {
-  idPattern,
+  usernamePattern,
   pwPattern,
   namePattern,
   emailPattern,
@@ -37,7 +37,7 @@ const Signup = () => {
   const checkValidForm = () => {
     return (
       !isDuplicateId &&
-      id.match(idPattern) &&
+      id.match(usernamePattern) &&
       pw.match(pwPattern) &&
       pw === pwAgain &&
       firstName.match(namePattern) &&
@@ -99,14 +99,14 @@ const Signup = () => {
   return (
     <>
       <Header>회원가입</Header>
-      <form className="signup-form">
+      <form className="card signup-form">
         <h3>SNUDAY에 오신 것을 환영합니다.</h3>
         <InputBox
           label="아이디"
           type="text"
           value={id}
           setValue={setId}
-          pattern={isDuplicateId ? /^$/ : idPattern}
+          pattern={isDuplicateId ? /^$/ : usernamePattern}
           message={
             isDuplicateId
               ? '이미 사용 중인 아이디입니다.'

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import ChannelList from './ChannelList';
-import { useAuthContext } from './context/AuthContext';
-import { SearchBox } from './Input';
+import ChannelList from 'channel/ChannelList';
+import { useAuthContext } from 'context/AuthContext';
+import { SearchBox } from 'Input';
 
 const SearchHome = () => {
   const searchOptions = { all: '전체', name: '이름', description: '소개' };
@@ -20,9 +20,7 @@ const SearchHome = () => {
           setSearchOption={setSearchOption}
         />
       </div>
-      <div className="card">
-        <ChannelList type={searchOption} keyword={searchValue} />
-      </div>
+      <ChannelList type={searchOption} keyword={searchValue} />
     </div>
   );
 };

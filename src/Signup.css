@@ -9,14 +9,6 @@ input[type='number'] {
   -moz-appearance: textfield;
 }
 
-.signup-form {
-  display: flex;
-  flex-direction: column;
-  padding: 0 32px;
-}
-.signup-form > * {
-  margin-bottom: 8px;
-}
 .signup-form > h3 {
   padding-left: 1rem;
 }

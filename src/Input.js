@@ -8,17 +8,22 @@ export const InputBox = ({
   pattern,
   message,
   showMessage,
+  children,
   ...rest
 }) => {
   const [showMsg, setShowMsg] = useState(showMessage);
   return (
     <div className="input-box">
-      {label || (message && showMsg) ? (
+      {label || message ? (
         <div className="input-box-label-container">
-          <label style={label ? {} : { paddingRight: '0' }}>{label}</label>
-          <span className="input-condition-message">
-            {showMsg && !value.match(pattern) ? message : ''}
-          </span>
+          {label ? (
+            <label style={label ? {} : { paddingRight: '0' }}>{label}</label>
+          ) : (
+            <></>
+          )}
+          <div className="input-condition-message">
+            {showMsg && !value.match(pattern) ? message : ` `}
+          </div>
         </div>
       ) : (
         <></>
@@ -43,6 +48,7 @@ export const InputBox = ({
         ></input>
         {button}
       </div>
+      {children}
     </div>
   );
 };
@@ -73,6 +79,7 @@ export const SearchBox = ({
   return (
     <div className="search-box" style={{ position: 'relative' }}>
       <InputBox
+        type="search"
         value={inputValue}
         setValue={setInputValue}
         onBlur={() => setSearchValue(() => inputValue)}

@@ -1,19 +1,22 @@
 import { useState } from 'react';
 import { Switch, Route } from 'react-router-dom';
-import Home from './Home';
-import Login from './Login';
-import Navigation from './Navigation';
-import Signup from './Signup';
-import './App.css';
-import MyPage from './MyPage';
-import { AuthProvider } from './context/AuthContext';
-import ChannelMain from './ChannelMain';
-import ChannelHome from './ChannelHome';
-import SearchHome from './SearchHome';
-import NoticeHome from './NoticeHome';
-import ChannelNotice from './ChannelNotice';
-import Notice from './Notice';
-import FindMyId from './FindMyId';
+import Home from 'Home';
+import Login from 'Login';
+import Navigation from 'Navigation';
+import Signup from 'Signup';
+import 'App.css';
+import MyPage from 'MyPage';
+import { AuthProvider } from 'context/AuthContext';
+import ChannelMain from 'channel/ChannelMain';
+import ChannelHome from 'channel/ChannelHome';
+import SearchHome from 'SearchHome';
+import NoticeHome from 'channel/NoticeHome';
+import ChannelNotice from 'channel/ChannelNotice';
+import Notice from 'channel/Notice';
+import FindMyId from 'FindMyId';
+import ChangeUsername from 'ChangeUsername';
+import ChangePassword from 'ChangePassword';
+import FindMyPassword from 'FindMyPassword';
 function copyTouch({ identifier, pageX, pageY }) {
   return { identifier, pageX, pageY };
 }
@@ -83,10 +86,18 @@ function App() {
       }
     }
   };
+  window.onresize = () => {
+    const NavBar = document.getElementById('navigation-bar');
+    const AddButton = document.getElementById('add-button');
+    NavBar.style.bottom = '-4.5rem';
+    if (AddButton) AddButton.style.bottom = '0';
+  };
   return (
     <AuthProvider>
       <Switch>
         <Route exact path="/" component={Home} />
+        <Route exact path="/mypage/ChangePw" component={ChangePassword} />
+        <Route exact path="/mypage/ChangeId" component={ChangeUsername} />
         <Route exact path="/mypage" component={MyPage} />
         <Route exact path="/notice" component={NoticeHome} />
         <Route exact path="/search" component={SearchHome} />
@@ -97,7 +108,7 @@ function App() {
         <Route exact path="/signup" component={Signup} />
         <Route exact path="/signin" component={Login} />
         <Route exact path="/findmyid" component={FindMyId} />
-        <Route exact path="/findmypw" component={FindMyId} />
+        <Route exact path="/findmypw" component={FindMyPassword} />
       </Switch>
       <Navigation />
     </AuthProvider>

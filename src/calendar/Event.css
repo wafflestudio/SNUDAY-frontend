@@ -1,0 +1,22 @@
+.event-container {
+  display: grid;
+  grid-template-columns: 2rem auto;
+  grid-template-rows: auto auto;
+  grid-auto-rows: minmax(min-content, max-content);
+}
+.event-color {
+  grid-column-start: 1;
+  grid-row: 1 / 2;
+  padding: 0.2rem 0.5rem;
+}
+.event-name {
+  grid-column-start: 2;
+  grid-row-start: 1;
+  font-weight: 600;
+}
+.event-date {
+  grid-column-start: 2;
+  grid-row-start: 2;
+  margin: 0;
+  font-weight: 500;
+}

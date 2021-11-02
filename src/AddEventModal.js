@@ -1,19 +1,48 @@
 import { useState, useEffect, useReducer } from 'react';
-import { postEvents } from './API';
-import { useAuthContext } from './context/AuthContext';
-import DateTimePicker from './DateTimePicker';
-import Modal from './Modal';
-import ToggleButton from './ToggleButton';
-const AddEventModalHeader = () => {
+import { patchEvent, postEvent } from 'API';
+import { useAuthContext } from 'context/AuthContext';
+import { useCalendarContext } from 'context/CalendarContext';
+import DateTimePicker from 'DateTimePicker';
+import Modal from 'Modal';
+import ToggleButton from 'ToggleButton';
+import Tag from 'Tag';
+import TagBar from 'calendar/TagBar';
+const AddEventModalHeader = ({ isModifying }) => {
   return (
     <>
-      <h3 className="title">새로운 일정</h3>
+      <h3 className="title">{isModifying ? '일정 고치기' : '새로운 일정'}</h3>
     </>
   );
 };
 const AddEventModalContent = ({ event, setEvent }) => {
+  const [isSettingChannel, setIsSettingChannel] = useState(false);
+  const {
+    value: { userInfo },
+  } = useAuthContext();
   return (
     <div className="event-input-container">
+      <Tag id={event.channel} onClick={() => setIsSettingChannel(true)} />
+      {isSettingChannel ? (
+        <TagBar
+          category="managing"
+          className="tagbar expand"
+          style={{
+            position: 'absolute',
+            top: '0',
+            left: '0',
+            width: '100%',
+            height: '100%',
+            backgroundColor: 'white',
+            padding: '12px 20px',
+          }}
+          onTagClick={(ch) => {
+            setEvent({ key: 'channel', value: ch });
+            setIsSettingChannel(false);
+          }}
+        />
+      ) : (
+        <></>
+      )}
       <input
         id="event-name"
         className="input-flat input-title"
@@ -25,31 +54,31 @@ const AddEventModalContent = ({ event, setEvent }) => {
       <div className="input-datetime-container">
         <label>시작</label>
         <DateTimePicker
-          date={event.startDate}
-          setDate={(date) => setEvent({ key: 'startDate', value: date })}
-          time={event.allDay ? undefined : event.startTime}
-          setTime={(time) => setEvent({ key: 'startTime', value: time })}
+          date={event.start_date}
+          setDate={(date) => setEvent({ key: 'start_date', value: date })}
+          time={event.has_time ? event.start_time : undefined}
+          setTime={(time) => setEvent({ key: 'start_time', value: time })}
         />
       </div>
       <div className="input-datetime-container">
         <label>종료</label>
         <DateTimePicker
-          date={event.endDate}
-          setDate={(date) => setEvent({ key: 'endDate', value: date })}
-          time={event.allDay ? undefined : event.endTime}
-          setTime={(time) => setEvent({ key: 'endTime', value: time })}
+          date={event.due_date}
+          setDate={(date) => setEvent({ key: 'due_date', value: date })}
+          time={event.has_time ? event.due_time : undefined}
+          setTime={(time) => setEvent({ key: 'due_time', value: time })}
         />
       </div>
       <div className="button-timeset">
         <label>하루 종일</label>
         <ToggleButton
-          value={event.allDay}
-          sendValue={(value) => setEvent({ key: 'allDay', value })}
+          value={!event.has_time}
+          sendValue={(value) => setEvent({ key: 'has_time', value: !value })}
         />
       </div>
       <textarea
         className="event-memo"
-        value={event.memo}
+        value={event.memo ?? ''}
         onChange={(e) => setEvent({ key: 'memo', value: e.target.value })}
         placeholder="메모"
       ></textarea>
@@ -66,11 +95,11 @@ const AddEventModalButton = ({ addEvent }) => {
     </div>
   );
 };
-const AddEventModal = ({ isActive, date }) => {
+const AddEventModal = ({ isActive, date, event: existingEvent }) => {
   const {
     value: { userInfo },
   } = useAuthContext();
-  console.log(userInfo);
+  const { fetchEvents } = useCalendarContext();
   const today = new Date();
   const initialDate = date
     ? date
@@ -78,15 +107,31 @@ const AddEventModal = ({ isActive, date }) => {
         2,
         '0'
       )}-${(today.getDate() + '').padStart(2, '0')}`;
-  const initialState = {
-    title: '',
-    allDay: false,
-    startDate: initialDate,
-    startTime: `${(((today.getHours() + 1) % 24) + '').padStart(2, '0')}:00`,
-    endDate: initialDate,
-    endTime: `${(((today.getHours() + 2) % 24) + '').padStart(2, '0')}:00`,
-    memo: '',
-  };
+  const initialState = existingEvent
+    ? {
+        ...existingEvent,
+        start_date: existingEvent.start_date.toISOString().substring(0, 10),
+        due_date: existingEvent.due_date.toISOString().substring(0, 10),
+        start_time: existingEvent.start_time
+          ? existingEvent.start_time.substring(0, 5)
+          : `${(((today.getHours() + 1) % 24) + '').padStart(2, '0')}:00`,
+        due_time: existingEvent.due_time
+          ? existingEvent.due_time.substring(0, 5)
+          : `${(((today.getHours() + 2) % 24) + '').padStart(2, '0')}:00`,
+      }
+    : {
+        channel: userInfo.my_channel,
+        title: '',
+        has_time: true,
+        start_date: initialDate,
+        start_time: `${(((today.getHours() + 1) % 24) + '').padStart(
+          2,
+          '0'
+        )}:00`,
+        due_date: initialDate,
+        due_time: `${(((today.getHours() + 2) % 24) + '').padStart(2, '0')}:00`,
+        memo: '',
+      };
   const reducer = (state, action) => {
     const key = action.key;
     const value = action.value;
@@ -98,40 +143,46 @@ const AddEventModal = ({ isActive, date }) => {
   };
   const [event, setEvent] = useReducer(reducer, initialState);
   useEffect(() => {
-    if (new Date(event.startDate) > new Date(event.endDate))
-      setEvent({ key: 'endDate', value: event.startDate });
-  }, [event.startDate]);
+    if (new Date(event.start_date) > new Date(event.due_date))
+      setEvent({ key: 'due_date', value: event.start_date });
+  }, [event.start_date]);
   useEffect(() => {
-    if (new Date(event.startDate) > new Date(event.endDate))
-      setEvent({ key: 'startDate', value: event.endDate });
-  }, [event.endDate]);
+    if (new Date(event.start_date) > new Date(event.due_date))
+      setEvent({ key: 'start_date', value: event.due_date });
+  }, [event.due_date]);
   useEffect(() => {
-    if (event.startDate === event.endDate && event.startTime > event.endTime)
-      setEvent({ key: 'endTime', value: event.startTime });
-  }, [event.startTime]);
+    if (
+      event.start_date === event.due_date &&
+      event.start_time > event.due_time
+    )
+      setEvent({ key: 'due_time', value: event.start_time });
+  }, [event.start_time]);
   useEffect(() => {
-    if (event.startDate === event.endDate && event.startTime > event.endTime)
-      setEvent({ key: 'startTime', value: event.endTime });
-  }, [event.endTime]);
+    if (
+      event.start_date === event.due_date &&
+      event.start_time > event.due_time
+    )
+      setEvent({ key: 'start_time', value: event.due_time });
+  }, [event.due_time]);
   const addEvent = () => {
     if (event.title === '') setEvent({ key: 'title', value: '새 일정' });
     let newEvent = {
       ...event,
       title: event.title === '' ? '새 일정' : event.title,
     };
-    delete Object.assign(newEvent, { has_time: !event.allDay }).allDay;
-    delete Object.assign(newEvent, { start_date: event.startDate }).startDate;
-    delete Object.assign(newEvent, { start_time: event.startTime }).startTime;
-    delete Object.assign(newEvent, { due_date: event.endDate }).endDate;
-    delete Object.assign(newEvent, { due_time: event.endTime }).endTime;
-    delete Object.assign(newEvent, { memo: event.memo ?? null }).memo;
-
-    postEvents(userInfo.my_channel, newEvent).then(console.log);
+    if (newEvent.memo === '') delete newEvent.memo;
+    (existingEvent ? patchEvent : postEvent)(newEvent.channel, newEvent).then(
+      (event) => {
+        console.log(event);
+        fetchEvents();
+        isActive(false);
+      }
+    );
   };
   return (
     <Modal
       isActive={isActive}
-      header={<AddEventModalHeader />}
+      header={<AddEventModalHeader isModifying={!!existingEvent} />}
       content={<AddEventModalContent event={event} setEvent={setEvent} />}
       button={<AddEventModalButton addEvent={addEvent} />}
     ></Modal>

@@ -1,5 +1,10 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { getManagingChannels, getSubscribedChannels, getUserMe } from '../API';
+import {
+  getManagingChannels,
+  getSubscribedChannels,
+  getAwaitingChannels,
+  getUserMe,
+} from '../API';
 const AuthContext = React.createContext();
 const AuthProvider = (props) => {
   const setToken = ({ access, refresh }) => {
@@ -22,11 +27,13 @@ const AuthProvider = (props) => {
     const userInfo = await getUserMe();
     const managingChannels = await getManagingChannels();
     const subscribingChannels = await getSubscribedChannels();
+    const awaitingChannels = await getAwaitingChannels();
     const myChannel = managingChannels.find((channel) => channel.is_personal);
     const newUserInfo = {
       ...userInfo,
       managing_channels: new Set(managingChannels.map((ch) => ch.id)),
       subscribing_channels: new Set(subscribingChannels.map((ch) => ch.id)),
+      awaiting_channels: new Set(awaitingChannels.map((ch) => ch.id)),
       my_channel: myChannel.id,
     };
     console.log(newUserInfo);
@@ -41,7 +48,7 @@ const AuthProvider = (props) => {
     refresh: undefined,
     userInfo: null,
   };
-  const action = { setToken, setIsLoggedIn, setUserInfo };
+  const action = { setToken, setIsLoggedIn, setUserInfo, initUserInfo };
   const [state, setState] = useState({ value: defaultValue, action });
   useEffect(() => {
     initUserInfo();

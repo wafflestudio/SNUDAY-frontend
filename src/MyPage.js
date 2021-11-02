@@ -31,7 +31,7 @@ const MyPage = () => {
               <div>{`${name} 님`}</div>
               <div>{userInfo.username}</div>
             </li>
-            <li>
+            <li onClick={() => history.push('/mypage/ChangeId')}>
               아이디 변경{' '}
               <img
                 className="arrow"
@@ -39,7 +39,7 @@ const MyPage = () => {
                 alt="more"
               />
             </li>
-            <li>
+            <li onClick={() => history.push('/mypage/ChangePw')}>
               비밀번호 변경{' '}
               <img
                 className="arrow"

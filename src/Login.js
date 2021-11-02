@@ -69,7 +69,8 @@ const Login = () => {
         </button>
       </form>
       <div className="login-helper">
-        <button onClick={() => history.push('./findmyid')}>아이디 찾기</button>
+        <button onClick={() => history.push('/findmyid')}>아이디 찾기</button>
+        <button onClick={() => history.push('/findmypw')}>비밀번호 찾기</button>
         <button onClick={() => history.push('/signup')}>회원가입</button>
       </div>
     </>

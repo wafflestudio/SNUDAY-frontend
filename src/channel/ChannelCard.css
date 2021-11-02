@@ -1,0 +1,62 @@
+.channel-list {
+  overflow: hidden;
+}
+.channel-card {
+  background-color: white;
+  display: flex;
+  align-items: flex-start;
+  align-content: stretch;
+  padding: 10px 15px;
+  border-bottom: 1px solid #dddddd;
+}
+.channel-image-with-button {
+  display: flex;
+  flex-direction: column;
+}
+.channel-image-with-button > * {
+  width: 100%;
+}
+.channel-image-with-button > *:not(:last-child) {
+  margin-bottom: 5px;
+}
+.channel-card-image {
+  object-fit: cover;
+  clip-path: circle();
+  height: 64px;
+  width: 64px;
+}
+.channel-card-info {
+  flex-basis: 100%;
+  padding-left: 10px;
+  padding-top: 2px;
+}
+.channel-card-info > *:not(:last-child) {
+  margin-bottom: 3px;
+}
+.channel-card-info-row {
+  display: flex;
+  align-items: center;
+}
+.channel-card-info-row > *:not(:last-child) {
+  margin-right: 0.5rem;
+}
+.channel-card-info-row svg {
+  height: 100%;
+}
+.channel-card-name {
+  font-weight: 500;
+  padding: 0.25rem 0.5rem;
+  border-radius: 1.25rem;
+  border: 1px solid #dddddd;
+  background-color: white;
+}
+.channel-card-subscribers {
+  font-size: 0.8rem;
+  line-height: 1rem;
+  /* max-height: 2rem; */
+  /* overflow: hidden;
+  text-overflow: ellipsis; */
+  color: #4d4d4d;
+  padding-left: 0.5rem;
+  flex-basis: 100%;
+}

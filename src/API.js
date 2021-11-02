@@ -28,6 +28,18 @@ export const loginUser = (data) =>
         reject(e.response.status);
       });
   });
+export const searchUser = (username) =>
+  new Promise((resolve, reject) => {
+    axios
+      .get(`users/search/`, { params: { type: 'username', q: username } })
+      .then((response) => {
+        resolve(response.data);
+      })
+      .catch((e) => {
+        logError(e);
+        reject(e);
+      });
+  });
 export const getUser = (id) =>
   new Promise((resolve, reject) => {
     axios
@@ -35,7 +47,10 @@ export const getUser = (id) =>
       .then((response) => {
         resolve(response.data);
       })
-      .catch(logError);
+      .catch((e) => {
+        logError(e);
+        reject(e);
+      });
   });
 export const getUserMe = () =>
   new Promise((resolve, reject) => {
@@ -44,7 +59,10 @@ export const getUserMe = () =>
       .then((response) => {
         resolve(response.data);
       })
-      .catch(logError);
+      .catch((e) => {
+        logError(e);
+        reject(e);
+      });
   });
 export const sendAuthEmail = (addr) =>
   new Promise((resolve, reject) => {
@@ -79,11 +97,33 @@ export const findUserId = (addr) =>
         reject(e);
       });
   });
-export const findUserPassword = (addr) =>
+export const findUserPassword = (user) =>
   new Promise((resolve, reject) => {
-    const email_prefix = addr.slice(0, addr.indexOf('@'));
+    user.email_prefix = user.email.slice(0, user.email.indexOf('@'));
+    delete user.email;
+    console.table(user);
     axios
-      .post('/users/find/password/', { email_prefix })
+      .post('/users/find/password/', user)
+      .then((response) => resolve(response.data))
+      .catch((e) => {
+        logError(e);
+        reject(e);
+      });
+  });
+export const patchUser = (user) =>
+  new Promise((resolve, reject) => {
+    axios
+      .patch('/users/me/', user)
+      .then((response) => resolve(response.data))
+      .catch((e) => {
+        logError(e);
+        reject(e);
+      });
+  });
+export const patchUserPassword = (data) =>
+  new Promise((resolve, reject) => {
+    axios
+      .patch('/users/me/change_password/', data)
       .then((response) => resolve(response.data))
       .catch((e) => {
         logError(e);
@@ -122,9 +162,12 @@ export const getMyEvents = (date) =>
       .then((response) => {
         resolve(response.data);
       })
-      .catch(logError);
+      .catch((e) => {
+        logError(e);
+        reject(e);
+      });
   });
-export const postEvents = (channelId, event) =>
+export const postEvent = (channelId, event) =>
   new Promise((resolve, reject) => {
     console.log(event);
     axios
@@ -132,7 +175,35 @@ export const postEvents = (channelId, event) =>
       .then((response) => {
         resolve(response.data);
       })
-      .catch(logError);
+      .catch((e) => {
+        logError(e);
+        reject(e);
+      });
+  });
+export const deleteEvent = (channelId, eventId) =>
+  new Promise((resolve, reject) => {
+    axios
+      .delete(`channels/${channelId}/events/${eventId}/`)
+      .then((response) => {
+        resolve(response.data);
+      })
+      .catch((e) => {
+        logError(e);
+        reject(e);
+      });
+  });
+export const patchEvent = (channelId, event) =>
+  new Promise((resolve, reject) => {
+    console.log(event);
+    axios
+      .patch(`channels/${channelId}/events/${event.id}/`, event)
+      .then((response) => {
+        resolve(response.data);
+      })
+      .catch((e) => {
+        logError(e);
+        reject(e);
+      });
   });
 export const getChannelEvents = ({ channelId, date }) =>
   new Promise((resolve, reject) => {
@@ -141,7 +212,10 @@ export const getChannelEvents = ({ channelId, date }) =>
       .then((response) => {
         resolve(response.data);
       })
-      .catch(logError);
+      .catch((e) => {
+        logError(e);
+        reject(e);
+      });
   });
 export const subscribeChannel = (id) => {
   return new Promise((resolve, reject) => {
@@ -150,7 +224,10 @@ export const subscribeChannel = (id) => {
       .then((response) => {
         resolve(response.data);
       })
-      .catch(logError);
+      .catch((e) => {
+        logError(e);
+        reject(e);
+      });
   });
 };
 export const unsubscribeChannel = (id) => {
@@ -160,9 +237,24 @@ export const unsubscribeChannel = (id) => {
       .then((response) => {
         resolve(response.data);
       })
-      .catch(logError);
+      .catch((e) => {
+        logError(e);
+        reject(e);
+      });
   });
 };
+export const getAwaitingChannels = () =>
+  new Promise((resolve, reject) => {
+    axios
+      .get(`users/me/awaiting_channels/`)
+      .then((response) => {
+        resolve(response.data);
+      })
+      .catch((e) => {
+        logError(e);
+        reject(e);
+      });
+  });
 export const getSubscribedChannels = () =>
   new Promise((resolve, reject) => {
     axios
@@ -170,7 +262,10 @@ export const getSubscribedChannels = () =>
       .then((response) => {
         resolve(response.data);
       })
-      .catch(logError);
+      .catch((e) => {
+        logError(e);
+        reject(e);
+      });
   });
 export const getManagingChannels = () =>
   new Promise((resolve, reject) => {
@@ -179,25 +274,41 @@ export const getManagingChannels = () =>
       .then((response) => {
         resolve(response.data);
       })
-      .catch(logError);
+      .catch((e) => {
+        logError(e);
+        reject(e);
+      });
   });
-export const searchChannels = ({ type, q }) =>
+export const searchChannels = ({ type, q, cursor }) =>
   new Promise((resolve, reject) => {
+    cursor = cursor?.substring(cursor.indexOf('?cursor='));
     axios
-      .get(`channels/search/`, { params: { type, q } })
+      .get(`channels/search/${cursor ?? ''}`, {
+        params: {
+          type,
+          q,
+        },
+      })
       .then((response) => {
         resolve(response.data);
       })
-      .catch(logError);
+      .catch((e) => {
+        logError(e);
+        reject(e);
+      });
   });
-export const getChannels = () =>
+export const getChannels = (cursor) =>
   new Promise((resolve, reject) => {
+    cursor = cursor?.substring(cursor.indexOf('?cursor='));
     axios
-      .get(`channels/`)
+      .get(`channels/${cursor ?? ''}`)
       .then((response) => {
         resolve(response.data);
       })
-      .catch(logError);
+      .catch((e) => {
+        logError(e);
+        reject(e);
+      });
   });
 export const getChannel = (id) =>
   new Promise((resolve, reject) => {
@@ -206,31 +317,59 @@ export const getChannel = (id) =>
       .then((response) => {
         resolve(response.data);
       })
-      .catch(logError);
+      .catch((e) => {
+        logError(e);
+        reject(e);
+      });
   });
 
 export const addChannel = (data) =>
   new Promise((resolve, reject) => {
     axios
-      .post('channels/', data)
+      .post('channels/', data, {
+        headers: { 'content-type': 'multipart/form-data' },
+      })
       .then((response) => resolve(response.data))
-      .catch(logError);
+      .catch((e) => {
+        logError(e);
+        reject(e);
+      });
+  });
+export const patchChannel = (data) =>
+  new Promise((resolve, reject) => {
+    console.log(data);
+    axios
+      .patch(`channels/${data.get('id')}/`, data, {
+        headers: { 'content-type': 'multipart/form-data' },
+      })
+      .then((response) => resolve(response.data))
+      .catch((e) => {
+        logError(e);
+        reject(e);
+      });
   });
 
 //NOTICES
 export const getUserNotices = ({ cursor }) =>
   new Promise((resolve, reject) => {
+    cursor = cursor?.substring(cursor.indexOf('?cursor='));
+
     axios
-      .get(`users/me/notices/`, { params: {} })
+      .get(`users/me/notices/${cursor ?? ''}`, { params: {} })
       .then((response) => {
         resolve(response.data);
       })
-      .catch(logError);
+      .catch((e) => {
+        logError(e);
+        reject(e);
+      });
   });
 export const searchUserNotices = ({ type, q, cursor }) =>
   new Promise((resolve, reject) => {
+    cursor = cursor?.substring(cursor.indexOf('?cursor='));
+
     axios
-      .get(`users/me/notices/search/`, { params: { type, q } })
+      .get(`users/me/notices/search/${cursor ?? ''}`, { params: { type, q } })
       .then((response) => {
         resolve(response.data);
       })
@@ -238,12 +377,17 @@ export const searchUserNotices = ({ type, q, cursor }) =>
   });
 export const getChannelNotices = ({ id, cursor }) =>
   new Promise((resolve, reject) => {
+    cursor = cursor?.substring(cursor.indexOf('?cursor='));
+
     axios
-      .get(`channels/${id}/notices/`, { params: {} })
+      .get(`channels/${id}/notices/${cursor ?? ''}`, { params: {} })
       .then((response) => {
         resolve(response.data);
       })
-      .catch(logError);
+      .catch((e) => {
+        logError(e);
+        reject(e);
+      });
   });
 export const getNotice = ({ channelId, noticeId }) =>
   new Promise((resolve, reject) => {
@@ -258,7 +402,10 @@ export const getNotice = ({ channelId, noticeId }) =>
           })
           .then(resolve);
       })
-      .catch(logError);
+      .catch((e) => {
+        logError(e);
+        reject(e);
+      });
   });
 export const deleteNotice = ({ channelId, noticeId }) =>
   new Promise((resolve, reject) => {
@@ -267,7 +414,10 @@ export const deleteNotice = ({ channelId, noticeId }) =>
       .then((response) => {
         resolve(response.data);
       })
-      .catch(logError);
+      .catch((e) => {
+        logError(e);
+        reject(e);
+      });
   });
 export const postNotice = ({ title, contents, channelId }) =>
   new Promise((resolve, reject) => {
@@ -276,7 +426,10 @@ export const postNotice = ({ title, contents, channelId }) =>
       .then((response) => {
         resolve(response.data);
       })
-      .catch(logError);
+      .catch((e) => {
+        logError(e);
+        reject(e);
+      });
   });
 export const patchNotice = ({ title, contents, channelId, noticeId }) =>
   new Promise((resolve, reject) => {
@@ -285,5 +438,8 @@ export const patchNotice = ({ title, contents, channelId, noticeId }) =>
       .then((response) => {
         resolve(response.data);
       })
-      .catch(logError);
+      .catch((e) => {
+        logError(e);
+        reject(e);
+      });
   });

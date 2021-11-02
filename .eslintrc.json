@@ -1,6 +1,6 @@
 {
   "extends": ["react-app", "react-app/jest"],
-  "rules": { "curly": [2, "multi"] },
+  "rules": { "curly": ["warn", "multi"] },
   "overrides": [
     {
       "files": ["**/*.js?(x)"],

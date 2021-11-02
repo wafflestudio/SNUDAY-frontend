@@ -33,11 +33,18 @@
 .login-helper {
   display: flex;
   justify-content: center;
+  justify-content: space-evenly;
+  margin: 0 auto;
+  padding: 0 48px;
+  max-width: 480px;
 }
-.login-helper > * {
-  margin: 0.5rem 1rem;
+.login-helper > button {
   background-color: transparent;
   border: none;
+  font-size: 0.8rem;
   color: #b8b8b8;
   text-decoration: underline;
+}
+.login-helper > button:active {
+  border: none;
 }
