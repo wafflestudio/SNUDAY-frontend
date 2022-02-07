@@ -1,4 +1,5 @@
 .eventbar {
+  z-index: 1;
   height: 1rem;
   overflow: hidden;
   color: white;

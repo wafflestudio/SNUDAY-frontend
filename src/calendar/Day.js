@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { useCalendarContext } from 'context/CalendarContext';
 import DayEventsModal from './DayEventsModal';
 import EventBar from './EventBar';
-const Day = ({ events, eventPositions, year, monthIndex, day }) => {
+const Day = ({ year, monthIndex, day, events, eventPositions }) => {
   const date = new Date(year, monthIndex, day);
   const [showEvent, setShowEvent] = useState(false);
   const { calendar, getNumDays, setDay } = useCalendarContext();
@@ -15,15 +15,26 @@ const Day = ({ events, eventPositions, year, monthIndex, day }) => {
   //api/v1/channels/{channel_id}/events/?date=2021-03-16
   const { getMonthEvents } = useCalendarContext();
   // console.log('events', date.getDate(), events);
+  //event numbers
+  let overflow = false;
   let dayEvents = events?.dayEventsMap.get(date.getDate());
-  let maxPos = 0;
+  if (dayEvents) {
+    dayEvents = [...dayEvents];
+    for (const e of dayEvents) {
+      if (eventPositions.get(e) > 4) {
+        overflow = true;
+        break;
+      }
+    }
+  }
+
+  //events showing on display
   let showingDayEvents = dayEvents
-    ? [...dayEvents].filter((e) => {
-        if (eventPositions.get(e) === 4) maxPos = 4;
-        return eventPositions.get(e) < 5;
-      })
+    ? overflow
+      ? dayEvents.filter((e) => eventPositions.get(e) < 4)
+      : dayEvents
     : [];
-  if (maxPos === 4 && dayEvents?.length - showingDayEvents.length > 0)
+  if (overflow && dayEvents?.length - showingDayEvents.length > 0)
     showingDayEvents.slice(0, -1);
   //const dayEvents = getMonthEvents(date.getMonth()).get(date.getDate());
   // const dayEvents =
@@ -39,30 +50,44 @@ const Day = ({ events, eventPositions, year, monthIndex, day }) => {
         setShowEvent(true);
       }}
     >
-      <div className={dateClass}>
-        <span>{date.getDate()}</span>
-        <span className="holiday"> {holiday}</span>
-      </div>
-      <div className="day-todo-box">
-        {showingDayEvents.map((eventNo) => (
-          <EventBar
-            eventNo={eventNo}
-            date={date}
-            pos={eventPositions.get(eventNo)}
-          />
-        ))}
-        {dayEvents && dayEvents.length - showingDayEvents.length > 0 ? (
-          <div className="eventbar" style={{ color: 'black' }}>{`+${
-            dayEvents.length - showingDayEvents.length - (maxPos === 4)
-          }개...`}</div>
-        ) : (
-          <></>
-        )}
-      </div>
-      {showEvent ? (
-        <DayEventsModal isActive={setShowEvent} date={date} />
-      ) : (
+      {day < 1 || day > getNumDays(year, monthIndex) ? (
         <></>
+      ) : (
+        <>
+          <div className={dateClass}>
+            <span>{date.getDate()}</span>
+            <span className="holiday"> {holiday}</span>
+          </div>
+          <div className="day-todo-box">
+            {showingDayEvents.map((eventNo) => (
+              <EventBar
+                key={eventNo}
+                eventNo={eventNo}
+                date={date}
+                pos={eventPositions.get(eventNo)}
+              />
+            ))}
+            {overflow ? (
+              <div
+                className="eventbar"
+                style={{
+                  position: 'absolute',
+                  transform: `translateY(${4 * 105}%)`,
+                  color: 'black',
+                }}
+              >{`+${
+                dayEvents.length - showingDayEvents.length - (overflow === 4)
+              }개`}</div>
+            ) : (
+              <></>
+            )}
+          </div>
+          {showEvent ? (
+            <DayEventsModal isActive={setShowEvent} date={date} />
+          ) : (
+            <></>
+          )}
+        </>
       )}
     </div>
   );

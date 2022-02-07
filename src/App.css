@@ -7,14 +7,38 @@
 .grey-text {
   color: #4d4d4d;
 }
+.loading {
+  background: linear-gradient(90deg, #b8b8b8, 40%, #fff 45% 55%, 60%, #b8b8b8);
+  background-size: 200%;
+  animation: Animation 2s linear infinite;
+}
+@keyframes Animation {
+  0% {
+    background-position: 100% 0%;
+  }
+  100% {
+    background-position: -100% 0%;
+  }
+}
 .main-container {
   display: flex;
-  min-height: 100vh;
   flex-direction: column;
   background-color: #ededed;
 }
 .main-container > * {
   margin-bottom: 10px;
+}
+.avatar {
+  object-fit: cover;
+  clip-path: circle();
+  height: 64px;
+  width: 64px;
+}
+.avatar-small {
+  object-fit: cover;
+  clip-path: circle();
+  height: 30px;
+  width: 30px;
 }
 .card {
   background-color: white;
@@ -43,9 +67,14 @@
     'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;
   box-sizing: border-box;
 }
+html {
+  scroll-behavior: smooth;
+}
 #root {
   font-size: 16px;
   min-height: 100vh;
+  background-color: #ededed;
+  overflow: hidden;
 }
 
 code {
@@ -112,20 +141,21 @@ button {
   padding: 0.25rem 0.5rem;
   border-radius: 1.5rem;
   border: 1px solid #3b77ff;
-  background-color: rgb(59, 119, 255);
+  background-color: #3b77ff;
   color: white;
   outline: none;
+  user-select: none;
+}
+button:active {
+  background-color: white;
+  color: #3b77ff;
+  border-color: #3b77ff;
+  font-weight: bold;
 }
 button:disabled {
   background-color: #dddddd;
   color: white;
   border: 1px solid #dddddd;
-}
-button:not(:disabled):active {
-  background-color: white;
-  color: #3b77ff;
-  border-color: #3b77ff;
-  font-weight: bold;
 }
 .button-big {
   height: 3rem;
@@ -145,6 +175,16 @@ button:not(:disabled):active {
 .button-blue:active {
   background-color: #3b77ff;
   color: white;
+}
+.button-delete {
+  background-color: white;
+  border-color: #f93822;
+  color: #f93822;
+}
+.button-delete:active {
+  background-color: #f93822;
+  color: white;
+  border-color: #f93822;
 }
 .button-grey {
   background-color: white;
@@ -168,17 +208,20 @@ button:not(:disabled):active {
 button:active {
   opacity: 0.8;
 }
-
+.header-background {
+  height: 3rem;
+}
 .header {
-  z-index: 1;
-  position: sticky;
+  z-index: 99;
+  position: fixed;
   top: 0;
-
-  bottom: calc(100vh - 4rem);
-  height: 3.2rem;
-  line-height: 3.2rem;
+  width: 100vw;
+  height: 3rem;
+  line-height: 3rem;
   border-bottom: 1px solid #b8b8b8;
-  background-color: white;
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  backdrop-filter: saturate(180%) blur(20px);
+  background-color: hsla(0, 0%, 100%, 0.72);
   text-align: center;
   font-size: 1.4rem;
   font-weight: bold;
@@ -234,7 +277,7 @@ input:not([type='checkbox']):not([type='radio']) {
   line-height: 1rem;
 }
 .input-condition-message {
-  color: red;
+  color: #f93822;
   font-size: 0.7rem;
   line-height: 0.7rem;
   height: 0.7rem;
@@ -254,8 +297,6 @@ input:not([type='checkbox']):not([type='radio']) {
   bottom: 0;
   background-color: white;
   z-index: 200;
-}
-ul.dropdown > li {
 }
 .input-round {
   border: 1px solid #dddddd;
@@ -298,9 +339,6 @@ ul.dropdown > li {
   line-height: 1rem;
   border-radius: 0.725rem;
 }
-.userlist > li:active {
-  background-color: #dddddd;
-}
 .menu-list {
   margin: 0;
   padding: 0;
@@ -314,4 +352,7 @@ ul.dropdown > li {
 }
 .menu-list > li:not(:last-child) {
   border-bottom: 1px solid #dddddd;
+}
+.selectable:active {
+  background: linear-gradient(#ddd, #eee, #ddd);
 }

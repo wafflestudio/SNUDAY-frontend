@@ -8,6 +8,7 @@ const NoticeCard = ({ notice, includeChannelName }) => {
   const history = useHistory();
   return (
     <li
+      className="selectable card"
       onClick={() =>
         history.push(`/channel/${notice.channel}/notice/${notice.id}`)
       }
@@ -85,24 +86,21 @@ const NoticeList = ({ channelId, type, keyword, limit, ...rest }) => {
   useEffect(() => {
     fetchNotices();
   }, [channelId, type, keyword, limit, userInfo]);
+  if (!notices?.results) return <></>;
   return (
     <ul ref={listRef} className="notice-list" {...rest}>
-      {notices?.results ? (
-        notices.results.length !== 0 ? (
-          notices.results
-            .slice(0, limit)
-            .map((notice) => (
-              <NoticeCard
-                key={notice.id}
-                notice={notice}
-                includeChannelName={!channelId}
-              />
-            ))
-        ) : (
-          <div className="error">공지사항이 없습니다.</div>
-        )
+      {notices.results.length !== 0 ? (
+        notices.results
+          .slice(0, limit)
+          .map((notice) => (
+            <NoticeCard
+              key={notice.id}
+              notice={notice}
+              includeChannelName={!channelId}
+            />
+          ))
       ) : (
-        <div className="error"></div>
+        <div className="error">공지사항이 없습니다.</div>
       )}
     </ul>
   );

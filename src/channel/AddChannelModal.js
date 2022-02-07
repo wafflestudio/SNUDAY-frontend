@@ -33,7 +33,7 @@ const ImageSelector = ({ image, setImage }) => {
       }}
     >
       <img
-        className="channel-card-image"
+        className="avatar"
         src={
           image
             ? typeof image === 'string'
@@ -310,7 +310,30 @@ const AddChannelModal = ({ isActive, init }) => {
         initUserInfo();
         isActive(false);
       })
-      .catch((e) => alert(Object.values(e.response.data)));
+      .catch((e) => {
+        let error = e.response.data;
+        if (typeof error === 'string') {
+          alert(error);
+          return;
+        }
+        let message = '';
+        for (const [key, value] of Object.entries(error)) {
+          switch (key) {
+            case 'name':
+              message += `채널 이름: ${value}\n`;
+              break;
+            case 'description':
+              message += `채널 소개: ${value}\n`;
+              break;
+            case 'error':
+              message += `${value}\n`;
+              break;
+            default:
+              message += `${key}: ${value}\n`;
+          }
+        }
+        alert(message);
+      });
   };
   return (
     <Modal

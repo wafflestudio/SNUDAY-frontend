@@ -1,5 +1,8 @@
 .channel-list {
-  overflow: hidden;
+  /* overflow: auto; */
+}
+.channel-list > li {
+  background: linear-gradient(#ddd, #eee, #ddd);
 }
 .channel-card {
   background-color: white;
@@ -13,19 +16,14 @@
   display: flex;
   flex-direction: column;
 }
-.channel-image-with-button > * {
-  width: 100%;
-}
 .channel-image-with-button > *:not(:last-child) {
   margin-bottom: 5px;
 }
-.channel-card-image {
-  object-fit: cover;
-  clip-path: circle();
-  height: 64px;
-  width: 64px;
-}
+
 .channel-card-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
   flex-basis: 100%;
   padding-left: 10px;
   padding-top: 2px;
@@ -36,6 +34,7 @@
 .channel-card-info-row {
   display: flex;
   align-items: center;
+  height: 2rem;
 }
 .channel-card-info-row > *:not(:last-child) {
   margin-right: 0.5rem;

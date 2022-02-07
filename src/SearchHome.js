@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import ChannelList from 'channel/ChannelList';
 import { useAuthContext } from 'context/AuthContext';
 import { SearchBox } from 'Input';
+import Header from 'Header';
 
 const SearchHome = () => {
   const searchOptions = { all: '전체', name: '이름', description: '소개' };
@@ -11,17 +12,20 @@ const SearchHome = () => {
     value: { isLoggedIn },
   } = useAuthContext();
   return (
-    <div className="main-container">
-      <div style={{ padding: ' 0 20px', margin: '20px 0' }}>
-        <SearchBox
-          searchValue={searchValue}
-          setSearchValue={setSearchValue}
-          searchOptions={searchOptions}
-          setSearchOption={setSearchOption}
-        />
+    <>
+      <Header left={<></>}>채널 찾기</Header>
+      <div className="main-container">
+        <div style={{ padding: ' 0 20px', margin: '20px 0' }}>
+          <SearchBox
+            searchValue={searchValue}
+            setSearchValue={setSearchValue}
+            searchOptions={searchOptions}
+            setSearchOption={setSearchOption}
+          />
+        </div>
+        <ChannelList type={searchOption} keyword={searchValue} />
       </div>
-      <ChannelList type={searchOption} keyword={searchValue} />
-    </div>
+    </>
   );
 };
 

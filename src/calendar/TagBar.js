@@ -9,7 +9,7 @@ const colors = {
   yellow: '#f3c550',
   green: '#b2d652',
 };
-const TagBar = ({ category, onTagClick, ...props }) => {
+const TagBar = ({ category, onTagClick, isMain, ...props }) => {
   const { disabledChannels, setDisabledChannels } = useCalendarContext();
   const [channels, setChannels] = useState([]);
   const {
@@ -53,15 +53,22 @@ const TagBar = ({ category, onTagClick, ...props }) => {
     }
   }, [userInfo]);
   return (
-    <ul className="tagbar" {...props}>
+    <ul className={`tagbar${isMain ? ' main' : ''}`} {...props}>
       {channels?.map((key) => (
         <Tag
+          readonly={false}
+          key={key}
           id={key}
           onClick={() => (onTagClick ? onTagClick(key) : undefined)}
           disabled={category === 'active' && disabledChannels.includes(key)}
         />
       ))}
-      <div className="tag plus">+</div>
+      {/* <div
+        className="plus"
+        onClick={(e) => e.target.parentElement.classList.toggle('expand')}
+      >
+        +
+      </div> */}
     </ul>
   );
 };

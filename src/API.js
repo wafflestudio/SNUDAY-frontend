@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { useAuthContext } from './context/AuthContext';
 
 const logError = (error) => {
   const log = error?.response;
@@ -13,6 +12,22 @@ axios.defaults.headers['Accept'] = 'application/json';
 axios.defaults.baseURL =
   'http://ec2-52-79-115-201.ap-northeast-2.compute.amazonaws.com/api/v1/';
 //USERS
+export const refresh = () =>
+  new Promise((resolve, reject) => {
+    const token = localStorage.getItem('refresh');
+    if (!token) reject('no refresh token available');
+    axios
+      .post('users/refresh/', { refresh: token })
+      .then((response) => {
+        axios.defaults.headers[
+          'Authorization'
+        ] = `Bearer ${response.data.access}`;
+        resolve(response.data);
+      })
+      .catch((e) => {
+        reject(e.response.status);
+      });
+  });
 export const loginUser = (data) =>
   new Promise((resolve, reject) => {
     axios
@@ -22,10 +37,12 @@ export const loginUser = (data) =>
         axios.defaults.headers[
           'Authorization'
         ] = `Bearer ${response.data.access}`;
-        resolve(response.data);
+        localStorage.setItem('refresh', response.data.refresh);
+        resolve(response?.data);
       })
       .catch((e) => {
-        reject(e.response.status);
+        console.log(e);
+        reject(e.response?.status);
       });
   });
 export const searchUser = (username) =>

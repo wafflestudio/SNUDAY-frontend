@@ -25,8 +25,10 @@ export const CalendarContextProvider = ({ value, children }) => {
     return 32 - new Date(year, month, 32).getDate();
   };
   useEffect(() => {
+    if (!userInfo) return;
     const colors = Object.keys(COLORS);
-    const savedColors = localStorage.getItem(channelColors);
+    const savedColors = localStorage.getItem('channelColors');
+    console.log('savedColors', savedColors);
     if (savedColors) {
       const presetColors = new Map(JSON.parse(savedColors));
       userInfo?.subscribing_channels.forEach((channel, index) => {
@@ -48,6 +50,11 @@ export const CalendarContextProvider = ({ value, children }) => {
       console.log(presetColors);
     }
   }, [userInfo?.subscribing_channels]);
+  const setChannelColor = (channel, color) => {
+    const newColors = new Map([...channelColors, [channel, color]]);
+    setChannelColors((prev) => newColors);
+    localStorage.setItem('channelColors', JSON.stringify([...newColors]));
+  };
   useEffect(() => {
     fetchEvents();
   }, [userInfo]);
@@ -64,25 +71,27 @@ export const CalendarContextProvider = ({ value, children }) => {
     setMonthEvents(new Map());
     setChannelEvents(new Map());
     const newEvents = new Map();
-    getMyEvents().then((evts) => {
-      console.log('events:', evts);
-      evts.forEach((ev) =>
-        newEvents.set(ev.id, {
-          ...ev,
-          start_date: new Date(
-            ev.has_time
-              ? ev.start_date + 'T' + ev.start_time + '+09:00'
-              : ev.start_date
-          ),
-          due_date: new Date(
-            ev.has_time
-              ? ev.due_date + 'T' + ev.due_time + '+09:00'
-              : ev.due_date
-          ),
-        })
-      );
-      setEvents(newEvents);
-    });
+    getMyEvents()
+      .then((evts) => {
+        console.log('events:', evts);
+        evts.forEach((ev) =>
+          newEvents.set(ev.id, {
+            ...ev,
+            start_date: new Date(
+              ev.has_time
+                ? ev.start_date + 'T' + ev.start_time + '+09:00'
+                : ev.start_date
+            ),
+            due_date: new Date(
+              ev.has_time
+                ? ev.due_date + 'T' + ev.due_time + '+09:00'
+                : ev.due_date
+            ),
+          })
+        );
+        setEvents(newEvents);
+      })
+      .catch(console.log);
   };
   //fetch events map sorted by month
   const fetchMonthEvents = () => {
@@ -180,7 +189,7 @@ export const CalendarContextProvider = ({ value, children }) => {
     return thisMonthEvents;
   };
   //return monthly events for active channels
-  const getMonthActiveEvents = (year, monthIndex) => {
+  const getMonthActiveEvents = (year, monthIndex, channelId) => {
     //프로미스로 해보기
     const monthActiveEvents = new Map(getMonthEvents(year, monthIndex));
     if (!getMonthEvents(year, monthIndex)) {
@@ -189,25 +198,37 @@ export const CalendarContextProvider = ({ value, children }) => {
     }
     console.log(monthActiveEvents);
     //event IDs of active channels
-    let activeChannelEvents = new Map(channelEvents);
-    for (const ch of disabledChannels) {
-      activeChannelEvents.delete(ch);
+    let activeChannelEvents;
+    if (channelId) {
+      activeChannelEvents = channelEvents.get(parseInt(channelId, 10));
+      if (activeChannelEvents !== undefined)
+        activeChannelEvents = Array.from(activeChannelEvents);
+    } else {
+      activeChannelEvents = new Map(channelEvents);
+      for (const ch of disabledChannels) {
+        activeChannelEvents.delete(ch);
+      }
+      activeChannelEvents = [...activeChannelEvents.values()].reduce(
+        (prev, curr) => [...prev, ...curr],
+        []
+      );
     }
-    activeChannelEvents = [...activeChannelEvents.values()].reduce(
-      (prev, curr) => [...prev, ...curr],
-      []
-    );
+    console.log(activeChannelEvents);
     for (let [day, events] of monthActiveEvents) {
       monthActiveEvents.set(
         day,
-        new Set([...events].filter((e) => activeChannelEvents.includes(e)))
+        new Set([...events].filter((e) => activeChannelEvents?.includes(e)))
       );
     }
     return {
-      eventsList: [...monthActiveEvents.values()].reduce(
-        (prev, curr) => [...prev, ...curr],
-        []
-      ),
+      eventsList: [
+        ...new Set(
+          [...monthActiveEvents.values()].reduce(
+            (prev, curr) => [...prev, ...curr],
+            []
+          )
+        ),
+      ],
       dayEventsMap: monthActiveEvents,
     };
   };
@@ -238,6 +259,7 @@ export const CalendarContextProvider = ({ value, children }) => {
         isFetching,
         disabledChannels,
         setDisabledChannels,
+        setChannelColor,
         calendar: new Calendar(),
         ...value,
       }}

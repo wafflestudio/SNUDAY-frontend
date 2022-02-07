@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
-import AddButton from 'AddButton';
+import React, { useEffect, useRef, useState } from 'react';
+import ModalButton from 'AddButton';
 import AddChannelModal from 'channel/AddChannelModal';
 import 'channel/ChannelMain.css';
 import { useAuthContext } from 'context/AuthContext';
 import ChannelList from 'channel/ChannelList';
 import { useHistory } from 'react-router-dom';
+import Header from 'Header';
 const ChannelMain = () => {
   const [activeTab, setActiveTab] = useState('subscribed');
+  const listRef = useRef(null);
   const {
     value: { isLoggedIn },
   } = useAuthContext();
@@ -14,16 +16,28 @@ const ChannelMain = () => {
   if (!isLoggedIn) history.push('/search');
   return (
     <>
+      <Header left={<></>}>내 채널</Header>
       {activeTab === 'managed' ? (
-        <AddButton component={AddChannelModal} />
+        <ModalButton component={AddChannelModal} />
       ) : (
         <></>
       )}
-      <ChannelMainTab
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-      ></ChannelMainTab>
-      <ChannelList category={activeTab} isLoggedIn={isLoggedIn} />
+      <div
+        ref={listRef}
+        style={{
+          width: '100vw',
+          height: 'calc(100vh - 3rem)',
+          overflow: 'auto',
+          position: 'fixed',
+          top: '3rem',
+        }}
+      >
+        <ChannelMainTab
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+        ></ChannelMainTab>
+        <ChannelList category={activeTab} isLoggedIn={isLoggedIn} />
+      </div>
     </>
   );
 };
@@ -36,6 +50,7 @@ const ChannelMainTab = ({ activeTab, setActiveTab }) => {
             activeTab === 'subscribed' ? 'channel-tab active' : 'channel-tab'
           }
           onClick={() => setActiveTab(() => 'subscribed')}
+          onScroll={(e) => e.stopPropagation()}
         >
           구독 채널
         </li>

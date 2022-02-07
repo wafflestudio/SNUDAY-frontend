@@ -19,7 +19,6 @@ const EventTag = ({ event }) => {
       <Tag
         id={event.channel}
         name={event.channel_name}
-        color="#d4515d"
         onClick={() => {
           if (userInfo.my_channel !== event.channel)
             history.push(`/channel/${event.channel}`);
@@ -30,6 +29,9 @@ const EventTag = ({ event }) => {
 };
 const EventContent = ({ isActive, event, modify }) => {
   const { fetchEvents } = useCalendarContext();
+  const {
+    value: { userInfo },
+  } = useAuthContext();
   const start = event.start_date;
   const end = event.due_date;
   const options = {
@@ -43,36 +45,42 @@ const EventContent = ({ isActive, event, modify }) => {
       <h3 className="event-title">{event.title}</h3>
       <pre className="event-date">{eventDateString(event)}</pre>
       <div>{event.memo}</div>
-      <div style={{ display: 'flex', flexDirection: 'row-reverse' }}>
-        <img
-          onClick={() => modify(true)}
-          className="button"
-          style={{
-            width: '45px',
-            height: '45px',
-          }}
-          src="/resources/edit-filled.svg"
-        />
-        <img
-          onClick={() => {
-            const proceed = window.confirm('일정을 삭제하시겠습니까?');
-            if (proceed) {
-              deleteEvent(event.channel, event.id).then((response) => {
-                fetchEvents();
-                isActive(false);
-              });
-            }
-          }}
-          className="button"
-          style={{
-            width: '45px',
-            height: '45px',
-            transform: 'rotate(45deg)',
-            marginRight: '5px',
-          }}
-          src="/resources/delete.svg"
-        />
-      </div>
+      {userInfo.managing_channels.has(event.channel) ? (
+        <div style={{ display: 'flex', flexDirection: 'row-reverse' }}>
+          <img
+            alt="edit"
+            onClick={() => modify(true)}
+            className="button"
+            style={{
+              width: '45px',
+              height: '45px',
+            }}
+            src="/resources/edit-filled.svg"
+          />
+          <img
+            alt="delete"
+            onClick={() => {
+              const proceed = window.confirm('일정을 삭제하시겠습니까?');
+              if (proceed) {
+                deleteEvent(event.channel, event.id).then((response) => {
+                  fetchEvents();
+                  isActive(false);
+                });
+              }
+            }}
+            className="button"
+            style={{
+              width: '45px',
+              height: '45px',
+              transform: 'rotate(45deg)',
+              marginRight: '5px',
+            }}
+            src="/resources/delete.svg"
+          />
+        </div>
+      ) : (
+        <></>
+      )}
     </div>
   );
 };

@@ -15,6 +15,8 @@ const ChannelList = ({ category, isLoggedIn, type, keyword }) => {
   const [isFetching, setIsFetching] = useInfiniteScroll(() => {
     if (channels?.next) fetchChannels(channels.next);
   }, listRef.current);
+  console.log(listRef.current?.getBoundingClientRect().top);
+  console.log(listRef.current?.parentElement.getBoundingClientRect());
   const {
     value: { userInfo },
   } = useAuthContext();
@@ -59,8 +61,8 @@ const ChannelList = ({ category, isLoggedIn, type, keyword }) => {
 
   return (
     <div ref={listRef} className="channel-list">
-      {channels?.results.map((channel) => (
-        <ChannelCard key={channel.id} channel={channel} />
+      {channels?.results.map((channelData) => (
+        <ChannelCard key={channelData.id} channelData={channelData} />
       ))}
     </div>
   );

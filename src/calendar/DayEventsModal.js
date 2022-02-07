@@ -2,6 +2,9 @@ import { useState } from 'react';
 import { useCalendarContext } from '../context/CalendarContext';
 import { EventListItem, EventModal } from './Event';
 import Modal from 'Modal';
+import ModalButton from 'AddButton';
+import AddEventModal from 'AddEventModal';
+import { toDateString } from 'Constants';
 
 const DayEventsModalHeader = ({ date }) => {
   const options = {
@@ -11,15 +14,30 @@ const DayEventsModalHeader = ({ date }) => {
     day: 'numeric',
   };
   return (
-    <div className="day-events-modal-header">
-      <h2 className="date-title">{`${
-        date.getMonth() + 1
-      }월 ${date.getDate()}일`}</h2>
-      <div className="date-small">
-        {date.toLocaleDateString('ko-KR', options)}
+    <>
+      <div className="day-events-modal-header">
+        <div>
+          <h2 className="date-title">{`${
+            date.getMonth() + 1
+          }월 ${date.getDate()}일`}</h2>
+          <div className="date-small">
+            {date.toLocaleDateString('ko-KR', options)}
+          </div>
+        </div>
+        <ModalButton
+          style={{
+            position: 'absolute',
+            top: 0,
+            right: 0,
+            height: '100%',
+          }}
+          component={AddEventModal}
+          button={<img src="/resources\plus.svg" style={{ height: '100%' }} />}
+          date={date}
+        />
       </div>
       <hr></hr>
-    </div>
+    </>
   );
 };
 const DayEventsModalContent = ({ events, showEvent }) => {

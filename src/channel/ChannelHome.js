@@ -7,13 +7,13 @@ import NoticeList from 'channel/NoticeList';
 const ChannelHome = ({ match }) => {
   const history = useHistory();
   const id = match.params.id;
-  const [channel, setChannel] = useState(null);
+  const [channelData, setChannelData] = useState(null);
   useEffect(() => {
-    getChannel(id).then((channel) => setChannel(() => channel));
+    getChannel(id).then((channel) => setChannelData(() => channel));
   }, []);
-  return channel ? (
+  return channelData ? (
     <div className="main-container">
-      <ChannelCard channel={channel} verbose={true} />
+      <ChannelCard channelData={channelData} verbose={true} />
       <section className="card">
         <header
           className="card-header"

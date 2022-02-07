@@ -1,5 +1,8 @@
 .modal-background {
   position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   top: 0;
   left: 0;
   width: 100vw;
@@ -15,17 +18,13 @@
     background-color: rgba(0, 0, 0, 0.3);
   }
 }
-.modal-background ~ * {
+/* .modal-background ~ * {
   filter: blur(4px);
-}
+} */
 .modal-container {
   /*align center*/
   margin: 0;
   position: absolute;
-  top: 50%;
-  left: 50%;
-  -ms-transform: translate(-50%, -50%);
-  transform: translate(-50%, -50%);
   user-select: auto;
 
   display: flex;
@@ -133,6 +132,8 @@ input {
 /*DayEventsModal*/
 .day-events-modal-header {
   text-align: left;
+  position: relative;
+  display: flex;
 }
 .day-events-modal-header > hr {
   margin: 1rem 0;

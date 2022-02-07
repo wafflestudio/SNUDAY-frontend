@@ -7,6 +7,7 @@ import Modal from 'Modal';
 import ToggleButton from 'ToggleButton';
 import Tag from 'Tag';
 import TagBar from 'calendar/TagBar';
+import { toDateString } from 'Constants';
 const AddEventModalHeader = ({ isModifying }) => {
   return (
     <>
@@ -14,14 +15,17 @@ const AddEventModalHeader = ({ isModifying }) => {
     </>
   );
 };
-const AddEventModalContent = ({ event, setEvent }) => {
+const AddEventModalContent = ({ event, setEvent, isModifying }) => {
   const [isSettingChannel, setIsSettingChannel] = useState(false);
   const {
     value: { userInfo },
   } = useAuthContext();
   return (
     <div className="event-input-container">
-      <Tag id={event.channel} onClick={() => setIsSettingChannel(true)} />
+      <Tag
+        id={event.channel}
+        onClick={() => (isModifying ? undefined : setIsSettingChannel(true))}
+      />
       {isSettingChannel ? (
         <TagBar
           category="managing"
@@ -101,12 +105,7 @@ const AddEventModal = ({ isActive, date, event: existingEvent }) => {
   } = useAuthContext();
   const { fetchEvents } = useCalendarContext();
   const today = new Date();
-  const initialDate = date
-    ? date
-    : `${today.getFullYear()}-${(today.getMonth() + 1 + '').padStart(
-        2,
-        '0'
-      )}-${(today.getDate() + '').padStart(2, '0')}`;
+  const initialDate = date ? toDateString(date) : toDateString(today);
   const initialState = existingEvent
     ? {
         ...existingEvent,
@@ -183,7 +182,13 @@ const AddEventModal = ({ isActive, date, event: existingEvent }) => {
     <Modal
       isActive={isActive}
       header={<AddEventModalHeader isModifying={!!existingEvent} />}
-      content={<AddEventModalContent event={event} setEvent={setEvent} />}
+      content={
+        <AddEventModalContent
+          event={event}
+          setEvent={setEvent}
+          isModifying={!!existingEvent}
+        />
+      }
       button={<AddEventModalButton addEvent={addEvent} />}
     ></Modal>
   );

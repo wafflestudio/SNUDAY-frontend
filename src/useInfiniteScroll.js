@@ -25,7 +25,7 @@ const useInfiniteScroll = (
       io = new IntersectionObserver(ioCallback, options);
       if (containerElement.lastElementChild !== lastElementRef.current) {
         lastElementRef.current = containerElement.lastElementChild;
-        io.observe(containerElement.lastElementChild);
+        if (lastElementRef.current) io.observe(lastElementRef.current);
       }
     }
     return () => io?.disconnect();

@@ -12,6 +12,7 @@ const AddNotice = ({
 }) => {
   const [title, setTitle] = useState(t ? t : '');
   const [contents, setContents] = useState(c ? c : '');
+  console.log(decodeURI(encodeURI(title)));
   const saveNotice = () => {
     noticeId
       ? patchNotice({ title, contents, channelId, noticeId }).then(
@@ -58,7 +59,11 @@ const AddNotice = ({
           onChange={(e) => setContents(e.target.value)}
           placeholder="내용"
         />
-        <button className="button-big" onClick={saveNotice}>
+        <button
+          className="button-big"
+          onClick={saveNotice}
+          disabled={!title.trim() || !contents.trim()}
+        >
           {noticeId ? '수정하기' : '올리기'}
         </button>
       </div>

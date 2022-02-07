@@ -1,22 +1,23 @@
 import { useState } from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, useHistory } from 'react-router-dom';
 import Home from 'Home';
-import Login from 'Login';
+import Login from 'auth/Login';
 import Navigation from 'Navigation';
-import Signup from 'Signup';
+import Signup from 'auth/Signup';
 import 'App.css';
-import MyPage from 'MyPage';
-import { AuthProvider } from 'context/AuthContext';
+import MyPage from 'auth/MyPage';
+import { useAuthContext } from './context/AuthContext';
 import ChannelMain from 'channel/ChannelMain';
 import ChannelHome from 'channel/ChannelHome';
 import SearchHome from 'SearchHome';
 import NoticeHome from 'channel/NoticeHome';
 import ChannelNotice from 'channel/ChannelNotice';
 import Notice from 'channel/Notice';
-import FindMyId from 'FindMyId';
-import ChangeUsername from 'ChangeUsername';
-import ChangePassword from 'ChangePassword';
-import FindMyPassword from 'FindMyPassword';
+import FindMyId from 'auth/FindMyId';
+import ChangeUsername from 'auth/ChangeUsername';
+import ChangePassword from 'auth/ChangePassword';
+import FindMyPassword from 'auth/FindMyPassword';
+import ChannelCalendar from 'channel/ChannelCalendar';
 function copyTouch({ identifier, pageX, pageY }) {
   return { identifier, pageX, pageY };
 }
@@ -56,12 +57,12 @@ function App() {
       if (id >= 0)
         if (touch.clientY < ongoingTouches[id].clientY - 12) {
           //scrollDown
-          NavBar.style.bottom = '-4.5rem';
+          if (NavBar) NavBar.style.bottom = '-4.5rem';
           if (AddButton) AddButton.style.bottom = '0';
           ongoingTouches.splice(id, 1, touch);
         } else if (touch.clientY > ongoingTouches[id].clientY + 12) {
           //scrollUp
-          NavBar.style.bottom = '0';
+          if (NavBar) NavBar.style.bottom = '0';
           if (AddButton) AddButton.style.bottom = '4.5rem';
           ongoingTouches.splice(id, 1, touch);
         }
@@ -75,11 +76,11 @@ function App() {
       if (id >= 0) {
         if (touch.clientY < ongoingTouches[id].clientY - 5) {
           //scrollDown
-          NavBar.style.bottom = '-4.5rem';
+          if (NavBar) NavBar.style.bottom = '-4.5rem';
           if (AddButton) AddButton.style.bottom = '0';
         } else if (touch.clientY > ongoingTouches[id].clientY + 5) {
           //scrollUp
-          NavBar.style.bottom = '0';
+          if (NavBar) NavBar.style.bottom = '0';
           if (AddButton) AddButton.style.bottom = '4.5rem';
         }
         ongoingTouches.splice(id, 1);
@@ -89,11 +90,26 @@ function App() {
   window.onresize = () => {
     const NavBar = document.getElementById('navigation-bar');
     const AddButton = document.getElementById('add-button');
-    NavBar.style.bottom = '-4.5rem';
+    if (NavBar) NavBar.style.bottom = '-4.5rem';
     if (AddButton) AddButton.style.bottom = '0';
   };
+  const {
+    value: { isLoggedIn },
+  } = useAuthContext();
+  const history = useHistory();
+  if (!isLoggedIn) {
+    history.push('/signin');
+    return (
+      <Switch>
+        <Route exact path="/signup" component={Signup} />
+        <Route exact path="/signin" component={Login} />
+        <Route exact path="/findmyid" component={FindMyId} />
+        <Route exact path="/findmypw" component={FindMyPassword} />
+      </Switch>
+    );
+  }
   return (
-    <AuthProvider>
+    <>
       <Switch>
         <Route exact path="/" component={Home} />
         <Route exact path="/mypage/ChangePw" component={ChangePassword} />
@@ -104,6 +120,7 @@ function App() {
         <Route exact path="/channel" component={ChannelMain} />
         <Route path="/channel/:channelId/notice/:noticeId" component={Notice} />
         <Route path="/channel/:id/notice" component={ChannelNotice} />
+        <Route path="/channel/:id/events" component={ChannelCalendar} />
         <Route path="/channel/:id" component={ChannelHome} />
         <Route exact path="/signup" component={Signup} />
         <Route exact path="/signin" component={Login} />
@@ -111,7 +128,7 @@ function App() {
         <Route exact path="/findmypw" component={FindMyPassword} />
       </Switch>
       <Navigation />
-    </AuthProvider>
+    </>
   );
 }
 

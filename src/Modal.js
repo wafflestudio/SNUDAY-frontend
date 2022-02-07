@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './Modal.css';
 //!!!Modal should come first of all siblings in order to blur the background content
-const Modal = ({ header, content, button, isActive, style }) => {
+export const ModalBackground = ({ children, isActive }) => {
   return (
     <div
       className="modal-background"
@@ -19,6 +19,13 @@ const Modal = ({ header, content, button, isActive, style }) => {
         e.stopPropagation();
       }}
     >
+      {children}
+    </div>
+  );
+};
+const Modal = ({ header, content, button, isActive, style }) => {
+  return (
+    <ModalBackground isActive={isActive}>
       <div
         className="modal-container"
         style={style}
@@ -28,7 +35,7 @@ const Modal = ({ header, content, button, isActive, style }) => {
         {content}
         {button}
       </div>
-    </div>
+    </ModalBackground>
   );
 };
 export default Modal;

@@ -1,8 +1,12 @@
 .channel-tabs {
-  padding-top: 30px;
+  z-index: 1;
+  position: sticky;
+  top: 0;
+  padding-top: 16px;
   overflow: hidden;
   overflow-x: auto;
   box-shadow: inset 0 -2px #457af6;
+  background: #ededed;
 }
 .channel-tabs-list {
   display: flex;
@@ -10,7 +14,6 @@
   padding: 0;
   width: 100%;
   justify-content: flex-start;
-  /* border-bottom: 2px solid #457af6; */
 }
 .channel-tab {
   width: 6rem;

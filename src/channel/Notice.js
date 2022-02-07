@@ -64,7 +64,10 @@ const Notice = ({
           <div className="notice-content">{notice?.contents}</div>
           {userInfo?.managing_channels.has(channelId) ? (
             <div className="notice-menu">
-              <button className="button-big button-grey" onClick={deleteNotice}>
+              <button
+                className="button-big button-delete"
+                onClick={deleteNotice}
+              >
                 삭제
               </button>
               <button

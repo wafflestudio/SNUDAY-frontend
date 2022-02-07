@@ -1,5 +1,14 @@
 import React, { useState } from 'react';
-const AddButton = ({ component }) => {
+const MainAddButton = ({ component, ...props }) => {
+  const shrink = (e) => {
+    e.target.parentElement.parentElement.classList.add('button-shrink');
+  };
+  const unshrink = (e) => {
+    e.target.parentElement.parentElement.classList.remove('button-shrink');
+  };
+  return <ModalButton />;
+};
+const ModalButton = ({ component, style, button, ...props }) => {
   const Component = component;
   const [add, setAdd] = useState(false);
   const shrink = (e) => {
@@ -10,14 +19,16 @@ const AddButton = ({ component }) => {
   };
   return (
     <>
-      {add ? <Component isActive={setAdd} /> : <></>}
-      <div className="button-add-container" id="add-button">
-        <img
-          className="button-add"
-          src="/resources/button-add.png"
-          srcSet="/resources/button-add@2x.png 2x, /resources/button-add@3x.png 3x"
-          alt="add"
-        />
+      {add ? <Component isActive={setAdd} {...props} /> : <></>}
+      <div style={style} className="button-add-container" id="add-button">
+        {button ?? (
+          <img
+            className="button-add"
+            src="/resources/button-add.png"
+            srcSet="/resources/button-add@2x.png 2x, /resources/button-add@3x.png 3x"
+            alt="add"
+          />
+        )}
         <svg
           className="button-add-circle"
           viewBox="0 0 100 100"
@@ -38,4 +49,4 @@ const AddButton = ({ component }) => {
     </>
   );
 };
-export default AddButton;
+export default ModalButton;

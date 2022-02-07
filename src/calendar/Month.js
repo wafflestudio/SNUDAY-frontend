@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useCalendarContext } from 'context/CalendarContext';
 import Week from './Week';
-const Month = ({ year, monthIndex }) => {
+const Month = ({ year, monthIndex, channel }) => {
   const date = new Date(year, monthIndex);
   const startDate = 1 - date.getDay();
   const getNumDays = (year, monthIndex) => {
@@ -12,6 +12,7 @@ const Month = ({ year, monthIndex }) => {
   );
   const {
     monthEvents,
+    channelEvents,
     getEvent,
     getMonthActiveEvents,
     getDateLength,
@@ -19,9 +20,12 @@ const Month = ({ year, monthIndex }) => {
   } = useCalendarContext();
   const [monthActiveEvents, setActiveMonthEvents] = useState(undefined);
   const [posEvents, setPosEvents] = useState(new Map());
-  console.log('activeEvents', getMonthActiveEvents(year, monthIndex));
   useEffect(() => {
-    setActiveMonthEvents(getMonthActiveEvents(year, monthIndex));
+    console.log(channel);
+    let monthActiveEvents = getMonthActiveEvents(year, monthIndex, channel);
+    // if(channel) monthActiveEvents = channelEvents.get(channel)
+    setActiveMonthEvents(monthActiveEvents);
+    console.log(monthActiveEvents);
   }, [monthEvents, disabledChannels]);
   useEffect(() => {
     const eventsOrder = new Map();
@@ -52,12 +56,10 @@ const Month = ({ year, monthIndex }) => {
             getEvent(id).due_date.getMonth() !== monthIndex
               ? getNumDays(year, monthIndex)
               : getEvent(id).due_date.getDate();
-          console.log(id, start, end);
           for (let d = start; d <= end; d++)
             occupiedPos.set(d, [...excludedPos, pos]);
         }
       });
-    console.log(occupiedPos);
     // [...monthActiveEvents.dayEventsMap.entries()]
     //   ?.sort((a, b) => b.length - a.length)
     //   ?.forEach((d) => {
@@ -71,10 +73,8 @@ const Month = ({ year, monthIndex }) => {
     //         if (!posEvents.get(id)) posEvents.set(id, idx.shift());
     //       });
     //   });
-    console.log(posEvents);
     setPosEvents(() => posEvents);
-  }, monthActiveEvents);
-  console.log(monthActiveEvents);
+  }, [monthActiveEvents]);
   useEffect(() => {
     document
       .getElementById(

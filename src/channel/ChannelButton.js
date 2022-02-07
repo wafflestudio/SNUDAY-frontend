@@ -2,55 +2,25 @@ import { useState } from 'react';
 import { EditChannelModal } from 'channel/AddChannelModal';
 import { subscribeChannel, unsubscribeChannel } from 'API';
 import { useAuthContext } from 'context/AuthContext';
-
-export const SubscribeButton = ({ channel: { id, name, is_private } }) => {
+export const ChannelStatusButton = ({ channelData }) => {
+  //채널 구독 상태에 따라 [구독 버튼], [구독 대기 버튼] [구독 취소 버튼]
+  const {
+    value: { userInfo },
+  } = useAuthContext();
+  if (!userInfo) return <></>;
+  if (userInfo.managing_channels.has(channelData.id))
+    return <EditChannelButton channelData={channelData} />;
+  if (userInfo.subscribing_channels.has(channelData.id))
+    return <CancelSubscriptionButton channelData={channelData} />;
+  if (userInfo.awaiting_channels.has(channelData.id))
+    return <AwaitSubscriptionButton channelData={channelData} />;
+  return <SubscribeButton channelData={channelData} />;
+};
+export const SubscribeButton = ({ channelData: { id, is_private } }) => {
   const {
     value: { userInfo },
     action: { setUserInfo },
   } = useAuthContext();
-  if (!userInfo) return <></>;
-  if (userInfo.subscribing_channels.has(id))
-    return (
-      <button
-        className="button-blue"
-        onClick={(e) => {
-          e.stopPropagation();
-          if (window.confirm(`'${name}'의 구독을 정말 그만둘까요?`))
-            unsubscribeChannel(id).then(() => {
-              const subscribing_channels = userInfo.subscribing_channels;
-              if (subscribing_channels.delete(id))
-                setUserInfo({
-                  ...userInfo,
-                  subscribing_channels,
-                });
-            });
-        }}
-        style={{ fontSize: '0.9rem' }}
-      >
-        구독중
-      </button>
-    );
-  if (userInfo.awaiting_channels.has(id))
-    return (
-      <button
-        className="button-blue"
-        onClick={(e) => {
-          e.stopPropagation();
-          if (window.confirm(`'${name}'의 구독 신청을 취소할까요?`))
-            unsubscribeChannel(id).then(() => {
-              const awaiting_channels = userInfo.awaiting_channels;
-              if (awaiting_channels.delete(id))
-                setUserInfo({
-                  ...userInfo,
-                  awaiting_channels: awaiting_channels,
-                });
-            });
-        }}
-        style={{ fontSize: '0.9rem' }}
-      >
-        대기
-      </button>
-    );
   return (
     <button
       onClick={(e) => {
@@ -74,14 +44,90 @@ export const SubscribeButton = ({ channel: { id, name, is_private } }) => {
     </button>
   );
 };
-export const ChannelButton = ({ channel }) => {
-  const [onEdit, setOnEdit] = useState(false);
+export const CancelSubscriptionButton = ({ channelData: { id, name } }) => {
   const {
     value: { userInfo },
+    action: { setUserInfo },
   } = useAuthContext();
-  return userInfo?.managing_channels?.has(channel.id) ? (
+  return (
+    <button
+      className="button-blue"
+      onClick={(e) => {
+        e.stopPropagation();
+        if (window.confirm(`'${name}'의 구독을 그만둘까요?`))
+          unsubscribeChannel(id).then(() => {
+            const subscribing_channels = userInfo.subscribing_channels;
+            if (subscribing_channels.delete(id))
+              setUserInfo({
+                //setter 설정해보기
+                ...userInfo,
+                subscribing_channels,
+              });
+          });
+      }}
+      style={{ fontSize: '0.9rem' }}
+    >
+      구독중
+    </button>
+  );
+};
+export const AwaitSubscriptionButton = ({ channelData: { name, id } }) => {
+  const {
+    value: { userInfo },
+    action: { setUserInfo },
+  } = useAuthContext();
+  return (
+    <button
+      className="button-blue"
+      onClick={(e) => {
+        e.stopPropagation();
+        if (window.confirm(`'${name}'의 구독 신청을 취소할까요?`))
+          unsubscribeChannel(id).then(() => {
+            const awaiting_channels = userInfo.awaiting_channels;
+            if (awaiting_channels.delete(id))
+              setUserInfo({
+                ...userInfo,
+                awaiting_channels: awaiting_channels,
+              });
+          });
+      }}
+      style={{ fontSize: '0.9rem' }}
+    >
+      대기
+    </button>
+  );
+};
+export const WaitingListButton = ({ channelData }) => {
+  const [onEdit, setOnEdit] = useState(false);
+  return (
     <>
       <img
+        alt="waiters"
+        // style={{
+        //   height: '28px',
+        //   border: '1px solid #3b77ff',
+        //   borderRadius: '14px',
+        // }}
+        src="/resources/person.svg"
+        onClick={(e) => {
+          e.stopPropagation();
+          setOnEdit(true);
+        }}
+      />
+      {onEdit ? (
+        <EditChannelModal isActive={setOnEdit} channelId={channelData.id} />
+      ) : (
+        <></>
+      )}
+    </>
+  );
+};
+export const EditChannelButton = ({ channelData }) => {
+  const [onEdit, setOnEdit] = useState(false);
+  return (
+    <>
+      <img
+        alt="edit"
         style={{
           height: '28px',
           border: '1px solid #3b77ff',
@@ -94,12 +140,10 @@ export const ChannelButton = ({ channel }) => {
         }}
       />
       {onEdit ? (
-        <EditChannelModal isActive={setOnEdit} channelId={channel.id} />
+        <EditChannelModal isActive={setOnEdit} channelId={channelData.id} />
       ) : (
         <></>
       )}
     </>
-  ) : (
-    <SubscribeButton channel={channel} />
   );
 };

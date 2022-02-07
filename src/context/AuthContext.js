@@ -7,7 +7,10 @@ import {
 } from '../API';
 const AuthContext = React.createContext();
 const AuthProvider = (props) => {
-  const setToken = ({ access, refresh }) => {
+  const setToken = ({
+    access = state.value.access,
+    refresh = state.value.refresh ?? localStorage.getItem('refresh'),
+  }) => {
     setState((prev) => ({
       ...prev,
       value: { ...prev.value, access, refresh },
@@ -25,6 +28,7 @@ const AuthProvider = (props) => {
   };
   const initUserInfo = async () => {
     const userInfo = await getUserMe();
+    console.log(userInfo);
     const managingChannels = await getManagingChannels();
     const subscribingChannels = await getSubscribedChannels();
     const awaitingChannels = await getAwaitingChannels();
@@ -51,7 +55,7 @@ const AuthProvider = (props) => {
   const action = { setToken, setIsLoggedIn, setUserInfo, initUserInfo };
   const [state, setState] = useState({ value: defaultValue, action });
   useEffect(() => {
-    initUserInfo();
+    if (state.value.access) initUserInfo();
   }, [state.value.access]);
   console.log(state);
   return (

@@ -56,7 +56,6 @@ const EventBar = ({ eventNo, color, date, pos }) => {
   let className = 'eventbar';
   if (isStart) className += ' start';
   if (isEnd) className += ' end';
-  console.log(pos);
   return (
     <>
       <div
@@ -64,11 +63,12 @@ const EventBar = ({ eventNo, color, date, pos }) => {
         onClick={(e) => {
           e.stopPropagation();
           setShowEvent(true);
+          console.log(e.target);
         }}
         style={{
           position: 'absolute',
           width: 100 * getDateLength(date, lastDate) + '%',
-          backgroundColor: COLORS[channelColors.get(e.channel)],
+          backgroundColor: COLORS[channelColors?.get(e.channel)],
           transform: `translateY(${pos * 105}%)`,
         }}
       >

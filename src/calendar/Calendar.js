@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Month from './Month';
 import TagBar from './TagBar';
 import './Calendar.css';
-import AddButton from 'AddButton';
+import ModalButton from 'AddButton';
 import { Calendar as cal } from './cal';
 import { CalendarContextProvider } from 'context/CalendarContext';
 import { getMyEvents, getSubscribedChannels } from '../API';
@@ -13,14 +13,14 @@ const getNumDays = (year, month) => {
   return 32 - new Date(year, month, 32).getDate();
 };
 
-const Calendar = () => {
+export const Calendar = ({ channelId, type }) => {
   const today = new Date();
   const [year, setYear] = useState(today.getFullYear());
   const [monthIndex, setMonthIndex] = useState(today.getMonth());
   const [day, setDay] = useState(today.getDate());
   const [numDays, setNumDays] = useState(getNumDays(year, monthIndex));
   const {
-    value: { isLoggedIn },
+    value: { isLoggedIn, userInfo },
   } = useAuthContext();
   useEffect(() => {
     // getMyEvents().then((events) => {
@@ -28,12 +28,14 @@ const Calendar = () => {
     // });
     // console.log(calendar.getEvents());
   }, []);
-  const moveMonth = (event) => {
-    if (event.deltaY < 0) {
+  const moveMonth = (direction) => {
+    if (direction < 0) {
+      //previous month
       chooseDay(1 - getNumDays(year, monthIndex - 1));
       return;
     }
-    if (event.deltaY > 0) {
+    if (direction > 0) {
+      //next month
       chooseDay(1 + numDays);
       return;
     }
@@ -113,8 +115,13 @@ const Calendar = () => {
           setDay: chooseDay,
         }}
       >
-        {isLoggedIn ? <AddButton component={AddEventModal} /> : <></>}
-        <div className="Calendar">
+        {isLoggedIn &&
+        (!channelId || userInfo.managing_channels.has(channelId)) ? (
+          <ModalButton component={AddEventModal} />
+        ) : (
+          <></>
+        )}
+        <div className={`Calendar ${type}`}>
           <div className="Calendar-header">
             <h3 className="Calendar-title">
               {year === today.getFullYear() ? '' : `${year}년 `}
@@ -131,20 +138,19 @@ const Calendar = () => {
             </h3>
             <button onClick={() => goToday()}>오늘</button>
           </div>
-          <TagBar category="active" />
-          <div className="weekdays">
-            <div className="weekday">일</div>
-            <div className="weekday">월</div>
-            <div className="weekday">화</div>
-            <div className="weekday">수</div>
-            <div className="weekday">목</div>
-            <div className="weekday">금</div>
-            <div className="weekday">토</div>
-          </div>
+          {channelId ? (
+            <></>
+          ) : (
+            <div className="Calendar-tagbar-container">
+              <TagBar category="active" isMain={true} />
+            </div>
+          )}
+
           <CalendarBody
             moveMonth={moveMonth}
             year={year}
             monthIndex={monthIndex}
+            channel={channelId}
           />
         </div>
       </CalendarContextProvider>
@@ -152,13 +158,40 @@ const Calendar = () => {
   );
 };
 export default Calendar;
-const CalendarBody = ({ moveMonth, year, monthIndex }) => {
+export const CalendarBody = ({ moveMonth, year, monthIndex, channel }) => {
+  const [targetTouch, setTargetTouch] = useState(null);
   return (
-    <div className="Calendar-body" onWheel={(e) => moveMonth(e)}>
+    <div className="Calendar-body" onWheel={(e) => moveMonth(e.deltaY)}>
+      <div className="weekdays">
+        <div className="weekday">일</div>
+        <div className="weekday">월</div>
+        <div className="weekday">화</div>
+        <div className="weekday">수</div>
+        <div className="weekday">목</div>
+        <div className="weekday">금</div>
+        <div className="weekday">토</div>
+      </div>
       <div
         id="Calendar-content"
         className="Calendar-content"
-        onScroll={(e) => e.preventDefault()}
+        onScroll={(e) => {
+          e.stopPropagation();
+        }}
+        onTouchStart={(e) => {
+          if (e.touches.length === 1) setTargetTouch(e.touches[0]);
+          else setTargetTouch(null);
+        }}
+        onTouchEnd={(e) => {
+          if (targetTouch === null) return;
+          const movedPositionX =
+            e.changedTouches[0].clientX - targetTouch.clientX;
+          const movedPositionY =
+            e.changedTouches[0].clientY - targetTouch.clientY;
+          const slope = movedPositionY / movedPositionX;
+          if (Math.abs(movedPositionX) > 20 && Math.abs(slope) < 0.6) {
+            moveMonth(-movedPositionX);
+          }
+        }}
       >
         {/* <div
           style={{
@@ -199,6 +232,7 @@ const CalendarBody = ({ moveMonth, year, monthIndex }) => {
           key={`${year}-${monthIndex}`}
           year={year}
           monthIndex={monthIndex}
+          channel={channel}
         />
         {/* <Month
           key={`${year}-${monthIndex + 1}-`}

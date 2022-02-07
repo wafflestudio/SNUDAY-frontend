@@ -1,19 +1,33 @@
 import { useCalendarContext } from 'context/CalendarContext';
 import Day from './Day';
 const Week = ({ year, monthIndex, day, events, eventPositions }) => {
-  const monthStart = 1 - new Date(year, monthIndex).getDay();
-  const date = new Date(year, monthIndex, day);
-  const startDate = day - date.getDay();
+  let date = new Date();
+  if (year === undefined) {
+    year = date.getFullYear();
+    if (monthIndex === undefined) {
+      if (day === undefined) {
+        monthIndex = date.getMonth();
+        day = date.getDate();
+      } else {
+        monthIndex = 0;
+      }
+    } else if (day === undefined) day = 1;
+  } else {
+    if (monthIndex === undefined) monthIndex = 0;
+    if (day === undefined) day = 1;
+  }
+  date = new Date(year, monthIndex, day);
+  const startDayOfWeek = day - date.getDay();
   // const { getMonthEvents } = useCalendarContext();
   // events = events ?? getMonthEvents(year, monthIndex);
   return (
     <div className="week">
       {[...Array(7).keys()].map((weekday) => (
         <Day
-          key={`${year}-${monthIndex}-${startDate + weekday}`}
+          key={`${year}-${monthIndex}-${startDayOfWeek + weekday}`}
           year={year}
           monthIndex={monthIndex}
-          day={startDate + weekday}
+          day={startDayOfWeek + weekday}
           events={events}
           eventPositions={eventPositions}
         />
