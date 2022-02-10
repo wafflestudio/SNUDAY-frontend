@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Switch, Route, useHistory } from 'react-router-dom';
+import { Switch, Route, Redirect, useHistory } from 'react-router-dom';
 import Home from 'Home';
 import Login from 'auth/Login';
 import Navigation from 'Navigation';
@@ -23,6 +23,7 @@ function copyTouch({ identifier, pageX, pageY }) {
 }
 
 function App() {
+  const [sctop, setsctop] = useState(window.scrollY);
   let lastScrollTop = 0;
   const stickNav = (e) => {
     console.log(window.pageYOffset);
@@ -94,22 +95,34 @@ function App() {
     if (AddButton) AddButton.style.bottom = '0';
   };
   const {
-    value: { isLoggedIn },
+    value: { isLoggedIn, userInfo },
   } = useAuthContext();
   const history = useHistory();
   if (!isLoggedIn) {
-    history.push('/signin');
+    // history.push('/signin');
+
     return (
       <Switch>
         <Route exact path="/signup" component={Signup} />
         <Route exact path="/signin" component={Login} />
         <Route exact path="/findmyid" component={FindMyId} />
         <Route exact path="/findmypw" component={FindMyPassword} />
+        <Redirect to="/signin" />
       </Switch>
     );
   }
+  //FIX: userInfo takes time to update after refresh
+  // if (!userInfo) return <></>;
   return (
-    <>
+    <div>
+      <div
+        onScroll={() => {
+          setsctop(window.pageYOffset);
+        }}
+        style={{ position: 'fixed', zIndex: 1000 }}
+      >
+        scrollTop:{sctop}
+      </div>
       <Switch>
         <Route exact path="/" component={Home} />
         <Route exact path="/mypage/ChangePw" component={ChangePassword} />
@@ -128,7 +141,7 @@ function App() {
         <Route exact path="/findmypw" component={FindMyPassword} />
       </Switch>
       <Navigation />
-    </>
+    </div>
   );
 }
 

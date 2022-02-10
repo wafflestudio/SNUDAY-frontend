@@ -9,7 +9,7 @@ const NoticeHome = () => {
   return (
     <>
       <Header left={<></>}>공지</Header>
-      <div className="main-container">
+      <div className="main-container" style={{ minHeight: '100%' }}>
         <div style={{ padding: ' 0 20px', margin: '20px 0' }}>
           <SearchBox
             searchValue={searchValue}
@@ -18,7 +18,7 @@ const NoticeHome = () => {
             setSearchOption={setSearchOption}
           />
         </div>
-        <div className="card">
+        <div className="card" style={{ minHeight: '100%' }}>
           <NoticeList type={searchOption} keyword={searchValue} />
         </div>
       </div>

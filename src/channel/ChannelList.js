@@ -15,9 +15,10 @@ const ChannelList = ({ category, isLoggedIn, type, keyword }) => {
   const [isFetching, setIsFetching] = useInfiniteScroll(() => {
     if (channels?.next) fetchChannels(channels.next);
   }, listRef.current);
-  console.log(listRef.current?.getBoundingClientRect().top);
-  console.log(listRef.current?.parentElement.getBoundingClientRect());
+  // console.log(listRef.current?.getBoundingClientRect().top);
+  // console.log(listRef.current?.parentElement.getBoundingClientRect());
   const {
+    action: { setUserInfo },
     value: { userInfo },
   } = useAuthContext();
   const fetchChannels = async (cursor) => {
@@ -35,13 +36,25 @@ const ChannelList = ({ category, isLoggedIn, type, keyword }) => {
         );
     } else if (isLoggedIn)
       if (category === 'managed')
-        getManagingChannels().then((response) => {
-          setChannels(() => ({ results: response }));
-          console.log(response);
+        getManagingChannels().then((channelsData) => {
+          setChannels(() => ({ results: channelsData }));
+          setUserInfo({
+            ...userInfo,
+            managing_channels: new Set(
+              channelsData.map((channel) => channel.id)
+            ),
+          });
+          console.log(channelsData);
         });
       else
-        getSubscribedChannels().then((response) => {
-          setChannels(() => ({ results: response }));
+        getSubscribedChannels().then((channelsData) => {
+          setChannels(() => ({ results: channelsData }));
+          setUserInfo({
+            ...userInfo,
+            subscribing_channels: new Set(
+              channelsData.map((channel) => channel.id)
+            ),
+          });
         });
     else
       getChannels(cursor).then((response) => {
@@ -57,7 +70,7 @@ const ChannelList = ({ category, isLoggedIn, type, keyword }) => {
   };
   useEffect(() => {
     fetchChannels();
-  }, [category, isLoggedIn, type, keyword, userInfo]);
+  }, [category, isLoggedIn, type, keyword]);
 
   return (
     <div ref={listRef} className="channel-list">

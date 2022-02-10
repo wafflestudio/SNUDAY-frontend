@@ -21,7 +21,10 @@ const AddEventModalContent = ({ event, setEvent, isModifying }) => {
     value: { userInfo },
   } = useAuthContext();
   return (
-    <div className="event-input-container">
+    <div
+      className="event-input-container"
+      style={isSettingChannel ? { overflow: 'hidden' } : {}}
+    >
       <Tag
         id={event.channel}
         onClick={() => (isModifying ? undefined : setIsSettingChannel(true))}
@@ -35,14 +38,21 @@ const AddEventModalContent = ({ event, setEvent, isModifying }) => {
             top: '0',
             left: '0',
             width: '100%',
-            height: '100%',
+            minHeight: '100%',
+            maxHeight: '100%',
             backgroundColor: 'white',
             padding: '12px 20px',
+            zIndex: 100,
           }}
           onTagClick={(ch) => {
             setEvent({ key: 'channel', value: ch });
             setIsSettingChannel(false);
           }}
+          onScroll={(e) => e.stopPropagation()}
+          onTouchStart={(e) => e.stopPropagation()}
+          onTouchMove={(e) => e.stopPropagation()}
+          onTouchEnd={(e) => e.stopPropagation()}
+          onWheel={(e) => e.stopPropagation()}
         />
       ) : (
         <></>
@@ -92,7 +102,7 @@ const AddEventModalContent = ({ event, setEvent, isModifying }) => {
 const AddEventModalButton = ({ addEvent }) => {
   return (
     <div>
-      <hr />
+      <hr style={{ marginTop: '2px' }} />
       <button className="button-save" onClick={() => addEvent()}>
         저장하기
       </button>
@@ -119,7 +129,11 @@ const AddEventModal = ({ isActive, date, event: existingEvent }) => {
           : `${(((today.getHours() + 2) % 24) + '').padStart(2, '0')}:00`,
       }
     : {
-        channel: userInfo.my_channel,
+        channel: [...userInfo.managing_channels][
+          userInfo.managing_channels.size - 1
+        ],
+        //FIX
+        //userInfo.managing_channels.values().next().value,
         title: '',
         has_time: true,
         start_date: initialDate,

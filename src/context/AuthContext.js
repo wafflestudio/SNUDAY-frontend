@@ -40,6 +40,11 @@ const AuthProvider = (props) => {
       awaiting_channels: new Set(awaitingChannels.map((ch) => ch.id)),
       my_channel: myChannel.id,
     };
+    newUserInfo.managing_channels.delete(newUserInfo.my_channel);
+    //FIX:오류로 임시 코드. 나중에 지우기. DELETE!
+    newUserInfo.managing_channels.delete(36);
+    newUserInfo.managing_channels.delete(46);
+    //
     console.log(newUserInfo);
     setState((prev) => ({
       ...prev,

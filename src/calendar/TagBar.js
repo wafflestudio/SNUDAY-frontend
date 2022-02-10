@@ -54,13 +54,15 @@ const TagBar = ({ category, onTagClick, isMain, ...props }) => {
   }, [userInfo]);
   return (
     <ul className={`tagbar${isMain ? ' main' : ''}`} {...props}>
-      {channels?.map((key) => (
+      {channels?.map((channelId) => (
         <Tag
-          readonly={false}
-          key={key}
-          id={key}
-          onClick={() => (onTagClick ? onTagClick(key) : undefined)}
-          disabled={category === 'active' && disabledChannels.includes(key)}
+          readonly={!isMain}
+          key={channelId}
+          id={channelId}
+          onClick={() => (onTagClick ? onTagClick(channelId) : undefined)}
+          disabled={
+            category === 'active' && disabledChannels.includes(channelId)
+          }
         />
       ))}
       {/* <div

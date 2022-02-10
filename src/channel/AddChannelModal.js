@@ -326,6 +326,7 @@ const AddChannelModal = ({ isActive, init }) => {
               message += `채널 소개: ${value}\n`;
               break;
             case 'error':
+            case 'detail':
               message += `${value}\n`;
               break;
             default:

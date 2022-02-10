@@ -16,7 +16,7 @@ const ChannelCalendar = ({ match }) => {
   //   {getChannel(match.params.id).then((channel) => channel.id)}
   return (
     <CalendarContextProvider>
-      <Header>{'학사일정'}</Header>
+      <Header>{channelName}</Header>
       <Calendar type="channel" channelId={channelId}></Calendar>
     </CalendarContextProvider>
   );

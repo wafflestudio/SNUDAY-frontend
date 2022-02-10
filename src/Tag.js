@@ -14,80 +14,108 @@ const Tag = ({
   readonly = true,
   ...props
 }) => {
-  const { channelColors, setChannelColor } = useCalendarContext();
-  const [channel, setChannel] = useState(null);
-  const [isChangingColor, setIsChangingColor] = useState(false);
-  const [timerId, setTimerId] = useState(undefined);
-  const [leftClickPos, setLeftClickPos] = useState(undefined);
-  const [color, setColor] = useState(
-    defaultColor
-      ? { value: defaultColor }
-      : channelColors
+  const findColor = (id) =>
+    channelColors
       ? { value: COLORS[channelColors.get(id)] }
       : {
           value:
             COLORS[
               new Map(JSON.parse(localStorage.getItem('channelColors'))).get(id)
             ],
-        }
-  );
+        };
+  const { channelColors, setChannelColor } = useCalendarContext();
+  const [channel, setChannel] = useState(null);
+  const [longPress, setLongPress] = useState(false);
+  const showColorPicker = !readonly && longPress;
+  const [timerId, setTimerId] = useState(undefined);
+  const [leftClickPos, setLeftClickPos] = useState(undefined);
+  const [boundingRect, setBoundingRect] = useState(undefined);
+  const [color, setColor] = useState(defaultColor ?? findColor(id));
   const {
     value: { userInfo },
   } = useAuthContext();
   useEffect(() => {
     if (!name) getChannel(id).then(setChannel);
+    setColor(findColor(id));
+    return () => {
+      setChannel(null);
+      name = null;
+    };
   }, [id, name]);
   useEffect(() => {
     if (!readonly && color.name) setChannelColor(id, color.name);
     // console.log(color);
   }, [color.value]);
-  return channel || name ? (
-    <div
-      className={disabled ? 'tag disabled' : 'tag'}
-      style={{
-        backgroundColor: color.value,
-        zIndex: isChangingColor ? '999' : '',
-      }}
-      onTouchStart={(e) => {
-        if (
-          e.target === e.currentTarget &&
-          e.targetTouches.length === 1 &&
-          e.targetTouches.length === e.touches.length
-        ) {
-          const boundingRect = e.target.getBoundingClientRect();
-          console.log(boundingRect);
-          setLeftClickPos(((boundingRect.left << 1) + boundingRect.width) >> 1);
-          setTimerId(setTimeout(setIsChangingColor, 700, true));
-        }
-      }}
-      onTouchMove={(e) => {
-        if (e.target === e.currentTarget) {
-          // console.log(e);
-          setIsChangingColor(false);
-          clearTimeout(timerId);
-        }
-      }}
-      onTouchEnd={(e) => {
-        clearTimeout(timerId);
-      }}
-      onClick={(e) => {
-        setIsChangingColor(false);
-        clearTimeout(timerId);
-      }}
-      {...props}
-    >
-      {userInfo?.my_channel === id ? '나의 일정' : name ?? channel?.name}
-      {!readonly && isChangingColor ? (
+  if (!(channel || name)) return <div className="tag"></div>;
+
+  return (
+    <>
+      {showColorPicker ? (
         <>
-          <ModalBackground isActive={setIsChangingColor}></ModalBackground>
-          <ColorPicker setColor={setColor} left={leftClickPos} />
+          <ModalBackground isActive={setLongPress}></ModalBackground>
+          <ColorPicker
+            setColor={setColor}
+            left={leftClickPos}
+            targetBoundingRect={boundingRect}
+          />
         </>
       ) : (
         <></>
       )}
-    </div>
-  ) : (
-    <div className="tag"></div>
+      <div
+        className={disabled ? 'tag disabled' : 'tag'}
+        style={{
+          backgroundColor: color.value,
+          zIndex: longPress ? '999' : '',
+        }}
+        onTouchStart={(e) => {
+          if (showColorPicker) {
+            setLongPress(false);
+            return;
+          }
+          if (
+            e.target === e.currentTarget &&
+            e.targetTouches.length === 1 &&
+            e.targetTouches.length === e.touches.length
+          ) {
+            const boundingRect = e.target.getBoundingClientRect();
+            console.log(boundingRect);
+            setLeftClickPos(
+              ((boundingRect.left << 1) + boundingRect.width) >> 1
+            );
+            setTimerId(setTimeout(setLongPress, 700, true));
+            setBoundingRect(boundingRect);
+          }
+        }}
+        onTouchMove={(e) => {
+          if (e.target === e.currentTarget && !longPress) {
+            // console.log(e);
+            setLongPress(false);
+            clearTimeout(timerId);
+          }
+        }}
+        onTouchEnd={(e) => {
+          clearTimeout(timerId);
+        }}
+        {...props}
+        onClick={(e) => {
+          props.onClick?.(e);
+          setLongPress(false);
+          clearTimeout(timerId);
+          console.log('click');
+        }}
+      >
+        {userInfo?.my_channel === id ? '나의 일정' : name ?? channel.name}
+        {/* {showColorPicker ? (
+          <>
+            <ModalBackground isActive={setLongPress}></ModalBackground>
+            <ColorPicker setColor={setColor} left={leftClickPos} />
+          </>
+        ) : (
+          <></>
+        )} */}
+      </div>
+    </>
   );
 };
 export default Tag;

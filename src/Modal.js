@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
+import ReactDOM from 'react-dom';
 import './Modal.css';
 //!!!Modal should come first of all siblings in order to blur the background content
 export const ModalBackground = ({ children, isActive }) => {
   return (
     <div
       className="modal-background"
+      role="dialog"
+      aria-label="modal-background"
       onClick={(e) => {
         e.stopPropagation();
         isActive(() => false);
@@ -24,7 +27,7 @@ export const ModalBackground = ({ children, isActive }) => {
   );
 };
 const Modal = ({ header, content, button, isActive, style }) => {
-  return (
+  return ReactDOM.createPortal(
     <ModalBackground isActive={isActive}>
       <div
         className="modal-container"
@@ -35,7 +38,8 @@ const Modal = ({ header, content, button, isActive, style }) => {
         {content}
         {button}
       </div>
-    </ModalBackground>
+    </ModalBackground>,
+    document.body
   );
 };
 export default Modal;

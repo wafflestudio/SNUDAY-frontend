@@ -21,7 +21,7 @@
   max-width: 80%;
 }
 .error {
-  height: 61px;
+  min-height: 61px;
   padding: 20px 0;
   color: #aaaaaa;
   text-align: center;

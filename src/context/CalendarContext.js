@@ -26,6 +26,7 @@ export const CalendarContextProvider = ({ value, children }) => {
   };
   useEffect(() => {
     if (!userInfo) return;
+    console.log('set colors');
     const colors = Object.keys(COLORS);
     const savedColors = localStorage.getItem('channelColors');
     console.log('savedColors', savedColors);

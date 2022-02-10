@@ -26,10 +26,11 @@ const ChannelMain = () => {
         ref={listRef}
         style={{
           width: '100vw',
-          height: 'calc(100vh - 3rem)',
+          height: 'calc(100% - 3rem)',
           overflow: 'auto',
           position: 'fixed',
           top: '3rem',
+          backgroundColor: 'white',
         }}
       >
         <ChannelMainTab

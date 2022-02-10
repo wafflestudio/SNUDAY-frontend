@@ -260,6 +260,43 @@ export const unsubscribeChannel = (id) => {
       });
   });
 };
+export const getAwaiters = (id) =>
+  new Promise((resolve, reject) => {
+    axios
+      .get(`channels/${id}/awaiters/`)
+      .then((response) => {
+        console.log(response.data);
+        resolve(response.data);
+      })
+      .catch((e) => {
+        logError(e);
+        reject(e);
+      });
+  });
+export const postAllowAwaiters = ({ channelId, userId }) =>
+  new Promise((resolve, reject) => {
+    axios
+      .post(`channels/${channelId}/awaiters/allow/${userId}/`)
+      .then((response) => {
+        resolve(response.data);
+      })
+      .catch((e) => {
+        logError(e);
+        reject(e);
+      });
+  });
+export const deleteRejectAwaiters = ({ channelId, userId }) =>
+  new Promise((resolve, reject) => {
+    axios
+      .delete(`channels/${channelId}/awaiters/allow/${userId}/`)
+      .then((response) => {
+        resolve(response.data);
+      })
+      .catch((e) => {
+        logError(e);
+        reject(e);
+      });
+  });
 export const getAwaitingChannels = () =>
   new Promise((resolve, reject) => {
     axios

@@ -61,7 +61,7 @@ const ChannelCard = ({ channelData, verbose }) => {
             <></>
           ) : (
             <>
-              {userInfo.managing_channels.has(channelData.id) ? (
+              {userInfo?.managing_channels.has(channelData.id) ? (
                 <WaitingListButton channelData={channelData} />
               ) : (
                 <></>

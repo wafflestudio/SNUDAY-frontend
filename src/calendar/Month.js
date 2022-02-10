@@ -19,9 +19,8 @@ const Month = ({ year, monthIndex, channel }) => {
     disabledChannels,
   } = useCalendarContext();
   const [monthActiveEvents, setActiveMonthEvents] = useState(undefined);
-  const [posEvents, setPosEvents] = useState(new Map());
+  const [posEvents, setPosEvents] = useState(null);
   useEffect(() => {
-    console.log(channel);
     let monthActiveEvents = getMonthActiveEvents(year, monthIndex, channel);
     // if(channel) monthActiveEvents = channelEvents.get(channel)
     setActiveMonthEvents(monthActiveEvents);
@@ -39,7 +38,7 @@ const Month = ({ year, monthIndex, channel }) => {
           getDateLength(getEvent(a).start_date, getEvent(a).due_date)
       )
       .forEach((id, idx) => eventsOrder.set(id, idx));
-    console.log(eventsOrder);
+    console.log('events order:', eventsOrder);
     if (monthActiveEvents)
       [...eventsOrder.keys()].forEach((id) => {
         if (!posEvents.get(id)) {
@@ -73,7 +72,7 @@ const Month = ({ year, monthIndex, channel }) => {
     //         if (!posEvents.get(id)) posEvents.set(id, idx.shift());
     //       });
     //   });
-    setPosEvents(() => posEvents);
+    setPosEvents(posEvents);
   }, [monthActiveEvents]);
   useEffect(() => {
     document

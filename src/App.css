@@ -25,7 +25,7 @@
   flex-direction: column;
   background-color: #ededed;
 }
-.main-container > * {
+.main-container > *:not(:last-child) {
   margin-bottom: 10px;
 }
 .avatar {
@@ -44,7 +44,6 @@
   background-color: white;
   padding: 10px 20px;
 }
-
 .card-header {
   display: flex;
   align-items: center;
@@ -66,20 +65,6 @@
     'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue',
     'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;
   box-sizing: border-box;
-}
-html {
-  scroll-behavior: smooth;
-}
-#root {
-  font-size: 16px;
-  min-height: 100vh;
-  background-color: #ededed;
-  overflow: hidden;
-}
-
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
 }
 form {
   display: flex;

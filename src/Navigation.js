@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { useAuthContext } from './context/AuthContext';
 
@@ -11,12 +12,16 @@ const Menu = ({ name, image, route }) => {
   const Icon = image;
   let history = useHistory();
   const location = useLocation();
-  let className = 'nav-item';
-  console.log(location.pathname);
-  if ('/' + location.pathname.split('/')[1] === route) className += ' active';
+  const [isActive, setIsActive] = useState(
+    '/' + location.pathname.split('/')[1] === route
+  );
+  useEffect(() => {
+    setIsActive('/' + location.pathname.split('/')[1] === route);
+    // console.log(name, location.pathname.split('/')[1]);
+  }, [location]);
   return (
     <div
-      className={className}
+      className={`nav-item${isActive ? ' active' : ''}`}
       onClick={() => {
         //const currentRoute = location.pathname.split('/')[1];
         if (location.pathname !== route) {

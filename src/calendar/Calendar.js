@@ -2,36 +2,32 @@ import React, { useState, useEffect } from 'react';
 import Month from './Month';
 import TagBar from './TagBar';
 import './Calendar.css';
+import { getNumDaysofMonth } from 'Constants';
 import ModalButton from 'AddButton';
-import { Calendar as cal } from './cal';
 import { CalendarContextProvider } from 'context/CalendarContext';
-import { getMyEvents, getSubscribedChannels } from '../API';
 import { useAuthContext } from 'context/AuthContext';
 import AddEventModal from 'AddEventModal';
-
-const getNumDays = (year, month) => {
-  return 32 - new Date(year, month, 32).getDate();
-};
 
 export const Calendar = ({ channelId, type }) => {
   const today = new Date();
   const [year, setYear] = useState(today.getFullYear());
   const [monthIndex, setMonthIndex] = useState(today.getMonth());
   const [day, setDay] = useState(today.getDate());
-  const [numDays, setNumDays] = useState(getNumDays(year, monthIndex));
+  const [numDays, setNumDays] = useState(getNumDaysofMonth(year, monthIndex));
   const {
     value: { isLoggedIn, userInfo },
   } = useAuthContext();
-  useEffect(() => {
-    // getMyEvents().then((events) => {
-    //   calendar.registerEvents(events);
-    // });
-    // console.log(calendar.getEvents());
-  }, []);
+  // useEffect(() => {
+  //   getMyEvents().then((events) => {
+  //     calendar.registerEvents(events);
+  //   });
+  //   console.log(calendar.getEvents());
+  // }, []);
   const moveMonth = (direction) => {
     if (direction < 0) {
       //previous month
-      chooseDay(1 - getNumDays(year, monthIndex - 1));
+      console.log(1 - getNumDaysofMonth(year, monthIndex - 1));
+      chooseDay(1 - getNumDaysofMonth(year, monthIndex - 1));
       return;
     }
     if (direction > 0) {
@@ -41,7 +37,7 @@ export const Calendar = ({ channelId, type }) => {
     }
   };
   useEffect(() => {
-    setNumDays(getNumDays(year, monthIndex));
+    setNumDays(getNumDaysofMonth(year, monthIndex));
     document.getElementById('Calendar-content').scrollLeft = window.innerWidth;
   }, [year, monthIndex]);
   const chooseMonth = (value) => {
@@ -81,7 +77,7 @@ export const Calendar = ({ channelId, type }) => {
         setMonthIndex(11);
       } else setMonthIndex(monthIndex - 1);
 
-      setDay(getNumDays(year, monthIndex - 1) + d);
+      setDay(getNumDaysofMonth(year, monthIndex - 1) + d);
       return;
     }
     if (d > numDays) {
@@ -116,6 +112,7 @@ export const Calendar = ({ channelId, type }) => {
         }}
       >
         {isLoggedIn &&
+        userInfo &&
         (!channelId || userInfo.managing_channels.has(channelId)) ? (
           <ModalButton component={AddEventModal} />
         ) : (

@@ -1,5 +1,29 @@
+* {
+  scroll-behavior: smooth;
+}
+html {
+  background-color: #ededed;
+  height: 100%;
+  overflow: hidden;
+}
 body {
+  background-color: white;
+  height: 100%;
+  width: 100%;
+  overflow: auto;
   margin: 0;
+  overscroll-behavior: contain;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+#root {
+  font-size: 16px;
+  min-height: 100%;
+  /* background-color: #ededed; */
+  overflow: hidden;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
 }

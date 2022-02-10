@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { EditChannelModal } from 'channel/AddChannelModal';
 import { subscribeChannel, unsubscribeChannel } from 'API';
 import { useAuthContext } from 'context/AuthContext';
+import ChannelAwaitersModal from './ChannelAwaitersModal';
 export const ChannelStatusButton = ({ channelData }) => {
   //채널 구독 상태에 따라 [구독 버튼], [구독 대기 버튼] [구독 취소 버튼]
   const {
@@ -115,7 +116,7 @@ export const WaitingListButton = ({ channelData }) => {
         }}
       />
       {onEdit ? (
-        <EditChannelModal isActive={setOnEdit} channelId={channelData.id} />
+        <ChannelAwaitersModal isActive={setOnEdit} channelId={channelData.id} />
       ) : (
         <></>
       )}

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import 'calendar/EventBar.css';
 import { EventModal } from 'calendar/Event';
 import { useCalendarContext } from 'context/CalendarContext';
-import { COLORS } from 'Constants';
+import { COLORS, getNumDaysofMonth, isSameDate } from 'Constants';
 const EventBar = ({ eventNo, color, date, pos }) => {
   const [showEvent, setShowEvent] = useState(false);
   const { getEvent, getDateLength, channelColors } = useCalendarContext();
@@ -10,10 +10,7 @@ const EventBar = ({ eventNo, color, date, pos }) => {
   if (Number.isInteger(eventNo)) {
     e = getEvent(eventNo);
   }
-  const isSameDate = (a, b) =>
-    a.getFullYear() === b.getFullYear() &&
-    a.getMonth() === b.getMonth() &&
-    a.getDate() === b.getDate();
+
   //first day of the month
   const FIRST_DAY = new Date(date.getFullYear(), date.getMonth(), 1);
   const THIS_SUNDAY = new Date(
@@ -26,6 +23,11 @@ const EventBar = ({ eventNo, color, date, pos }) => {
     date.getMonth(),
     date.getDate() - date.getDay() + 6
   );
+  const LAST_DAY_OF_THE_MONTH = new Date(
+    date.getFullYear(),
+    date.getMonth(),
+    getNumDaysofMonth(date.getFullYear(), date.getMonth())
+  );
   //date: start date of this eventbar
   const firstDate = //start date of the event
     isSameDate(date, THIS_SUNDAY) && date > e.start_date
@@ -35,15 +37,19 @@ const EventBar = ({ eventNo, color, date, pos }) => {
           e.start_date.getMonth(),
           e.start_date.getDate()
         );
-  const lastDate = //end date of the event
-    !isSameDate(THIS_SATURDAY, e.due_date) && e.due_date < THIS_SATURDAY
+  const maxDate =
+    THIS_SATURDAY < LAST_DAY_OF_THE_MONTH
+      ? THIS_SATURDAY
+      : LAST_DAY_OF_THE_MONTH;
+  const lastDate = //end date of the bar
+    !isSameDate(maxDate, e.due_date) && e.due_date < maxDate
       ? new Date(
           e.due_date.getFullYear(),
           e.due_date.getMonth(),
           e.due_date.getDate()
         )
-      : THIS_SATURDAY;
-
+      : maxDate;
+  //determine round edge of the bar
   const isStart = isSameDate(e.start_date, date);
   const isEnd = isSameDate(e.due_date, lastDate);
   if (
@@ -67,7 +73,8 @@ const EventBar = ({ eventNo, color, date, pos }) => {
         }}
         style={{
           position: 'absolute',
-          width: 100 * getDateLength(date, lastDate) + '%',
+          width: 100 * Math.min(getDateLength(date, lastDate)) + '%',
+          //^FIXIT: min(getDateLength, last date of the month)
           backgroundColor: COLORS[channelColors?.get(e.channel)],
           transform: `translateY(${pos * 105}%)`,
         }}

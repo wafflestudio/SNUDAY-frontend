@@ -45,8 +45,14 @@ const EventContent = ({ isActive, event, modify }) => {
       <h3 className="event-title">{event.title}</h3>
       <pre className="event-date">{eventDateString(event)}</pre>
       <div>{event.memo}</div>
-      {userInfo.managing_channels.has(event.channel) ? (
-        <div style={{ display: 'flex', flexDirection: 'row-reverse' }}>
+      {userInfo?.managing_channels.has(event.channel) ? (
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'row-reverse',
+            alignItems: 'flex-end',
+          }}
+        >
           <img
             alt="edit"
             onClick={() => modify(true)}
@@ -106,6 +112,7 @@ export const EventModal = ({ isActive, event }) => {
 export const EventListItem = ({ event, showEvent }) => {
   const { channelColors } = useCalendarContext();
   const dateString = eventDateString(event);
+  if (!channelColors) return <></>;
   return (
     <div className="event-container" onClick={() => showEvent(event.id)}>
       <div className="event-color">
