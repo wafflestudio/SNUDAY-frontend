@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28">
+    <g data-name="레이어 2">
+        <g data-name="레이어 1" transform="translate(.384 .5)">
+            <circle data-name="타원 2-2" cx="13.5" cy="13.5" r="13.5" transform="translate(.116)" style="fill:#fff;stroke:#457af6"/>
+            <path data-name="패스 190" d="M25.057 20.106a4.588 4.588 0 1 0-5.151 0 7.341 7.341 0 0 0-4.766 6.864.634.634 0 0 0 1.269 0 6.073 6.073 0 0 1 12.145 0 .634.634 0 0 0 1.269 0 7.341 7.341 0 0 0-4.766-6.864zm-5.9-3.806a3.315 3.315 0 1 1 0 .008z" transform="translate(-8.824 -6.929)" style="fill:#3b77ff"/>
+        </g>
+    </g>
+</svg>

@@ -1,9 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" id="구성_요소_8_1" width="18.568" height="25.136" viewBox="0 0 18.568 25.136">
-    <defs>
-        <style>
-            .cls-1{fill:#fff}
-        </style>
-    </defs>
+    <g>
     <path id="선_8" d="M4.281 0L0 23.565" class="cls-1" transform="translate(3.162 .793)"/>
     <path id="패스_33" d="M235.4 25.094a.639.639 0 0 1-.139 0 .779.779 0 0 1-.624-.9L238.946.616a.774.774 0 1 1 1.522.279l-4.281 23.56a.784.784 0 0 1-.787.639z" transform="translate(-232.241 .038)"/>
     <path id="선_9" d="M4.281 0L0 23.565" class="cls-1" transform="translate(10.898 .793)"/>
@@ -12,4 +8,5 @@
     <path id="패스_35" d="M246.448 35.427h-15.674a.774.774 0 1 1 0-1.547h15.674a.774.774 0 0 1 0 1.547z" transform="translate(-230 -16.386)"/>
     <path id="선_11" d="M0 0L15.674 0" class="cls-1" transform="translate(2.12 7.436)"/>
     <path id="패스_36" d="M249.058 14.427h-15.674a.774.774 0 1 1 0-1.547h15.674a.774.774 0 1 1 0 1.547z" transform="translate(-231.264 -6.218)"/>
+    </g>
 </svg>

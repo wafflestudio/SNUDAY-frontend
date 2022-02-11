@@ -1,0 +1,57 @@
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+/* Firefox */
+input[type='number'] {
+  -moz-appearance: textfield;
+}
+
+.signup-form > h3 {
+  padding-left: 1rem;
+}
+.input-fullname-container {
+  display: flex;
+}
+.input-fullname-container > :first-child {
+  width: 45%;
+  padding-right: 1rem;
+}
+.input-fullname-container > :last-child {
+  width: 55%;
+}
+.agreement-container {
+  padding-left: 1rem;
+}
+.label-agreement {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  font-size: 0.8rem;
+  min-height: 2rem;
+  line-height: 1rem;
+  word-break: keep-all;
+}
+.label-agreement * {
+  word-break: keep-all;
+}
+.label-agreement input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+.checkmark {
+  margin-right: 7px;
+  width: initial;
+  height: 23px;
+  min-width: 23px;
+}
+.label-agreement input:checked ~ .checkmark circle {
+  fill: #3b77ff;
+  stroke: none;
+}
+.label-agreement input:checked ~ .checkmark path {
+  fill: #fff;
+}

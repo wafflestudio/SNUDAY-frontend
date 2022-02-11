@@ -1,0 +1,331 @@
+input[type='date']::-webkit-clear-button,
+input[type='month']::-webkit-clear-button,
+input[type='time']::-webkit-clear-button {
+  -webkit-appearance: none;
+  display: none;
+}
+.disabled {
+  opacity: 0.5;
+}
+.button-add-container {
+  position: fixed;
+  bottom: 4.5rem;
+  right: 0;
+  z-index: 10;
+  transition: bottom 0.3s, transform 0.15s;
+  user-select: none;
+}
+.button-add {
+  position: relative;
+  top: 0;
+  left: 0;
+}
+.button-add-circle {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.button-shrink {
+  transform: scale(0.9);
+}
+/* @keyframes off {
+  to {
+    transform: translate(-48%, 0);
+  }
+} */
+.button-toggle {
+  width: 2.8rem;
+  height: 1.5rem;
+  padding: 0;
+  border: none;
+  transition: background-color 0.3s;
+}
+.button-off {
+  background-color: #b8b8b8;
+}
+.button-toggle-circle {
+  transform: translate(0, 0);
+  transition: transform 0.3s;
+}
+.button-off .button-toggle-circle {
+  transform: translate(-48%, 0);
+}
+.button-timeset {
+  display: flex;
+  align-self: flex-end;
+  font-size: 0.9rem;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.tagbar {
+  /* z-index: 1; */
+  display: flex;
+  align-items: center;
+  align-content: flex-start;
+  width: 100%;
+  min-height: calc(1rem + 32px);
+  overflow-x: auto;
+  margin: 0;
+  background-color: #ededed;
+  /* background-image: linear-gradient(
+    rgb(250, 250, 251),
+    rgb(246, 246, 246) 33%,
+    rgb(233, 233, 233)
+  ); */
+  padding-left: 0rem; /*0.833: fit-start*/
+}
+
+.tagbar::-webkit-scrollbar {
+  display: none;
+}
+ul.tagbar.main {
+  /* position: sticky;
+  top: calc(1.75rem + 20px); */
+  /* overflow-y: visible; */
+  z-index: 10;
+}
+ul.tagbar > .tag {
+  margin-left: 12px;
+  margin: 4px 0 4px 12px;
+  animation: fade-in 1s;
+  transition: all 0.5s;
+}
+ul.tagbar.expand {
+  flex-wrap: wrap;
+  min-height: fit-content;
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.tag {
+  list-style-type: none;
+  height: calc(1rem + 12px);
+  min-width: fit-content;
+  max-width: fit-content;
+  /* margin: auto 0.5rem; */
+  padding: 0 0.8rem;
+  line-height: calc(1rem + 12px);
+  background-color: transparent;
+  color: white;
+  text-align: center;
+  border-radius: calc(1rem + 12px);
+}
+.tagbar .plus {
+  /* background-color: unset; */
+  position: sticky;
+  right: 0;
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    #ffffffdd 40%,
+    #fff 100%
+  );
+  color: black;
+  font-size: 1.8rem;
+  font-weight: 300;
+  text-align: right;
+  min-width: 3rem;
+  line-height: calc(16px + 1.8rem);
+  height: calc(16px + 1.8rem);
+  margin: -8px 0;
+  padding-right: 8px;
+}
+.tag::before {
+  content: '# ';
+}
+.tag.plus::before {
+  content: unset;
+}
+.Calendar {
+  position: relative;
+  user-select: none;
+}
+.Calendar.main {
+  position: fixed;
+  width: 100vw;
+  height: 100%;
+}
+.Calendar.channel {
+  position: fixed;
+  top: 3rem;
+  width: 100vw;
+  height: calc(100% - 3rem);
+}
+.Calendar.mini {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+.Calendar.mini * {
+  animation: none;
+}
+.Calendar > * {
+  background-color: white;
+}
+.Calendar-header {
+  /* z-index: 99; */
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: calc(1.75rem + 20px);
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin: auto 0;
+  padding: 0.5rem 1.333rem;
+}
+.Calendar-tagbar-container {
+  position: absolute;
+  top: calc(1.75rem + 20px);
+  width: 100%;
+  overflow-y: visible;
+  /* z-index: 20; */
+}
+.Calendar-title {
+  display: inline-block;
+  position: relative;
+  font-size: 1.75rem;
+  margin: 0 16px 0 0;
+}
+.Calendar-date-select {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  padding: 0;
+  cursor: pointer;
+}
+.Calendar-date-select::-webkit-calendar-picker-indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  margin: 0;
+}
+.Calendar-body {
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */
+}
+.main .Calendar-body,
+.channel .Calendar-body {
+  height: calc(100% - 6rem);
+  position: sticky;
+  top: 6rem;
+  overflow-x: hidden;
+}
+.main .Calendar-content,
+.channel .Calendar-content {
+  max-height: calc(100% - 3rem);
+}
+.Calendar.mini .Calendar-content {
+  height: calc(14rem + 2px);
+  top: 0;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+.Calendar.mini .Calendar-content::-webkit-scrollbar {
+  display: none;
+}
+.Calendar-content {
+  position: absolute;
+  top: 3rem;
+  display: flex;
+  flex: none;
+  width: 100%;
+  padding-top: 2px;
+  overflow-y: auto;
+  scroll-snap-type: both mandatory;
+}
+.month {
+  width: 100%;
+}
+.week:not(.weekdays) {
+  display: flex;
+  border-bottom: 1px rgb(221, 221, 221) solid;
+  justify-content: space-around;
+}
+.Calendar.mini .weekdays,
+.Calendar.mini .Calendar-header {
+  display: none;
+}
+.weekdays {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 3rem;
+  z-index: 2;
+  display: flex;
+  justify-content: space-around;
+  border-bottom: 1px rgb(221, 221, 221) solid;
+  background-color: white;
+}
+.day,
+.weekday {
+  flex: 1 1 calc(100% / 7);
+  text-align: center;
+}
+.week .day,
+.week .weekday {
+  width: calc(100% / 7);
+}
+.day {
+  height: 7rem;
+}
+.weekday {
+  height: 3rem;
+  line-height: 3rem;
+  font-weight: bold;
+}
+.weekday:first-child,
+.day:first-child {
+  color: rgb(217, 75, 75);
+}
+.weekday:last-child,
+.day:last-child {
+  color: rgb(60, 105, 227);
+  border-right: 0;
+}
+.date {
+  height: 1.5rem;
+  line-height: 1.5em;
+  font-weight: 500;
+}
+.date > .holiday {
+  color: rgb(217, 75, 75);
+}
+.today .date span:first-child {
+  padding: 0 0.25em;
+  color: white;
+  background-color: rgb(59, 119, 255);
+  border-radius: 0.4em;
+}
+.day.past .date,
+.day.next .date,
+.day.past .eventbar,
+.day.next .eventbar {
+  opacity: 0.5;
+}
+.day-todo-box {
+  position: relative;
+  height: 6em;
+}
+.day.active {
+  box-sizing: content-box;
+  border: 2px solid rgb(60, 105, 227);
+  margin: -2px;
+  border-radius: 0.5rem;
+}

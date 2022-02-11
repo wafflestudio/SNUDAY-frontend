@@ -1,5 +1,45 @@
+* {
+  scroll-behavior: smooth;
+}
+html {
+  /* background-color: #ededed; */
+  height: 100%;
+  overflow: hidden;
+}
 body {
+  background-color: white;
+  height: 100%;
+  width: 100%;
+  overflow: auto;
   margin: 0;
+  overscroll-behavior: contain;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+#root {
+  font-size: 16px;
+  min-height: 100%;
+  /* background-color: #ededed; */
+  overflow: hidden;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+a:link,
+a:visited {
+  color: #3b77ff;
+  background-color: transparent;
+  text-decoration: none;
+}
+a:visited {
+  color: #4b4dbd;
+}
+a:hover,
+a:active {
+  color: #4499e3;
+  background-color: transparent;
+  text-decoration: underline;
+  -webkit-tap-highlight-color: transparent;
 }
