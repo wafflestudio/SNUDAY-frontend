@@ -21,7 +21,7 @@
   max-width: 80%;
 }
 .error {
-  min-height: 61px;
+  min-height: 62px;
   padding: 20px 0;
   color: #aaaaaa;
   text-align: center;
@@ -38,18 +38,25 @@
   list-style-type: none;
   border-bottom: 1px solid #dddddd;
 }
+.notice-list.loading > li {
+  border-bottom: 1px solid transparent;
+}
 .notice-list > li > .tag ~ * {
   padding-left: 0.833rem;
 }
 .notice-list > li > *:not(:last-child) {
-  margin-bottom: 5px;
+  margin-bottom: 0.5rem;
 }
 .notice-list-title {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  line-height: 1.2rem;
+  min-height: 1.2rem;
 }
 .notice-list-date {
+  line-height: 0.8rem;
+  min-height: 0.8rem;
   font-size: 0.8rem;
   color: #4d4d4d;
 }

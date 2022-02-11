@@ -281,7 +281,9 @@ const AddChannelModal = ({ isActive, init }) => {
       managers_id: channel.managers.map((m) => m.username),
     };
     delete channelData.managers;
-    if (!(channelData.image instanceof Blob)) delete channelData.image;
+    //FIXIT: image upload error
+    // if (!(channelData.image instanceof Blob)) delete channelData.image;
+    delete channelData.image;
     console.log(channelData);
     const sendChannel = init ? patchChannel : addChannel;
 

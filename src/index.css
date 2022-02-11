@@ -2,7 +2,7 @@
   scroll-behavior: smooth;
 }
 html {
-  background-color: #ededed;
+  /* background-color: #ededed; */
   height: 100%;
   overflow: hidden;
 }
@@ -26,4 +26,20 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+a:link,
+a:visited {
+  color: #3b77ff;
+  background-color: transparent;
+  text-decoration: none;
+}
+a:visited {
+  color: #4b4dbd;
+}
+a:hover,
+a:active {
+  color: #4499e3;
+  background-color: transparent;
+  text-decoration: underline;
+  -webkit-tap-highlight-color: transparent;
 }

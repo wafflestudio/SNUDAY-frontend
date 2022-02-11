@@ -34,6 +34,7 @@ const Notice = ({
     });
     window.scrollTo(0, 0);
   }, [isModifying]);
+  console.log(findURL(notice?.contents));
   return isModifying ? (
     <AddNotice
       channelId={channelId}
@@ -49,19 +50,17 @@ const Notice = ({
         <div className="card">
           <div className="notice-header">
             <Tag
-              id={notice?.channel}
-              name={notice?.channel_name}
-              onClick={() => history.push(`/channel/${notice?.channel}`)}
+              id={notice.channel}
+              name={notice.channel_name}
+              onClick={() => history.push(`/channel/${notice.channel}`)}
             />
             <h3>{notice?.title}</h3>
             <div>
-              {new Date(notice?.created_at)
-                .toLocaleString('ko-kr')
-                .slice(0, -3)}
+              {new Date(notice.created_at).toLocaleString('ko-kr').slice(0, -3)}
             </div>
-            <div className="grey-text">{notice?.writer_name}</div>
+            <div className="grey-text">{notice.writer_name}</div>
           </div>
-          <div className="notice-content">{notice?.contents}</div>
+          <div className="notice-content">{findURL(notice.contents)}</div>
           {userInfo?.managing_channels.has(channelId) ? (
             <div className="notice-menu">
               <button
@@ -86,5 +85,25 @@ const Notice = ({
       )}
     </>
   );
+};
+const addATag = (string) => <a href={string}>string</a>;
+const findURL = (string) => {
+  if (typeof string !== 'string') return;
+  const arr = [];
+  let result;
+  let lastIndex = 0;
+  const reURL = /https?:\/\/[\S]+\.[\S]+/g;
+  console.log(string?.split(reURL));
+  while ((result = reURL.exec(string)) !== null) {
+    console.log(result);
+    console.log(reURL.lastIndex);
+    arr.push(string.slice(lastIndex, result.index));
+    arr.push(<a href={result[0]}>{result[0]}</a>);
+    lastIndex = reURL.lastIndex;
+  }
+  arr.push(string.slice(lastIndex));
+  console.log(arr);
+  return arr;
+  return string?.replaceAll(reURL, `<a href='$&'>$&</a>`);
 };
 export default Notice;

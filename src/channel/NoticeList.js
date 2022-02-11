@@ -9,11 +9,12 @@ const NoticeCard = ({ notice, includeChannelName }) => {
   return (
     <li
       className="selectable card"
-      onClick={() =>
-        history.push(`/channel/${notice.channel}/notice/${notice.id}`)
-      }
+      onClick={() => {
+        if (notice)
+          history.push(`/channel/${notice.channel}/notice/${notice.id}`);
+      }}
     >
-      {includeChannelName ? (
+      {includeChannelName && notice ? (
         <Tag
           onClick={(e) => {
             e.stopPropagation();
@@ -25,9 +26,9 @@ const NoticeCard = ({ notice, includeChannelName }) => {
       ) : (
         <></>
       )}
-      <div className="notice-list-title">{notice.title}</div>
+      <div className="notice-list-title">{notice?.title}</div>
       <div className="notice-list-date">
-        {new Date(notice.created_at).toLocaleDateString()}
+        {notice ? new Date(notice.created_at).toLocaleDateString() : ''}
       </div>
     </li>
   );
@@ -38,7 +39,7 @@ const NoticeList = ({ channelId, type, keyword, limit, ...rest }) => {
   const [isFetching, setIsFetching] = useInfiniteScroll(() => {
     if (notices?.next) fetchNotices(notices.next);
     console.log('isFetching');
-  }, listRef.current);
+  }, listRef.current); //??
   const {
     value: { isLoggedIn, userInfo },
   } = useAuthContext();
@@ -86,7 +87,15 @@ const NoticeList = ({ channelId, type, keyword, limit, ...rest }) => {
   useEffect(() => {
     fetchNotices();
   }, [channelId, type, keyword, limit, userInfo]);
-  if (!notices?.results) return <></>;
+  if (!notices?.results)
+    return (
+      // <ul className="notice-list loading">
+      //   {[...Array(limit ?? 0)].map(() => (
+      //     <NoticeCard />
+      //   ))}
+      // </ul>
+      <div className="error"></div>
+    );
   return (
     <ul ref={listRef} className="notice-list" {...rest}>
       {notices.results.length !== 0 ? (

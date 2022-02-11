@@ -36,7 +36,7 @@ const ChannelCard = ({ channelData, verbose }) => {
     image,
     description,
     subscribers_count,
-    // is_private,
+    is_private,
     // is_official,
     //is_personal,
     //created_at,
@@ -45,7 +45,11 @@ const ChannelCard = ({ channelData, verbose }) => {
   return (
     <div
       className="channel-card"
-      onClick={() => (verbose ? undefined : history.push(`/channel/${id}`))}
+      onClick={() =>
+        verbose || (is_private && !userInfo?.subscribing_channels?.has(id))
+          ? undefined
+          : history.push(`/channel/${id}`)
+      }
     >
       <div className="channel-image-with-button">
         <ChannelAvatar name={name} image={image} />
@@ -61,7 +65,7 @@ const ChannelCard = ({ channelData, verbose }) => {
             <></>
           ) : (
             <>
-              {userInfo?.managing_channels.has(channelData.id) ? (
+              {userInfo?.managing_channels?.has(channelData.id) ? (
                 <WaitingListButton channelData={channelData} />
               ) : (
                 <></>

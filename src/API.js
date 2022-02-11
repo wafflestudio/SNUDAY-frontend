@@ -25,7 +25,7 @@ export const refresh = () =>
         resolve(response.data);
       })
       .catch((e) => {
-        reject(e.response.status);
+        reject(e.response);
       });
   });
 export const loginUser = (data) =>

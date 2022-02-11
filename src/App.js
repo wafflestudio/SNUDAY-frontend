@@ -114,15 +114,7 @@ function App() {
   //FIX: userInfo takes time to update after refresh
   // if (!userInfo) return <></>;
   return (
-    <div>
-      <div
-        onScroll={() => {
-          setsctop(window.pageYOffset);
-        }}
-        style={{ position: 'fixed', zIndex: 1000 }}
-      >
-        scrollTop:{sctop}
-      </div>
+    <>
       <Switch>
         <Route exact path="/" component={Home} />
         <Route exact path="/mypage/ChangePw" component={ChangePassword} />
@@ -141,7 +133,7 @@ function App() {
         <Route exact path="/findmypw" component={FindMyPassword} />
       </Switch>
       <Navigation />
-    </div>
+    </>
   );
 }
 

@@ -339,5 +339,5 @@ input:not([type='checkbox']):not([type='radio']) {
   border-bottom: 1px solid #dddddd;
 }
 .selectable:active {
-  background: linear-gradient(#ddd, #eee, #ddd);
+  background: rgba(240, 240, 240, 1);
 }

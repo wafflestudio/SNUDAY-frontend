@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { useCalendarContext } from 'context/CalendarContext';
 import DayEventsModal from './DayEventsModal';
 import EventBar from './EventBar';
-const Day = ({ year, monthIndex, day, events, eventPositions }) => {
+const Day = ({ year, monthIndex, day, channelId, events, eventPositions }) => {
   const date = new Date(year, monthIndex, day);
   const [showEvent, setShowEvent] = useState(false);
   const { calendar, getNumDays, setDay } = useCalendarContext();
@@ -83,7 +83,11 @@ const Day = ({ year, monthIndex, day, events, eventPositions }) => {
             )}
           </div>
           {showEvent ? (
-            <DayEventsModal isActive={setShowEvent} date={date} />
+            <DayEventsModal
+              isActive={setShowEvent}
+              date={date}
+              channelId={channelId}
+            />
           ) : (
             <></>
           )}

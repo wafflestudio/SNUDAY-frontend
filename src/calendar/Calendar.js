@@ -56,18 +56,21 @@ export const Calendar = ({ channelId, type }) => {
       ?.classList.add('active');
   }, [year, monthIndex, day]);
   useEffect(() => {
-    document
-      .getElementById(
-        `${year}-${monthIndex}-${new Date(
-          year,
-          monthIndex,
-          day
-        ).toLocaleDateString('ko-KR')}`
-      )
-      ?.scrollIntoView({
-        block: 'nearest',
-        behavior: 'smooth',
-      });
+    const selectedDay = document.getElementById(
+      `${year}-${monthIndex}-${new Date(
+        year,
+        monthIndex,
+        day
+      ).toLocaleDateString('ko-KR')}`
+    );
+    //FIXIT:intersecting day
+    // let observer = new IntersectionObserver(
+    //   () => selectedDay.scrollIntoView(),
+    //   {
+    //     root: document.getElementsByClassName('Calendar-content')[0],
+    //     threshold: 1,
+    //   }
+    // );
   }, [day]);
   const chooseDay = (d) => {
     //전후 달
@@ -118,7 +121,7 @@ export const Calendar = ({ channelId, type }) => {
         ) : (
           <></>
         )}
-        <div className={`Calendar ${type}`}>
+        <div className={`Calendar ${type ?? ''}`}>
           <div className="Calendar-header">
             <h3 className="Calendar-title">
               {year === today.getFullYear() ? '' : `${year}년 `}
@@ -147,7 +150,7 @@ export const Calendar = ({ channelId, type }) => {
             moveMonth={moveMonth}
             year={year}
             monthIndex={monthIndex}
-            channel={channelId}
+            channelId={channelId}
           />
         </div>
       </CalendarContextProvider>
@@ -155,7 +158,7 @@ export const Calendar = ({ channelId, type }) => {
   );
 };
 export default Calendar;
-export const CalendarBody = ({ moveMonth, year, monthIndex, channel }) => {
+export const CalendarBody = ({ moveMonth, year, monthIndex, channelId }) => {
   const [targetTouch, setTargetTouch] = useState(null);
   return (
     <div className="Calendar-body" onWheel={(e) => moveMonth(e.deltaY)}>
@@ -229,7 +232,7 @@ export const CalendarBody = ({ moveMonth, year, monthIndex, channel }) => {
           key={`${year}-${monthIndex}`}
           year={year}
           monthIndex={monthIndex}
-          channel={channel}
+          channelId={channelId}
         />
         {/* <Month
           key={`${year}-${monthIndex + 1}-`}

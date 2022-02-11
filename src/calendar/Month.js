@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useCalendarContext } from 'context/CalendarContext';
 import Week from './Week';
-const Month = ({ year, monthIndex, channel }) => {
+const Month = ({ year, monthIndex, channelId }) => {
   const date = new Date(year, monthIndex);
   const startDate = 1 - date.getDay();
   const getNumDays = (year, monthIndex) => {
@@ -21,7 +21,7 @@ const Month = ({ year, monthIndex, channel }) => {
   const [monthActiveEvents, setActiveMonthEvents] = useState(undefined);
   const [posEvents, setPosEvents] = useState(null);
   useEffect(() => {
-    let monthActiveEvents = getMonthActiveEvents(year, monthIndex, channel);
+    let monthActiveEvents = getMonthActiveEvents(year, monthIndex, channelId);
     // if(channel) monthActiveEvents = channelEvents.get(channel)
     setActiveMonthEvents(monthActiveEvents);
     console.log(monthActiveEvents);
@@ -85,10 +85,11 @@ const Month = ({ year, monthIndex, channel }) => {
     <div className="month">
       {[...Array(numWeeks).keys()].map((weekNo) => (
         <Week
-          key={`${year}-${monthIndex}-${weekNo}w`}
+          key={`${year}-${monthIndex}-${weekNo + 1}w`}
           year={year}
           monthIndex={monthIndex}
           day={startDate + 7 * weekNo}
+          channelId={channelId}
           events={monthActiveEvents}
           eventPositions={posEvents}
         />

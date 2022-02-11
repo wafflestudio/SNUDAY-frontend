@@ -9,11 +9,11 @@ export const ChannelStatusButton = ({ channelData }) => {
     value: { userInfo },
   } = useAuthContext();
   if (!userInfo) return <></>;
-  if (userInfo.managing_channels.has(channelData.id))
+  if (userInfo.managing_channels?.has(channelData.id))
     return <EditChannelButton channelData={channelData} />;
-  if (userInfo.subscribing_channels.has(channelData.id))
+  if (userInfo.subscribing_channels?.has(channelData.id))
     return <CancelSubscriptionButton channelData={channelData} />;
-  if (userInfo.awaiting_channels.has(channelData.id))
+  if (userInfo.awaiting_channels?.has(channelData.id))
     return <AwaitSubscriptionButton channelData={channelData} />;
   return <SubscribeButton channelData={channelData} />;
 };
