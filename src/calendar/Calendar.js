@@ -123,7 +123,7 @@ export const Calendar = ({ channelId, type }) => {
         )}
         <div className={`Calendar ${type ?? ''}`}>
           <div className="Calendar-header">
-            <h3 className="Calendar-title">
+            <h1 className="Calendar-title">
               {year === today.getFullYear() ? '' : `${year}년 `}
               {monthIndex + 1}월
               <input
@@ -135,7 +135,7 @@ export const Calendar = ({ channelId, type }) => {
                   chooseMonth(e.target.value);
                 }}
               />
-            </h3>
+            </h1>
             <button onClick={() => goToday()}>오늘</button>
           </div>
           {channelId ? (

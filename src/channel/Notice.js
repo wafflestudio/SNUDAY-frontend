@@ -48,7 +48,7 @@ const Notice = ({
       <Header>공지</Header>
       {notice ? (
         <div className="card">
-          <div className="notice-header">
+          <div className="notice-info">
             <Tag
               id={notice.channel}
               name={notice.channel_name}
