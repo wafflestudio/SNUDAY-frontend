@@ -6,21 +6,43 @@
   box-sizing: border-box;
   scroll-behavior: smooth;
 }
+/* @media all and (display-mode: standalone) {
+  body {
+    background-color: orange !important;
+    color: orange !important;
+  }
+}
+@media all and (display-mode: browser) {
+  body {
+    background-color: teal !important;
+    color: teal !important;
+  }
+} */
 html {
   /* background-color: #ededed; */
   height: 100%;
   overflow: hidden;
   font-size: 15px;
 }
+
 body {
   background-color: white;
-  height: 100%;
   width: 100%;
+  height: 100%;
   overflow: auto;
   margin: 0;
   overscroll-behavior: contain;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+@media only screen and (display-mode: standalone) {
+  /*PWA*/
+  @supports (-webkit-touch-callout: none) {
+    /*iOS*/
+    body {
+      height: calc(100% - 83px) !important;
+    }
+  }
 }
 #root {
   min-height: 100%;

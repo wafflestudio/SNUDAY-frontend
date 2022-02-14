@@ -1,6 +1,6 @@
 .nav-container {
   z-index: 10;
-  height: 4.5rem;
+  height: fit-content;
   width: 100vw;
   display: flex;
   justify-content: space-around;
@@ -14,15 +14,17 @@
 .nav-item {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  align-items: center;
+  justify-content: flex-start;
   flex: 1;
   text-align: center;
   font-size: min(0.75rem, 4vw);
   font-weight: bold;
 }
 .nav-item svg {
-  margin: 0 auto;
-  height: 2rem;
+  width: 100%;
+  height: 24px;
+  margin: 10px 0 5px;
 }
 .nav-item:active {
   background-color: rgb(237, 237, 237);
@@ -34,5 +36,21 @@
 }
 .nav-item p {
   margin: 0;
-  padding-top: 0.25rem;
+  line-height: 1rem;
+  margin-bottom: 10px;
+}
+@media only screen and (display-mode: standalone) {
+  /*PWA*/
+  @supports (-webkit-touch-callout: none) {
+    /*iOS*/
+    .nav-container {
+      border-top: 0.5px solid #b8b8b8;
+    }
+    .nav-item p {
+      font-size: 10px;
+      font-weight: 500;
+      line-height: 10px;
+      margin-bottom: 34px;
+    }
+  }
 }
