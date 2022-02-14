@@ -1,5 +1,5 @@
 import ColorPicker from 'ColorPicker';
-import { ModalBackground } from 'Modal';
+import Modal, { ModalBackground } from 'Modal';
 import { useEffect, useState } from 'react';
 import { getChannel } from './API';
 import { COLORS } from './Constants';
@@ -51,14 +51,16 @@ const Tag = ({
   return (
     <>
       {showColorPicker ? (
-        <>
-          <ModalBackground isActive={setLongPress}></ModalBackground>
-          <ColorPicker
-            setColor={setColor}
-            left={leftClickPos}
-            targetBoundingRect={boundingRect}
-          />
-        </>
+        <Modal
+          isActive={setLongPress}
+          content={
+            <ColorPicker
+              setColor={setColor}
+              left={leftClickPos}
+              targetBoundingRect={boundingRect}
+            />
+          }
+        ></Modal>
       ) : (
         <></>
       )}
@@ -106,14 +108,6 @@ const Tag = ({
         }}
       >
         {userInfo?.my_channel === id ? '나의 일정' : name ?? channel.name}
-        {/* {showColorPicker ? (
-          <>
-            <ModalBackground isActive={setLongPress}></ModalBackground>
-            <ColorPicker setColor={setColor} left={leftClickPos} />
-          </>
-        ) : (
-          <></>
-        )} */}
       </div>
     </>
   );
