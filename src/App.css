@@ -59,32 +59,6 @@
   color: #3c69e3;
   border: none;
 }
-* {
-  font-family: 'Noto Sans', 'Noto Sans CJK KR', -apple-system,
-    BlinkMacSystemFont, '애플 SD 산돌고딕 Neo', 'Apple SD Gothic Neo',
-    'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue',
-    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;
-  box-sizing: border-box;
-}
-form {
-  display: flex;
-  flex-direction: column;
-  padding: 0 8px;
-}
-form > * {
-  margin-bottom: 8px;
-}
-hr {
-  border-top: 1px solid #dddddd;
-  border-bottom: 0;
-  border-left: 0;
-  border-right: 0;
-}
-label {
-  padding-right: 0.5rem;
-  font-weight: 500;
-  min-width: fit-content;
-}
 .input-box:focus-within ~ #channel-search-option-select {
   display: none;
   border: 1px solid transparent;
@@ -120,28 +94,7 @@ label {
 #channel-search-option-select:focus {
   border: 1px solid #457af6;
 }
-button {
-  min-width: fit-content;
-  font-size: 1rem;
-  padding: 0.25rem 0.5rem;
-  border-radius: 1.5rem;
-  border: 1px solid #3b77ff;
-  background-color: #3b77ff;
-  color: white;
-  outline: none;
-  user-select: none;
-}
-button:active {
-  background-color: white;
-  color: #3b77ff;
-  border-color: #3b77ff;
-  font-weight: bold;
-}
-button:disabled {
-  background-color: #dddddd;
-  color: white;
-  border: 1px solid #dddddd;
-}
+
 .button-big {
   height: 3rem;
   font-size: 1.2rem;
@@ -198,31 +151,35 @@ button:active {
 }
 .header {
   z-index: 99;
-  position: fixed;
-  top: 0;
-  width: 100vw;
   height: 3rem;
   line-height: 3rem;
-  border-bottom: 1px solid #b8b8b8;
+
+  position: fixed;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 0.5px solid #b8b8b8;
   -webkit-backdrop-filter: saturate(180%) blur(20px);
   backdrop-filter: saturate(180%) blur(20px);
   background-color: hsla(0, 0%, 100%, 0.72);
   text-align: center;
-  font-size: 1.4rem;
-  font-weight: bold;
 }
 .header > * {
-  position: absolute;
+  /* position: absolute;
   top: 50%;
   -ms-transform: translate(0, -50%);
   transform: translate(0, -50%);
-  margin-left: 10px;
+  margin-left: 10px; */
+  width: fit-content;
 }
 .header > .header-left {
-  left: 0;
+  position: absolute;
+  left: 16px;
 }
 .header > .header-right {
-  right: 0;
+  position: absolute;
+  right: 16px;
 }
 .small-text {
   font-size: 0.8rem;
@@ -241,6 +198,9 @@ textarea {
 }
 textarea:focus {
   border-color: #457af6;
+}
+img {
+  color: inherit;
 }
 input {
   background-color: #fff;

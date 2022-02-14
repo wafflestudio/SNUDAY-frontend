@@ -60,11 +60,11 @@
   font-size: 0.8rem;
   color: #4d4d4d;
 }
-.notice-header {
+.notice-info {
   padding: 10px 0 20px 16px;
   border-bottom: 1px solid #b8b8b8;
 }
-.notice-header > h3 {
+.notice-info > h3 {
   margin: 16px 0;
 }
 .notice-content {
