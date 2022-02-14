@@ -64,7 +64,7 @@ input[type='time']::-webkit-clear-button {
   align-items: center;
   align-content: flex-start;
   width: 100%;
-  min-height: calc(1rem + 32px);
+  min-height: 40px;
   overflow-x: auto;
   margin: 0;
   background-color: #ededed;
@@ -110,10 +110,11 @@ ul.tagbar.expand {
   max-width: fit-content;
   /* margin: auto 0.5rem; */
   padding: 0 0.8rem;
-  line-height: calc(1rem + 12px);
   background-color: transparent;
   color: white;
+  line-height: calc(1rem + 12px);
   text-align: center;
+  font-weight: 500;
   border-radius: calc(1rem + 12px);
 }
 .tagbar .plus {
@@ -173,16 +174,17 @@ ul.tagbar.expand {
   position: absolute;
   top: 0;
   width: 100%;
-  height: calc(1.75rem + 20px);
+  height: 50px;
+  padding-top: 2px;
+  /* height: calc(1.75rem + 20px); */
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  margin: auto 0;
-  padding: 0.5rem 1.333rem;
 }
 .Calendar-tagbar-container {
   position: absolute;
-  top: calc(1.75rem + 20px);
+  top: 50px;
+  /* top: calc(1.75rem + 20px); */
   width: 100%;
   overflow-y: visible;
   /* z-index: 20; */
@@ -190,7 +192,6 @@ ul.tagbar.expand {
 .Calendar-title {
   display: inline-block;
   position: relative;
-  font-size: 1.75rem;
   margin: 0 16px 0 0;
 }
 .Calendar-date-select {

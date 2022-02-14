@@ -1,10 +1,16 @@
 * {
+  font-family: 'Noto Sans', 'Noto Sans CJK KR', -apple-system,
+    BlinkMacSystemFont, '애플 SD 산돌고딕 Neo', 'Apple SD Gothic Neo',
+    'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue',
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;
+  box-sizing: border-box;
   scroll-behavior: smooth;
 }
 html {
   /* background-color: #ededed; */
   height: 100%;
   overflow: hidden;
+  font-size: 15px;
 }
 body {
   background-color: white;
@@ -17,15 +23,8 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 #root {
-  font-size: 16px;
   min-height: 100%;
-  /* background-color: #ededed; */
   overflow: hidden;
-}
-
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
 }
 a:link,
 a:visited {
@@ -42,4 +41,58 @@ a:active {
   background-color: transparent;
   text-decoration: underline;
   -webkit-tap-highlight-color: transparent;
+}
+button {
+  min-width: fit-content;
+  font-size: 1.2rem;
+  padding: 0.2rem 0.75rem;
+  border-radius: 1.6rem;
+  border: none;
+  background-color: #3b77ff;
+  color: white;
+  outline: none;
+  user-select: none;
+}
+button:active {
+  background-color: white;
+  color: #3b77ff;
+  border-color: #3b77ff;
+  font-weight: bold;
+}
+button:disabled {
+  background-color: #dddddd;
+  color: white;
+  border: 1px solid #dddddd;
+}
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+form {
+  display: flex;
+  flex-direction: column;
+  padding: 0 8px;
+}
+form > * {
+  margin-bottom: 8px;
+}
+hr {
+  border-top: 1px solid #dddddd;
+  border-bottom: 0;
+  border-left: 0;
+  border-right: 0;
+}
+h1 {
+  font-size: 34px;
+}
+*[class$='header'] {
+  width: 100%;
+  font-size: 17px;
+  font-weight: bold;
+  padding: 0 16px;
+}
+label {
+  padding-right: 0.5rem;
+  font-weight: 500;
+  min-width: fit-content;
 }

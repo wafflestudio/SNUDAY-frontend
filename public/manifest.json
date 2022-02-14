@@ -1,15 +1,17 @@
 {
   "short_name": "SNUDAY",
   "name": "SNUDAY",
+  "description": "서울대학교 학내 일정관리 서비스, 스누데이",
   "icons": [
     {
-      "src": "logo.svg",
-      "sizes": "108x108",
-      "type": "image/svg"
+      "src": "/logo.png",
+      "sizes": "any",
+      "type": "image/png"
     }
   ],
-  "start_url": "./index.html",
+  "id": "/",
+  "start_url": "/",
   "display": "standalone",
-  "theme_color": "#000000",
+  "theme_color": "#ffffff",
   "background_color": "#ffffff"
 }
