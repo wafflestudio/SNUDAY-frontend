@@ -117,7 +117,7 @@ const AddChannelModalContent = ({ channel, setChannel }) => {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          width: '4.5rem',
+          width: 'fit-content',
           padding: '2px 10px',
           margin: '0',
           color: channel.is_private ? '#aaaaaa' : '#3b77ff',
@@ -135,12 +135,14 @@ const AddChannelModalContent = ({ channel, setChannel }) => {
         {channel.is_private ? (
           <>
             <ClosedLock />
-            {` 비공개`}
+            <span style={{ fontSize: '0.8rem', paddingLeft: '5px' }}>
+              비공개
+            </span>
           </>
         ) : (
           <>
             <OpenLock />
-            {` 공개`}
+            <span style={{ fontSize: '0.8rem', paddingLeft: '5px' }}>공개</span>
           </>
         )}
       </div>
@@ -259,7 +261,7 @@ const AddChannelModal = ({ isActive, init }) => {
     name: '',
     description: '',
     managers: [userInfo],
-    is_private: true,
+    is_private: false,
     image: null,
     //is_official:false
   };
@@ -282,8 +284,8 @@ const AddChannelModal = ({ isActive, init }) => {
     };
     delete channelData.managers;
     //FIXIT: image upload error
-    // if (!(channelData.image instanceof Blob)) delete channelData.image;
-    delete channelData.image;
+    if (!(channelData.image instanceof Blob)) delete channelData.image;
+    // delete channelData.image;
     console.log(channelData);
     const sendChannel = init ? patchChannel : addChannel;
 

@@ -1,5 +1,5 @@
 import ColorPicker from 'ColorPicker';
-import Modal, { ModalBackground } from 'Modal';
+import Modal from 'Modal';
 import { useEffect, useState } from 'react';
 import { getChannel } from './API';
 import { COLORS } from './Constants';

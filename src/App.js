@@ -30,11 +30,11 @@ function App() {
     const NavBar = document.getElementById('navigation-bar');
     const AddButton = document.getElementById('add-button');
     if (window.pageYOffset > lastScrollTop) {
-      NavBar.style.bottom = '-4.5rem';
+      NavBar.style.bottom = '-' + NavBar.offsetHeight + 'px';
       AddButton.style.bottom = '0';
     } else {
       NavBar.style.bottom = '0';
-      AddButton.style.bottom = '4.5rem';
+      AddButton.style.bottom = NavBar.offsetHeight + 'px';
     }
     lastScrollTop = window.pageYOffset;
   };
@@ -58,13 +58,13 @@ function App() {
       if (id >= 0)
         if (touch.clientY < ongoingTouches[id].clientY - 12) {
           //scrollDown
-          if (NavBar) NavBar.style.bottom = '-4.5rem';
+          if (NavBar) NavBar.style.bottom = '-' + NavBar.offsetHeight + 'px';
           if (AddButton) AddButton.style.bottom = '0';
           ongoingTouches.splice(id, 1, touch);
         } else if (touch.clientY > ongoingTouches[id].clientY + 12) {
           //scrollUp
           if (NavBar) NavBar.style.bottom = '0';
-          if (AddButton) AddButton.style.bottom = '4.5rem';
+          if (AddButton) AddButton.style.bottom = NavBar.offsetHeight + 'px';
           ongoingTouches.splice(id, 1, touch);
         }
     }
@@ -77,12 +77,12 @@ function App() {
       if (id >= 0) {
         if (touch.clientY < ongoingTouches[id].clientY - 5) {
           //scrollDown
-          if (NavBar) NavBar.style.bottom = '-4.5rem';
+          if (NavBar) NavBar.style.bottom = '-' + NavBar.offsetHeight + 'px';
           if (AddButton) AddButton.style.bottom = '0';
         } else if (touch.clientY > ongoingTouches[id].clientY + 5) {
           //scrollUp
           if (NavBar) NavBar.style.bottom = '0';
-          if (AddButton) AddButton.style.bottom = '4.5rem';
+          if (AddButton) AddButton.style.bottom = NavBar.offsetHeight + 'px';
         }
         ongoingTouches.splice(id, 1);
       }
@@ -91,7 +91,7 @@ function App() {
   window.onresize = () => {
     const NavBar = document.getElementById('navigation-bar');
     const AddButton = document.getElementById('add-button');
-    if (NavBar) NavBar.style.bottom = '-4.5rem';
+    if (NavBar) NavBar.style.bottom = '-' + NavBar.offsetHeight + 'px';
     if (AddButton) AddButton.style.bottom = '0';
   };
   const {
