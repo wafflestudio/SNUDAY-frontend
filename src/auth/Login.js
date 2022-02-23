@@ -5,6 +5,7 @@ import { loginUser, refresh } from 'API';
 import { useEffect, useState } from 'react';
 import { useAuthContext } from 'context/AuthContext';
 import { InputBox } from 'Input';
+import { usernamePattern, pwPattern } from 'Constants';
 const Login = () => {
   let history = useHistory();
   const [isLoading, setIsLoading] = useState(true);
@@ -50,21 +51,23 @@ const Login = () => {
       </div>
       <form className="login-form">
         <InputBox
+          aria-label="ID"
           value={username}
           setValue={setUsername}
           type="text"
           message={showMessage ? '아이디를 입력하세요.' : undefined}
           showMessage={true}
-          pattern={/^.+$/}
+          pattern={usernamePattern}
           placeholder="아이디"
         />
         <InputBox
+          aria-label="password"
           value={password}
           setValue={setPassword}
           type="password"
           message={showMessage ? '비밀번호를 입력하세요.' : undefined}
           showMessage={showMessage}
-          pattern={/^.+$/}
+          pattern={pwPattern}
           placeholder="비밀번호"
         />
         {showMessage && username !== '' && password !== '' ? (
@@ -75,10 +78,11 @@ const Login = () => {
           <></>
         )}
         <button
+          type="submit"
           className="button-big"
           onClick={(e) => {
-            e.preventDefault();
             login();
+            e.preventDefault();
           }}
         >
           로그인
