@@ -48,9 +48,12 @@ function App() {
     return -1; // not found
   }
   window.ontouchstart = (e) => {
+    if (window.navigator.standalone) return; //iOS standalone
     for (let touch of e.changedTouches) ongoingTouches.push(touch);
   };
   window.ontouchmove = (e) => {
+    if (window.navigator.standalone) return;
+
     const NavBar = document.getElementById('navigation-bar');
     const AddButton = document.getElementById('add-button');
     for (let touch of e.changedTouches) {
@@ -70,6 +73,8 @@ function App() {
     }
   };
   window.ontouchend = (e) => {
+    if (window.navigator.standalone) return;
+
     const NavBar = document.getElementById('navigation-bar');
     const AddButton = document.getElementById('add-button');
     for (let touch of e.changedTouches) {

@@ -14,8 +14,8 @@ const SearchHome = () => {
   return (
     <>
       <Header left={<></>}>채널 찾기</Header>
-      <div className="main-container">
-        <div style={{ padding: ' 0 20px', margin: '20px 0' }}>
+      <div className="main-container" style={{ height: 'calc(100% - 3rem)' }}>
+        <div style={{ padding: ' 0 20px', margin: '10px 0' }}>
           <SearchBox
             searchValue={searchValue}
             setSearchValue={setSearchValue}

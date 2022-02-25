@@ -87,18 +87,22 @@ const NoticeList = ({ channelId, type, keyword, limit, ...rest }) => {
   useEffect(() => {
     fetchNotices();
   }, [channelId, type, keyword, limit, userInfo]);
-  if (!notices?.results)
-    return (
-      // <ul className="notice-list loading">
-      //   {[...Array(limit ?? 0)].map(() => (
-      //     <NoticeCard />
-      //   ))}
-      // </ul>
-      <div className="error"></div>
-    );
+  // if (!notices?.results)
+  //   return (
+  //     // <ul className="notice-list loading">
+  //     //   {[...Array(limit ?? 0)].map(() => (
+  //     //     <NoticeCard />
+  //     //   ))}
+  //     // </ul>
+  //     <div className="error"></div>
+  //   );
   return (
     <ul ref={listRef} className="notice-list" {...rest}>
-      {notices.results.length !== 0 ? (
+      {!notices?.results ? (
+        <div className="error"></div>
+      ) : notices.results.length === 0 ? (
+        <div className="error">공지사항이 없습니다.</div>
+      ) : (
         notices.results
           .slice(0, limit)
           .map((notice) => (
@@ -108,8 +112,6 @@ const NoticeList = ({ channelId, type, keyword, limit, ...rest }) => {
               includeChannelName={!channelId}
             />
           ))
-      ) : (
-        <div className="error">공지사항이 없습니다.</div>
       )}
     </ul>
   );

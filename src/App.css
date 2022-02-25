@@ -21,6 +21,9 @@
   }
 }
 .main-container {
+  width: 100vw;
+  max-height: calc(100% - 3rem);
+  overflow: auto;
   display: flex;
   flex-direction: column;
   background-color: #ededed;
