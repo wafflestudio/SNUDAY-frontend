@@ -26,18 +26,23 @@ const ChannelMain = () => {
         ref={listRef}
         style={{
           width: '100vw',
-          height: 'calc(100% - 3rem)',
-          overflow: 'auto',
+          height: `calc(${
+            listRef.current?.parentElement.getBoundingClientRect().height
+          }px - 3rem)`,
           position: 'fixed',
           top: '3rem',
           backgroundColor: 'white',
         }}
+        onScroll={(e) => e.stopPropagation()}
+        onTouchMove={(e) => e.stopPropagation()}
       >
         <ChannelMainTab
           activeTab={activeTab}
           setActiveTab={setActiveTab}
         ></ChannelMainTab>
-        <ChannelList category={activeTab} isLoggedIn={isLoggedIn} />
+        <section style={{ height: 'calc(100% - 3rem - 18px)' }}>
+          <ChannelList category={activeTab} isLoggedIn={isLoggedIn} />
+        </section>
       </div>
     </>
   );

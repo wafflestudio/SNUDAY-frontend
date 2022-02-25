@@ -1,6 +1,7 @@
 .channel-list {
-  /* overflow: auto; */
+  overflow: auto;
   background-color: white;
+  max-height: 100%;
 }
 .channel-list > li {
   background: linear-gradient(#ddd, #eee, #ddd);
