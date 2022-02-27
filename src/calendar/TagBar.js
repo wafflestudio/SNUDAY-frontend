@@ -1,17 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useAuthContext } from 'context/AuthContext';
 import { useCalendarContext } from 'context/CalendarContext';
 import Tag from 'Tag';
 
-const colors = {
-  red: '#d4515d',
-  orange: '#e8914f',
-  yellow: '#f3c550',
-  green: '#b2d652',
-};
 const TagBar = ({ category, onTagClick, isMain, ...props }) => {
   const { disabledChannels, setDisabledChannels } = useCalendarContext();
   const [channels, setChannels] = useState([]);
+  const tagbarRef = useRef(null);
   const {
     value: { userInfo },
   } = useAuthContext();
@@ -53,8 +48,8 @@ const TagBar = ({ category, onTagClick, isMain, ...props }) => {
     }
   }, [userInfo]);
   return (
-    <ul className={`tagbar${isMain ? ' main' : ''}`} {...props}>
-      {channels?.map((channelId) => (
+    <ul ref={tagbarRef} className={`tagbar${isMain ? ' main' : ''}`} {...props}>
+      {channels.map((channelId) => (
         <Tag
           readonly={!isMain}
           key={channelId}
@@ -65,12 +60,19 @@ const TagBar = ({ category, onTagClick, isMain, ...props }) => {
           }
         />
       ))}
-      {/* <div
-        className="plus"
-        onClick={(e) => e.target.parentElement.classList.toggle('expand')}
-      >
-        +
-      </div> */}
+      {isMain &&
+      (tagbarRef.current?.matches('.expand') ||
+        tagbarRef.current?.offsetWidth < tagbarRef.current?.scrollWidth) ? (
+        <img
+          className="plus"
+          src="/resources/plus.svg"
+          onClick={(e) => {
+            e.target.parentElement.classList.toggle('expand');
+          }}
+        />
+      ) : (
+        <></>
+      )}
     </ul>
   );
 };
