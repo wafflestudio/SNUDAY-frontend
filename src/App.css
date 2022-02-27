@@ -100,17 +100,16 @@
 
 .button-big {
   height: 3rem;
+  border-radius: 3rem;
   font-size: 1.2rem;
   margin: 0.66rem 0;
 }
 .button-blue {
   background-color: white;
   color: #3b77ff;
-  border: 1px solid #3b77ff;
 }
 .button-blue:disabled {
   color: #b8b8b8;
-  border-color: #b8b8b8;
   opacity: 1;
 }
 .button-blue:active {
@@ -119,7 +118,6 @@
 }
 .button-delete {
   background-color: white;
-  border-color: #f93822;
   color: #f93822;
 }
 .button-delete:active {
@@ -130,11 +128,9 @@
 .button-grey {
   background-color: white;
   color: #b8b8b8;
-  border: 1px solid #b8b8b8;
 }
 .button-grey:active {
   color: #4d4d4d;
-  border: 1px solid #4d4d4d;
 }
 .button-in-input {
   height: 80%;

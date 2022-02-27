@@ -27,6 +27,7 @@ const Tag = ({
   const [channel, setChannel] = useState(null);
   const [longPress, setLongPress] = useState(false);
   const showColorPicker = !readonly && longPress;
+  if (showColorPicker) window.navigator.vibrate?.(5);
   const [timerId, setTimerId] = useState(undefined);
   const [leftClickPos, setLeftClickPos] = useState(undefined);
   const [boundingRect, setBoundingRect] = useState(undefined);
@@ -46,24 +47,10 @@ const Tag = ({
     if (!readonly && color.name) setChannelColor(id, color.name);
     // console.log(color);
   }, [color.value]);
-  if (!(channel || name)) return <div className="tag"></div>;
+  if (!(channel || name)) return <></>;
 
   return (
     <>
-      {showColorPicker ? (
-        <Modal
-          isActive={setLongPress}
-          content={
-            <ColorPicker
-              setColor={setColor}
-              left={leftClickPos}
-              targetBoundingRect={boundingRect}
-            />
-          }
-        ></Modal>
-      ) : (
-        <></>
-      )}
       <div
         className={disabled ? 'tag disabled' : 'tag'}
         style={{
@@ -108,6 +95,20 @@ const Tag = ({
         }}
       >
         {userInfo?.my_channel === id ? '나의 일정' : name ?? channel.name}
+        {showColorPicker ? (
+          <Modal
+            isActive={setLongPress}
+            content={
+              <ColorPicker
+                setColor={setColor}
+                left={leftClickPos}
+                targetBoundingRect={boundingRect}
+              />
+            }
+          ></Modal>
+        ) : (
+          <></>
+        )}
       </div>
     </>
   );
