@@ -52,8 +52,8 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  line-height: 1.2rem;
-  min-height: 1.2rem;
+  /* line-height: 1.2rem;
+  min-height: 1.2rem; */
 }
 .notice-list-date {
   line-height: 0.8rem;

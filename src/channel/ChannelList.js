@@ -9,7 +9,7 @@ import ChannelCard from 'channel/ChannelCard';
 import { useAuthContext } from 'context/AuthContext';
 import useInfiniteScroll from 'useInfiniteScroll';
 
-const ChannelList = ({ category, isLoggedIn, type, keyword }) => {
+const ChannelList = ({ category, isLoggedIn, type, keyword, style }) => {
   const listRef = useRef(null);
   const [channels, setChannels] = useState(null);
   const [isFetching, setIsFetching] = useInfiniteScroll(() => {
@@ -73,7 +73,7 @@ const ChannelList = ({ category, isLoggedIn, type, keyword }) => {
   }, [category, isLoggedIn, type, keyword]);
 
   return (
-    <div ref={listRef} className="channel-list">
+    <div ref={listRef} className="channel-list" style={style}>
       {channels?.results.map((channelData) => (
         <ChannelCard key={channelData.id} channelData={channelData} />
       ))}

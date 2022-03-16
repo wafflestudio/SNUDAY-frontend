@@ -161,7 +161,7 @@ const AddChannelModalContent = ({ channel, setChannel }) => {
           setChannel({ key: 'description', value: e.target.value })
         }
       ></textarea>
-      <span
+      {/* <span
         style={{
           paddingLeft: '16px',
           margin: 0,
@@ -220,7 +220,7 @@ const AddChannelModalContent = ({ channel, setChannel }) => {
         ) : (
           <></>
         )}
-      </InputButtonBox>
+      </InputButtonBox> */}
     </div>
   );
 };
@@ -344,9 +344,7 @@ const AddChannelModal = ({ isActive, init }) => {
     <Modal
       isActive={isActive}
       header={
-        <h3 className="title">
-          {init ? '채널 정보 수정' : '새로운 채널 만들기'}
-        </h3>
+        <h3 className="title">{init ? '채널 정보 수정' : '새 채널 만들기'}</h3>
       }
       content={
         <AddChannelModalContent channel={channel} setChannel={setChannel} />

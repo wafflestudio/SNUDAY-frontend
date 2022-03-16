@@ -21,8 +21,6 @@
   display: flex;
   flex-direction: column;
   padding: 0 48px;
-  max-width: 480px;
-  margin: auto;
 }
 .login-form > * {
   margin-bottom: 8px;
@@ -34,9 +32,7 @@
   display: flex;
   justify-content: center;
   justify-content: space-evenly;
-  margin: 0 auto;
   padding: 0 48px;
-  max-width: 480px;
 }
 .login-helper > button {
   background-color: transparent;

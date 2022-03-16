@@ -6,6 +6,7 @@ import Tag from 'Tag';
 const TagBar = ({ category, onTagClick, isMain, ...props }) => {
   const { disabledChannels, setDisabledChannels } = useCalendarContext();
   const [channels, setChannels] = useState([]);
+  const [isOverflowing, setIsOverflowing] = useState(false);
   const tagbarRef = useRef(null);
   const {
     value: { userInfo },
@@ -47,6 +48,25 @@ const TagBar = ({ category, onTagClick, isMain, ...props }) => {
         break;
     }
   }, [userInfo]);
+  useEffect(() => {
+    const callback = (mutationList, observer) => {
+      if (
+        tagbarRef.current?.matches('.expand') ||
+        tagbarRef.current?.offsetWidth < tagbarRef.current?.scrollWidth
+      )
+        setIsOverflowing(true);
+      else setIsOverflowing(false);
+    };
+    const observer = new MutationObserver(callback);
+    observer.observe(tagbarRef.current, {
+      childList: true,
+      subtree: true,
+      characterData: true,
+    });
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
   return (
     <ul ref={tagbarRef} className={`tagbar${isMain ? ' main' : ''}`} {...props}>
       {channels.map((channelId) => (
@@ -60,9 +80,7 @@ const TagBar = ({ category, onTagClick, isMain, ...props }) => {
           }
         />
       ))}
-      {isMain &&
-      (tagbarRef.current?.matches('.expand') ||
-        tagbarRef.current?.offsetWidth < tagbarRef.current?.scrollWidth) ? (
+      {isMain && isOverflowing ? (
         <img
           className="plus"
           src="/resources/plus.svg"

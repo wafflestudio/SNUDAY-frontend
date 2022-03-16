@@ -99,7 +99,7 @@ const Signup = () => {
   return (
     <>
       <Header>회원가입</Header>
-      <form className="card signup-form">
+      <form className="card signup-form mobile-max-container">
         <h3>SNUDAY에 오신 것을 환영합니다.</h3>
         <InputBox
           label="아이디"
