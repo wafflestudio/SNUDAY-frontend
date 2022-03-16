@@ -19,6 +19,7 @@ const Menu = ({ name, image, route }) => {
     setIsActive('/' + location.pathname.split('/')[1] === route);
     // console.log(name, location.pathname.split('/')[1]);
   }, [location]);
+
   return (
     <div
       className={`nav-item${isActive ? ' active' : ''}`}
@@ -40,6 +41,13 @@ const Navigation = () => {
   const {
     value: { isLoggedIn },
   } = useAuthContext();
+  useEffect(() => {
+    window.addEventListener('orientationchange', (e) => {
+      setTimeout(() => {
+        document.getElementById('navigation-bar').style.bottom = '0px';
+      }, 0);
+    });
+  }, []);
   const menuList = isLoggedIn
     ? [
         { name: '내 일정', image: MyCal, route: '/' },

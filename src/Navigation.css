@@ -11,6 +11,16 @@
   transition: bottom 0.3s;
   user-select: none;
 }
+@media screen and (orientation: landscape) {
+  .nav-container {
+    bottom: 0;
+  }
+}
+@media screen and (orientation: portrait) {
+  .nav-container {
+    bottom: 0;
+  }
+}
 .nav-item {
   display: flex;
   flex-direction: column;
@@ -38,6 +48,14 @@
   margin: 0;
   line-height: 1rem;
   margin-bottom: 10px;
+  transition: margin-bottom 0.5s;
+}
+@supports (-webkit-touch-callout: none) {
+  @media (orientation: landscape) {
+    .nav-item p {
+      margin-bottom: 21px;
+    }
+  }
 }
 @media only screen and (display-mode: standalone) {
   /*PWA*/
@@ -50,7 +68,11 @@
       font-size: 10px;
       font-weight: 500;
       line-height: 10px;
-      margin-bottom: 34px;
+    }
+    @media (orientation: portrait) {
+      .nav-item p {
+        margin-bottom: 34px;
+      }
     }
   }
 }
