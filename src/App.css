@@ -20,6 +20,10 @@
     background-position: -100% 0%;
   }
 }
+.mobile-max-container {
+  max-width: 480px;
+  margin: auto;
+}
 .main-container {
   width: 100vw;
   max-height: calc(100% - 3rem);

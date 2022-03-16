@@ -49,7 +49,7 @@ const Login = () => {
       <div className="login-header">
         <Logo className="login-logo" />
       </div>
-      <form className="login-form">
+      <form className="login-form mobile-max-container">
         <InputBox
           aria-label="ID"
           value={username}
@@ -88,7 +88,7 @@ const Login = () => {
           로그인
         </button>
       </form>
-      <div className="login-helper">
+      <div className="login-helper mobile-max-container">
         <button onClick={() => history.push('/findmyid')}>아이디 찾기</button>
         <button onClick={() => history.push('/findmypw')}>비밀번호 찾기</button>
         <button onClick={() => history.push('/signup')}>회원가입</button>
