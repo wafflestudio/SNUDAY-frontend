@@ -3,12 +3,10 @@ import { useEffect, useState } from 'react';
 import NoticeList from 'channel/NoticeList';
 import AddNotice from 'channel/AddNotice';
 import { useAuthContext } from 'context/AuthContext';
+import { useParams } from 'react-router-dom';
 
-const ChannelNotice = ({
-  match: {
-    params: { id },
-  },
-}) => {
+const ChannelNotice = () => {
+  const { id } = useParams();
   const [addNotice, setAddNotice] = useState(false);
   const {
     value: { userInfo },

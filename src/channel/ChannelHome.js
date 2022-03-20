@@ -1,14 +1,16 @@
 import './Channel.css';
 import { getChannel, getChannelEvents } from 'API';
 import ChannelCard from 'channel/ChannelCard';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import NoticeList from 'channel/NoticeList';
 import ChannelCalendar from './ChannelCalendar';
 import Calendar from 'calendar/Calendar';
 const ChannelHome = ({ match }) => {
   const navigate = useNavigate();
-  const id = +match.params.id;
+  let { id } = useParams();
+  id = +id;
+  console.log(id);
   const [channelData, setChannelData] = useState(null);
   useEffect(() => {
     getChannel(id).then((channel) => setChannelData(() => channel));

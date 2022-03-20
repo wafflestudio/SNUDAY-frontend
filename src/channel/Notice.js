@@ -1,18 +1,14 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import AddNotice from 'channel/AddNotice';
 import { getNotice, deleteNotice as deleteNoticeAPI } from 'API';
-import { getUser } from 'API';
 import { useAuthContext } from 'context/AuthContext';
 import Header from 'Header';
 import Tag from 'Tag';
-const Notice = ({
-  match: {
-    params: { channelId, noticeId },
-  },
-}) => {
-  channelId = parseInt(channelId);
-  noticeId = parseInt(noticeId);
+const Notice = () => {
+  let { channelId, noticeId } = useParams();
+  channelId = +channelId;
+  noticeId = +noticeId;
   const [notice, setNotice] = useState(null);
   const [isModifying, setIsModifying] = useState(false);
   const {
