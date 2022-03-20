@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 const Header = ({ children, left, right }) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   useEffect(() => {
     document.title = children + ' | SNUDAY';
   }, []);
@@ -23,7 +23,7 @@ const Header = ({ children, left, right }) => {
             src="/resources/arrow-back.svg"
             alt="back to previous page"
             className="header-left"
-            onClick={history.goBack}
+            onClick={() => navigate(-1)}
           />
         )}
         {children}

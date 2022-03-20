@@ -4,7 +4,7 @@ import AddChannelModal from 'channel/AddChannelModal';
 import 'channel/ChannelMain.css';
 import { useAuthContext } from 'context/AuthContext';
 import ChannelList from 'channel/ChannelList';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Header from 'Header';
 const ChannelMain = () => {
   const [activeTab, setActiveTab] = useState('subscribed');
@@ -12,8 +12,8 @@ const ChannelMain = () => {
   const {
     value: { isLoggedIn },
   } = useAuthContext();
-  const history = useHistory();
-  if (!isLoggedIn) history.push('/search');
+  const navigate = useNavigate();
+  if (!isLoggedIn) navigate('/search');
   return (
     <>
       <Header left={<></>}>내 채널</Header>

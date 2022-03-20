@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuthContext } from './context/AuthContext';
 
 import './Navigation.css';
@@ -10,7 +10,7 @@ import { ReactComponent as Channel } from './resources/nav-4.svg';
 import { ReactComponent as MyPage } from './resources/nav-5.svg';
 const Menu = ({ name, image, route }) => {
   const Icon = image;
-  let history = useHistory();
+  let navigate = useNavigate();
   const location = useLocation();
   const [isActive, setIsActive] = useState(
     '/' + location.pathname.split('/')[1] === route
@@ -27,7 +27,7 @@ const Menu = ({ name, image, route }) => {
         //const currentRoute = location.pathname.split('/')[1];
         if (location.pathname !== route) {
           //if (currentRoute === 'signin' && route === 'mypage') return;
-          history.push(route);
+          navigate(route);
           window.scrollTo(0, 0);
         }
       }}

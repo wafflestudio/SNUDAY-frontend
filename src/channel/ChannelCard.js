@@ -3,7 +3,7 @@ import { ReactComponent as Favorite } from 'resources/star.svg';
 import { ReactComponent as ClosedLock } from 'resources/lock-closed.svg';
 import { ReactComponent as OpenLock } from 'resources/lock-open.svg';
 import { ReactComponent as OfficialMark } from 'resources/checkbox-checked.svg';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from 'context/AuthContext';
 import { ChannelStatusButton, WaitingListButton } from 'channel/ChannelButton';
 const ChannelInfoHeader = ({
@@ -26,7 +26,7 @@ const ChannelAvatar = ({ name, image }) => (
 );
 
 const ChannelCard = ({ channelData, verbose }) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const {
     value: { userInfo },
   } = useAuthContext();
@@ -48,7 +48,7 @@ const ChannelCard = ({ channelData, verbose }) => {
       onClick={() =>
         verbose || (is_private && !userInfo?.subscribing_channels?.has(id))
           ? undefined
-          : history.push(`/channel/${id}`)
+          : navigate(`/channel/${id}`)
       }
     >
       <div className="channel-image-with-button">

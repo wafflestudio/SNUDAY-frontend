@@ -1,13 +1,13 @@
 import './Channel.css';
 import { getChannel, getChannelEvents } from 'API';
 import ChannelCard from 'channel/ChannelCard';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import NoticeList from 'channel/NoticeList';
 import ChannelCalendar from './ChannelCalendar';
 import Calendar from 'calendar/Calendar';
 const ChannelHome = ({ match }) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const id = +match.params.id;
   const [channelData, setChannelData] = useState(null);
   useEffect(() => {
@@ -32,7 +32,7 @@ const ChannelHome = ({ match }) => {
       <section className="card">
         <header
           className="card-header"
-          onClick={() => history.push(`/channel/${id}/notice/`)}
+          onClick={() => navigate(`/channel/${id}/notice/`)}
         >
           공지사항
           <img className="arrow" src="/resources/right-arrow.svg" alt="more" />
@@ -42,7 +42,7 @@ const ChannelHome = ({ match }) => {
       <section className="card">
         <header
           className="card-header"
-          onClick={() => history.push(`/channel/${id}/events/`)}
+          onClick={() => navigate(`/channel/${id}/events/`)}
         >
           채널 일정
           <img

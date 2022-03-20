@@ -7,7 +7,7 @@ import {
   verifyAuthEmail,
 } from 'API';
 import { InputBox, InputButtonBox } from 'Input';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { ReactComponent as Uncheckedbox } from 'resources/checkbox_unchecked.svg';
 import {
   usernamePattern,
@@ -18,7 +18,7 @@ import {
 } from 'Constants';
 import Header from 'Header';
 const Signup = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const [id, setId] = useState('');
   const [isDuplicateId, setIsDuplicateId] = useState(false);
   const [pw, setPw] = useState('');
@@ -75,7 +75,7 @@ const Signup = () => {
     postUser(form)
       .then((response) => {
         alert('가입을 축하합니다!');
-        history.push('/signin');
+        navigate('/signin');
       })
       .catch((error) => {
         alert(Object.values(error.response.data));

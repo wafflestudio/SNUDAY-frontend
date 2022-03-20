@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import AddNotice from 'channel/AddNotice';
 import { getNotice, deleteNotice as deleteNoticeAPI } from 'API';
 import { getUser } from 'API';
@@ -18,13 +18,13 @@ const Notice = ({
   const {
     value: { userInfo },
   } = useAuthContext();
-  const history = useHistory();
+  const navigate = useNavigate();
   const deleteNotice = () => {
     const confirm = window.confirm('정말 공지를 삭제할까요?');
     if (confirm)
       deleteNoticeAPI({ channelId, noticeId }).then((response) => {
         alert('공지가 삭제되었습니다.');
-        history.push(`/channel/${channelId}/notice`);
+        navigate(`/channel/${channelId}/notice`);
       });
   };
   useEffect(() => {
@@ -52,7 +52,7 @@ const Notice = ({
             <Tag
               id={notice.channel}
               name={notice.channel_name}
-              onClick={() => history.push(`/channel/${notice.channel}`)}
+              onClick={() => navigate(`/channel/${notice.channel}`)}
             />
             <h3>{notice?.title}</h3>
             <div>

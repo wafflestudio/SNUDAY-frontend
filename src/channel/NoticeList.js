@@ -1,24 +1,23 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { getUserNotices, getChannelNotices, searchUserNotices } from 'API';
 import { useAuthContext } from 'context/AuthContext';
 import Tag from 'Tag';
 import useInfiniteScroll from 'useInfiniteScroll';
 const NoticeCard = ({ notice, includeChannelName }) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   return (
     <li
       className="selectable card"
       onClick={() => {
-        if (notice)
-          history.push(`/channel/${notice.channel}/notice/${notice.id}`);
+        if (notice) navigate(`/channel/${notice.channel}/notice/${notice.id}`);
       }}
     >
       {includeChannelName && notice ? (
         <Tag
           onClick={(e) => {
             e.stopPropagation();
-            history.push(`/channel/${notice.channel}`);
+            navigate(`/channel/${notice.channel}`);
           }}
           id={notice.channel}
           name={notice.channel_name}
