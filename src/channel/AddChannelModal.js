@@ -62,9 +62,6 @@ const ImageSelector = ({ image, setImage }) => {
 const AddChannelModalContent = ({ channel, setChannel }) => {
   const { name, description, is_private, image, managers } = channel;
   const X = XButton;
-  const {
-    value: { isLoggedIn, userInfo },
-  } = useAuthContext();
   const [username, setUsername] = useState('');
   const [selectedUser, setSelectedUser] = useState('');
   const [userSearchList, setUserSearchList] = useState([]);
