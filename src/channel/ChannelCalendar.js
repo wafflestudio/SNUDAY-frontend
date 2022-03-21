@@ -1,12 +1,14 @@
 import { getChannel } from 'API';
 import { CalendarContextProvider } from 'context/CalendarContext';
 import Header from 'Header';
+import { useParams } from 'react-router-dom';
 
 const { CalendarBody, default: Calendar } = require('calendar/Calendar');
 const { useState, useEffect } = require('react');
 
-const ChannelCalendar = ({ match, id }) => {
-  const channelId = id || +match.params.id;
+const ChannelCalendar = ({ id }) => {
+  const params = useParams();
+  const channelId = id || +params.id;
   const [channelName, setChannelName] = useState('');
   useEffect(() => {
     getChannel(channelId).then((channel) => setChannelName(channel.name));

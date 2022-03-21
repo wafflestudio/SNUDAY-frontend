@@ -1,9 +1,9 @@
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from 'context/AuthContext';
 import axios from 'axios';
 import Header from 'Header';
 const MyPage = () => {
-  let history = useHistory();
+  let navigate = useNavigate();
   const {
     value: { isLoggedIn, userInfo },
     action: { setIsLoggedIn, setToken },
@@ -32,7 +32,7 @@ const MyPage = () => {
               <div>{`${name} 님`}</div>
               <div>{userInfo.username}</div>
             </li>
-            <li onClick={() => history.push('/mypage/ChangeId')}>
+            <li onClick={() => navigate('/mypage/ChangeId')}>
               아이디 변경{' '}
               <img
                 className="arrow"
@@ -40,7 +40,7 @@ const MyPage = () => {
                 alt="more"
               />
             </li>
-            <li onClick={() => history.push('/mypage/ChangePw')}>
+            <li onClick={() => navigate('/mypage/ChangePw')}>
               비밀번호 변경{' '}
               <img
                 className="arrow"
@@ -75,7 +75,7 @@ const MyPage = () => {
       </div>
     </>
   ) : (
-    <>{setTimeout(() => history.push('/signin'), 0)}</>
+    <>{setTimeout(() => navigate('/signin'), 0)}</>
   );
 };
 export default MyPage;

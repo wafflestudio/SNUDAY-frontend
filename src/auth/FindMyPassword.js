@@ -3,10 +3,10 @@ import { InputBox } from 'Input';
 import { findUserPassword, patchUser } from 'API';
 import { usernamePattern, namePattern, pwPattern } from 'Constants';
 import Header from 'Header';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from 'context/AuthContext';
 const FindMyPassword = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const {
     value: { isLoggedIn },
     action: { initUserInfo },
@@ -34,7 +34,7 @@ const FindMyPassword = () => {
       });
   };
 
-  if (isLoggedIn) history.push('/mypage');
+  if (isLoggedIn) navigate('/mypage');
   return (
     <>
       <Header>비밀번호 재발급</Header>

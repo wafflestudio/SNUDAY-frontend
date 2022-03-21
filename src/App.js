@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Switch, Route, Redirect, useHistory } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import Home from 'Home';
 import Login from 'auth/Login';
 import Navigation from 'Navigation';
@@ -48,11 +48,19 @@ function App() {
     return -1; // not found
   }
   window.ontouchstart = (e) => {
-    if (window.navigator.standalone) return; //iOS standalone
+    if (
+      window.navigator.standalone ||
+      window.matchMedia('(display-mode: standalone)').matches
+    )
+      return; //iOS||Android standalone
     for (let touch of e.changedTouches) ongoingTouches.push(touch);
   };
   window.ontouchmove = (e) => {
-    if (window.navigator.standalone) return;
+    if (
+      window.navigator.standalone ||
+      window.matchMedia('(display-mode: standalone)').matches
+    )
+      return;
 
     const NavBar = document.getElementById('navigation-bar');
     const AddButton = document.getElementById('add-button');
@@ -73,7 +81,11 @@ function App() {
     }
   };
   window.ontouchend = (e) => {
-    if (window.navigator.standalone) return;
+    if (
+      window.navigator.standalone ||
+      window.matchMedia('(display-mode: standalone)').matches
+    )
+      return;
 
     const NavBar = document.getElementById('navigation-bar');
     const AddButton = document.getElementById('add-button');
@@ -93,50 +105,47 @@ function App() {
       }
     }
   };
-  window.onresize = () => {
-    const NavBar = document.getElementById('navigation-bar');
-    const AddButton = document.getElementById('add-button');
-    if (NavBar) NavBar.style.bottom = '-' + NavBar.offsetHeight + 'px';
-    if (AddButton) AddButton.style.bottom = '0';
-  };
   const {
     value: { isLoggedIn, userInfo },
   } = useAuthContext();
-  const history = useHistory();
+  const navigate = useNavigate();
   if (!isLoggedIn) {
-    // history.push('/signin');
+    // navigate('/signin');
 
     return (
-      <Switch>
-        <Route exact path="/signup" component={Signup} />
-        <Route exact path="/signin" component={Login} />
-        <Route exact path="/findmyid" component={FindMyId} />
-        <Route exact path="/findmypw" component={FindMyPassword} />
-        <Redirect to="/signin" />
-      </Switch>
+      <Routes>
+        <Route path="signup" element={<Signup />} />
+        <Route path="signin" element={<Login />} />
+        <Route path="findmyid" element={<FindMyId />} />
+        <Route path="findmypw" element={<FindMyPassword />} />
+        <Route path="*" element={<Navigate to="signin" replace />} />
+      </Routes>
     );
   }
   //FIX: userInfo takes time to update after refresh
   // if (!userInfo) return <></>;
   return (
     <>
-      <Switch>
-        <Route exact path="/" component={Home} />
-        <Route exact path="/mypage/ChangePw" component={ChangePassword} />
-        <Route exact path="/mypage/ChangeId" component={ChangeUsername} />
-        <Route exact path="/mypage" component={MyPage} />
-        <Route exact path="/notice" component={NoticeHome} />
-        <Route exact path="/search" component={SearchHome} />
-        <Route exact path="/channel" component={ChannelMain} />
-        <Route path="/channel/:channelId/notice/:noticeId" component={Notice} />
-        <Route path="/channel/:id/notice" component={ChannelNotice} />
-        <Route path="/channel/:id/events" component={ChannelCalendar} />
-        <Route path="/channel/:id" component={ChannelHome} />
-        <Route exact path="/signup" component={Signup} />
-        <Route exact path="/signin" component={Login} />
-        <Route exact path="/findmyid" component={FindMyId} />
-        <Route exact path="/findmypw" component={FindMyPassword} />
-      </Switch>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="mypage/ChangePw" element={<ChangePassword />} />
+        <Route path="mypage/ChangeId" element={<ChangeUsername />} />
+        <Route path="mypage" element={<MyPage />} />
+        <Route path="notice" element={<NoticeHome />} />
+        <Route path="search" element={<SearchHome />} />
+        <Route path="channel" element={<ChannelMain />} />
+        <Route
+          path="channel/:channelId/notice/:noticeId"
+          element={<Notice />}
+        />
+        <Route path="channel/:id/notice" element={<ChannelNotice />} />
+        <Route path="channel/:id/events" element={<ChannelCalendar />} />
+        <Route path="channel/:id" element={<ChannelHome />} />
+        <Route path="signup" element={<Signup />} />
+        <Route path="signin" element={<Login />} />
+        <Route path="findmyid" element={<FindMyId />} />
+        <Route path="findmypw" element={<FindMyPassword />} />
+      </Routes>
       <Navigation />
     </>
   );

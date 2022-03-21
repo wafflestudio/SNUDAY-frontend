@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useHistory } from 'react-router';
+import { useNavigate } from 'react-router';
 import { useAuthContext } from 'context/AuthContext';
 import 'calendar/Event.css';
 import Modal from 'Modal';
@@ -10,7 +10,7 @@ import { COLORS } from 'Constants';
 import { deleteEvent } from 'API';
 
 const EventTag = ({ event }) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const {
     value: { userInfo },
   } = useAuthContext();
@@ -21,7 +21,7 @@ const EventTag = ({ event }) => {
         name={event.channel_name}
         onClick={() => {
           if (userInfo.my_channel !== event.channel)
-            history.push(`/channel/${event.channel}`);
+            navigate(`/channel/${event.channel}`);
         }}
       />
     </div>

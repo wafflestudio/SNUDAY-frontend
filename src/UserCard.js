@@ -1,4 +1,4 @@
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from 'context/AuthContext';
 import { ChannelStatusButton, WaitingListButton } from 'channel/ChannelButton';
 import { deleteRejectAwaiters, postAllowAwaiters } from 'API';

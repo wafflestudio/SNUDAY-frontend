@@ -3,10 +3,10 @@ import { InputBox } from 'Input';
 import { patchUserPassword } from 'API';
 import { pwPattern } from 'Constants';
 import Header from 'Header';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from 'context/AuthContext';
 const ChangePassword = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const {
     value: { isLoggedIn },
     action: { initUserInfo },
@@ -20,11 +20,11 @@ const ChangePassword = () => {
       .then((response) => {
         initUserInfo();
         alert('비밀번호가 변경되었습니다.');
-        history.push('/mypage');
+        navigate('/mypage');
       })
       .catch(() => alert('다시 시도해주세요.'));
   };
-  if (!isLoggedIn) history.push('/signin');
+  if (!isLoggedIn) navigate('/signin');
   return (
     <>
       <Header>비밀번호 변경</Header>

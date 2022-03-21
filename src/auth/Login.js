@@ -1,13 +1,13 @@
 import { ReactComponent as Logo } from 'resources/logo.svg';
 import './Login.css';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { loginUser, refresh } from 'API';
 import { useEffect, useState } from 'react';
 import { useAuthContext } from 'context/AuthContext';
 import { InputBox } from 'Input';
 import { usernamePattern, pwPattern } from 'Constants';
 const Login = () => {
-  let history = useHistory();
+  let navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -20,7 +20,7 @@ const Login = () => {
       .then((data) => {
         setToken(data);
         setIsLoggedIn(true);
-        history.push('/');
+        navigate('/');
       })
       .catch((status) => {
         setShowMessage(true);
@@ -30,13 +30,13 @@ const Login = () => {
     setShowMessage(false);
   }, [username, password]);
   useEffect(() => {
-    if (isLoggedIn) history.push('/'); //FIX: 이미 로그인시 이전 페이지 유지
+    if (isLoggedIn) navigate('/'); //FIX: 이미 로그인시 이전 페이지 유지
     if (!isLoggedIn) {
       refresh()
         .then((data) => {
           setToken(data); //data.access
           setIsLoggedIn(true);
-          history.push('/');
+          navigate('/');
         })
         .catch((err) => {
           setIsLoading(false);
@@ -89,9 +89,9 @@ const Login = () => {
         </button>
       </form>
       <div className="login-helper mobile-max-container">
-        <button onClick={() => history.push('/findmyid')}>아이디 찾기</button>
-        <button onClick={() => history.push('/findmypw')}>비밀번호 찾기</button>
-        <button onClick={() => history.push('/signup')}>회원가입</button>
+        <button onClick={() => navigate('/findmyid')}>아이디 찾기</button>
+        <button onClick={() => navigate('/findmypw')}>비밀번호 찾기</button>
+        <button onClick={() => navigate('/signup')}>회원가입</button>
       </div>
     </>
   );
