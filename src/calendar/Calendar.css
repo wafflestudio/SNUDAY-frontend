@@ -59,57 +59,61 @@ input[type='time']::-webkit-clear-button {
   align-items: center;
 }
 
-ul.tagbar {
+.tagbar {
   /* z-index: 1; */
   display: flex;
   align-items: center;
   align-content: flex-start;
+  justify-content: flex-start;
   width: 100%;
   min-height: 43px;
   overflow-x: auto;
   margin: 0;
   padding-right: 12px;
   background-color: #ededed;
-  padding: 4px 12px 4px 0;
+  padding: 4px 12px 4px 4px;
   /* transition: max-height 1s; */
   /* padding-left: 0rem; 0.833: fit-start */
 }
 @supports not selector(A:has(B)) {
-  ul.tagbar.main:not(.expand) {
+  .tagbar.main:not(.expand) {
     padding-right: 35px;
   }
-  ul.tagbar.main:not(.expand)::after {
-    content: ' ';
-    padding-left: 35px;
-  }
 }
-ul.tagbar.main:has(> .plus):not(.expand) {
-  padding-right: 35px;
+.tagbar.main:has(> .plus):not(.expand)::after {
+  content: '';
+  padding-left: 100px;
+  background-color: red;
 }
-ul.tagbar::-webkit-scrollbar {
+.tagbar::-webkit-scrollbar {
   display: none;
 }
-ul.tagbar.main {
+.tagbar.main {
   /* position: sticky;
   top: calc(1.75rem + 20px); */
   /* overflow-y: visible; */
   z-index: 99;
 }
-ul.tagbar > .tag {
+.tagbar.main > * {
+  z-index: 100;
+}
+.tagbar > .tag {
   /* margin-left: 12px; */
-  margin: 4px 0 4px 12px;
+  margin: 4px 0 4px 8px;
   /* transition-property: width, height;
   transition-duration: 0.5s; */
 }
-ul.tagbar > .tag:not(.disabled) {
+.tagbar > .tag:not(.disabled) {
   /* animation: fade-in 1s; */
 }
 
-ul.tagbar.expand {
+.tagbar.expand {
   position: relative;
   flex-wrap: wrap;
   /* min-height: fit-content; */
   border-radius: 0 0 16px 16px;
+  right: 0;
+  width: 100vw;
   /* padding-right: 28px; */
 }
 @keyframes fade-in {
@@ -133,6 +137,10 @@ ul.tagbar.expand {
   text-align: center;
   font-weight: 500;
   border-radius: calc(1rem + 12px);
+}
+.tag.loading {
+  background-color: rgb(184, 184, 184);
+  min-width: 60px;
 }
 .tagbar .plus {
   /* background-color: unset; */
@@ -161,7 +169,7 @@ ul.tagbar.expand {
   margin-right: -12px;
   /* transform: rotate(-45deg); */
 }
-.tag::before {
+.tag:not(.loading)::before {
   content: '# ';
 }
 .tag.plus::before {

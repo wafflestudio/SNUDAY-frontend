@@ -47,7 +47,7 @@ const Tag = ({
     if (!readonly && color.name) setChannelColor(id, color.name);
     // console.log(color);
   }, [color.value]);
-  if (!(channel || name)) return <></>;
+  if (!(channel || name)) return <div className="tag loading"></div>;
 
   return (
     <>

@@ -7,19 +7,23 @@
 .grey-text {
   color: #4d4d4d;
 }
-.loading {
-  background: linear-gradient(90deg, #b8b8b8, 40%, #fff 45% 55%, 60%, #b8b8b8);
+/* .loading {
+  background: linear-gradient(90deg, #b8b8b8, #dddddd 45% 55%, #b8b8b8);
   background-size: 200%;
-  animation: Animation 2s linear infinite;
+  animation-name: loading;
+  animation-duration: 2s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-delay: 1s;
 }
-@keyframes Animation {
+@keyframes loading {
   0% {
     background-position: 100% 0%;
   }
   100% {
     background-position: -100% 0%;
   }
-}
+} */
 .mobile-max-container {
   max-width: 480px;
   margin: auto;

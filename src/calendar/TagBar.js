@@ -68,7 +68,11 @@ const TagBar = ({ category, onTagClick, isMain, ...props }) => {
     };
   }, []);
   return (
-    <ul ref={tagbarRef} className={`tagbar${isMain ? ' main' : ''}`} {...props}>
+    <div
+      ref={tagbarRef}
+      className={`tagbar${isMain ? ' main' : ''}`}
+      {...props}
+    >
       {channels.map((channelId) => (
         <Tag
           readonly={!isMain}
@@ -91,7 +95,7 @@ const TagBar = ({ category, onTagClick, isMain, ...props }) => {
       ) : (
         <></>
       )}
-    </ul>
+    </div>
   );
 };
 export default TagBar;

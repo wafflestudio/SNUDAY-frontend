@@ -7,7 +7,27 @@ import ModalButton from 'AddButton';
 import { CalendarContextProvider } from 'context/CalendarContext';
 import { useAuthContext } from 'context/AuthContext';
 import AddEventModal from 'AddEventModal';
-
+import { useSearchParams } from 'react-router-dom';
+import axios from 'axios';
+export const AndroidCalendar = ({}) => {
+  let [searchParams, setSearchParams] = useSearchParams();
+  const token = searchParams.get('token');
+  axios.defaults.headers['Authorization'] = `Bearer ${token}`;
+  const {
+    value: { isLoggedIn, userInfo },
+    action: { setIsLoggedIn, setToken },
+  } = useAuthContext();
+  useEffect(() => {
+    setToken({ access: token });
+    setIsLoggedIn(true);
+  }, []);
+  useEffect(() => {
+    const addButton = document.getElementById('add-button');
+    if (addButton) addButton.style.bottom = '0';
+  });
+  if (!isLoggedIn) return <></>;
+  return <Calendar type="main" />;
+};
 export const Calendar = ({ channelId, type }) => {
   const today = new Date();
   const [year, setYear] = useState(today.getFullYear());
@@ -17,6 +37,9 @@ export const Calendar = ({ channelId, type }) => {
   const {
     value: { isLoggedIn, userInfo },
   } = useAuthContext();
+  let [searchParams, setSearchParams] = useSearchParams();
+  const token = searchParams.get('token');
+  console.log([...searchParams.entries()]);
   // useEffect(() => {
   //   getMyEvents().then((events) => {
   //     calendar.registerEvents(events);
@@ -160,8 +183,20 @@ export const Calendar = ({ channelId, type }) => {
 export default Calendar;
 export const CalendarBody = ({ moveMonth, year, monthIndex, channelId }) => {
   const [targetTouch, setTargetTouch] = useState(null);
+  const [scrollTime, setScrollTime] = useState(Date.now());
+  useEffect(() => {
+    // setScrollTime(null);
+  }, [monthIndex]);
   return (
-    <div className="Calendar-body" onWheel={(e) => moveMonth(e.deltaY)}>
+    <div
+      className="Calendar-body"
+      onWheel={(e) => {
+        if (Date.now() - scrollTime > 1000) {
+          setScrollTime(Date.now());
+          moveMonth(e.deltaY);
+        }
+      }}
+    >
       <div className="weekdays">
         <div className="weekday">일</div>
         <div className="weekday">월</div>
