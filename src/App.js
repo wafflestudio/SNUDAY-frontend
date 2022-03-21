@@ -1,5 +1,11 @@
 import React, { useState } from 'react';
-import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import {
+  Routes,
+  Route,
+  Navigate,
+  useNavigate,
+  useLocation,
+} from 'react-router-dom';
 import Home from 'Home';
 import Login from 'auth/Login';
 import Navigation from 'Navigation';
@@ -18,6 +24,7 @@ import ChangeUsername from 'auth/ChangeUsername';
 import ChangePassword from 'auth/ChangePassword';
 import FindMyPassword from 'auth/FindMyPassword';
 import ChannelCalendar from 'channel/ChannelCalendar';
+import { AndroidCalendar } from 'calendar/Calendar';
 function copyTouch({ identifier, pageX, pageY }) {
   return { identifier, pageX, pageY };
 }
@@ -70,12 +77,13 @@ function App() {
         if (touch.clientY < ongoingTouches[id].clientY - 12) {
           //scrollDown
           if (NavBar) NavBar.style.bottom = '-' + NavBar.offsetHeight + 'px';
-          if (AddButton) AddButton.style.bottom = '0';
+          if (NavBar && AddButton) AddButton.style.bottom = '0';
           ongoingTouches.splice(id, 1, touch);
         } else if (touch.clientY > ongoingTouches[id].clientY + 12) {
           //scrollUp
           if (NavBar) NavBar.style.bottom = '0';
-          if (AddButton) AddButton.style.bottom = NavBar.offsetHeight + 'px';
+          if (NavBar && AddButton)
+            AddButton.style.bottom = NavBar.offsetHeight + 'px';
           ongoingTouches.splice(id, 1, touch);
         }
     }
@@ -95,11 +103,12 @@ function App() {
         if (touch.clientY < ongoingTouches[id].clientY - 5) {
           //scrollDown
           if (NavBar) NavBar.style.bottom = '-' + NavBar.offsetHeight + 'px';
-          if (AddButton) AddButton.style.bottom = '0';
+          if (NavBar && AddButton) AddButton.style.bottom = '0';
         } else if (touch.clientY > ongoingTouches[id].clientY + 5) {
           //scrollUp
           if (NavBar) NavBar.style.bottom = '0';
-          if (AddButton) AddButton.style.bottom = NavBar.offsetHeight + 'px';
+          if (NavBar && AddButton)
+            AddButton.style.bottom = NavBar.offsetHeight + 'px';
         }
         ongoingTouches.splice(id, 1);
       }
@@ -109,6 +118,9 @@ function App() {
     value: { isLoggedIn, userInfo },
   } = useAuthContext();
   const navigate = useNavigate();
+  const location = useLocation();
+  console.log(location);
+  if (location.pathname === '/android') return <AndroidCalendar />;
   if (!isLoggedIn) {
     // navigate('/signin');
 
