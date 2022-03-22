@@ -6,11 +6,7 @@ const Home = () => {
   useEffect(() => {
     document.title = 'SNUDAY';
   }, []);
-  const navigate = useNavigate();
-  const {
-    value: { isLoggedIn },
-  } = useAuthContext();
-  if (!isLoggedIn) navigate('/signin', { replace: true });
-  return isLoggedIn ? <Calendar type="main" /> : <></>;
+  // if (!isLoggedIn) navigate('/signin', { replace: true });
+  return <Calendar type="main" />;
 };
 export default Home;

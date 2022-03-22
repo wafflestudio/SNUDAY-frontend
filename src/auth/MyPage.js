@@ -6,13 +6,14 @@ const MyPage = () => {
   let navigate = useNavigate();
   const {
     value: { isLoggedIn, userInfo },
-    action: { setIsLoggedIn, setToken },
+    action: { setIsLoggedIn, setUserInfo, setToken },
   } = useAuthContext();
   const logout = () => {
     delete axios.defaults.headers['Authorization'];
     localStorage.removeItem('refresh');
-    setToken({ access: undefined, refresh: undefined });
+    setToken({ access: null, refresh: null });
     setIsLoggedIn(false);
+    setUserInfo(null);
   };
   console.log(userInfo);
   const name =
@@ -32,7 +33,7 @@ const MyPage = () => {
               <div>{`${name} 님`}</div>
               <div>{userInfo.username}</div>
             </li>
-            <li onClick={() => navigate('/mypage/ChangeId')}>
+            <li onClick={() => navigate('/mypage/changeId')}>
               아이디 변경{' '}
               <img
                 className="arrow"
@@ -40,7 +41,7 @@ const MyPage = () => {
                 alt="more"
               />
             </li>
-            <li onClick={() => navigate('/mypage/ChangePw')}>
+            <li onClick={() => navigate('/mypage/changePw')}>
               비밀번호 변경{' '}
               <img
                 className="arrow"

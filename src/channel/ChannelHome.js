@@ -1,12 +1,11 @@
 import './Channel.css';
-import { getChannel, getChannelEvents } from 'API';
+import { getChannel } from 'API';
 import ChannelCard from 'channel/ChannelCard';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import NoticeList from 'channel/NoticeList';
-import ChannelCalendar from './ChannelCalendar';
 import Calendar from 'calendar/Calendar';
-const ChannelHome = ({ match }) => {
+const ChannelHome = () => {
   const navigate = useNavigate();
   let { id } = useParams();
   id = +id;
@@ -19,13 +18,7 @@ const ChannelHome = ({ match }) => {
     const today = document.getElementsByClassName('day today')[0];
     const calendar = document.getElementsByClassName('Calendar-content')[0];
     if (today) {
-      console.log(today);
-      console.log(today.getBoundingClientRect().top);
-      console.log(today.offsetTop);
-      console.log(today.scrollTop);
-      console.log(
-        calendar.scrollTo({ top: today.offsetTop, behavior: 'smooth' })
-      );
+      calendar.scrollTo({ top: today.offsetTop, behavior: 'smooth' });
     }
   });
   return channelData ? (
@@ -53,9 +46,8 @@ const ChannelHome = ({ match }) => {
             alt="see more events"
           />
         </header>
-        {/* <div className="error"> 캘린더 넣기</div> */}
         <div style={{ height: 'calc(14rem + 2px)', overflow: 'hidden' }}>
-          <Calendar channelId={id} type={'mini'} />
+          <Calendar channelId={id} type="mini" />
         </div>
       </section>
     </div>

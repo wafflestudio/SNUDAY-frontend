@@ -30,13 +30,17 @@ const Login = () => {
     setShowMessage(false);
   }, [username, password]);
   useEffect(() => {
-    if (isLoggedIn) navigate('/'); //FIX: 이미 로그인시 이전 페이지 유지
+    if (isLoggedIn) {
+      navigate(-1);
+      console.log('goback');
+    } //FIX: 이미 로그인시 이전 페이지 유지
     if (!isLoggedIn) {
       refresh()
         .then((data) => {
           setToken(data); //data.access
           setIsLoggedIn(true);
-          navigate('/');
+          navigate(-1);
+          console.log('goback!');
         })
         .catch((err) => {
           setIsLoading(false);
@@ -47,7 +51,7 @@ const Login = () => {
   return (
     <>
       <div className="login-header">
-        <Logo className="login-logo" />
+        <Logo onClick={() => navigate('/')} className="login-logo" />
       </div>
       <form className="login-form mobile-max-container">
         <InputBox

@@ -17,6 +17,7 @@ import {
   authNumberPattern,
 } from 'Constants';
 import Header from 'Header';
+import { useAuthContext } from 'context/AuthContext';
 const Signup = () => {
   const navigate = useNavigate();
   const [id, setId] = useState('');
@@ -96,6 +97,15 @@ const Signup = () => {
   const verify = () => {
     console.log('authNum:' + authNumber);
   };
+
+  const {
+    value: { isLoggedIn },
+  } = useAuthContext();
+  if (isLoggedIn) {
+    navigate(-1);
+    return <></>;
+  }
+
   return (
     <>
       <Header>회원가입</Header>

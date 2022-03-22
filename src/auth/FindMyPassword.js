@@ -34,7 +34,10 @@ const FindMyPassword = () => {
       });
   };
 
-  if (isLoggedIn) navigate('/mypage');
+  if (isLoggedIn) {
+    navigate('/mypage');
+    return <></>;
+  }
   return (
     <>
       <Header>비밀번호 재발급</Header>
