@@ -7,13 +7,13 @@ import { useState, useEffect } from 'react';
 import { getChannel } from 'API';
 import ErrorScreen from './ErrorScreen';
 const ChannelPortal = () => {
-  let { id } = useParams();
-  id = +id;
-  console.log(id);
+  let { channelId } = useParams();
+  channelId = +channelId;
+  console.log(channelId);
   const [channelData, setChannelData] = useState(null);
   const [error, setError] = useState(null);
   useEffect(() => {
-    getChannel(id)
+    getChannel(channelId)
       .then((channel) => setChannelData(() => channel))
       .catch((error) => {
         setError(error.response?.data?.error);
@@ -27,10 +27,10 @@ const ChannelPortal = () => {
   }
   return (
     <Routes>
-      <Route path="channel/:id" element={<ChannelHome />} />
-      <Route path="channel/:id/notice" element={<ChannelNotice />} />
-      <Route path="channel/:id/events" element={<ChannelCalendar />} />
-      <Route path="channel/:channelId/notice/:noticeId" element={<Notice />} />
+      <Route path="" element={<ChannelHome />} />
+      <Route path="notice" element={<ChannelNotice />} />
+      <Route path="events" element={<ChannelCalendar />} />
+      <Route path="notice/:noticeId" element={<Notice />} />
     </Routes>
   );
 };

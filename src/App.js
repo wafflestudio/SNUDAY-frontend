@@ -133,7 +133,7 @@ function App() {
         <Route path="findmypw" element={<FindMyPassword />} />
         <Route path="/" element={<Home />} />
 
-        <Route path="channel/:id/*" element={<ChannelPortal />} />
+        <Route path="channel/:channelId/*" element={<ChannelPortal />} />
         <Route path="*" element={<Navigate to="signin" />} />
       </Routes>
     );
@@ -147,7 +147,7 @@ function App() {
         <Route path="notice" element={<NoticeHome />} />
         <Route path="search" element={<SearchHome />} />
         <Route path="channel" element={<MyChannels />} />
-        <Route path="channel/:id/*" element={<ChannelPortal />} />
+        <Route path="channel/:channelId/*" element={<ChannelPortal />} />
         <Route path="mypage" element={<MyPage />} />
         <Route path="mypage/changePw" element={<ChangePassword />} />
         <Route path="mypage/changeId" element={<ChangeUsername />} />

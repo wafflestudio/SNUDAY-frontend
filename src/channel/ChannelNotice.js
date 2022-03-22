@@ -6,7 +6,7 @@ import { useAuthContext } from 'context/AuthContext';
 import { useParams } from 'react-router-dom';
 
 const ChannelNotice = () => {
-  const { id } = useParams();
+  const { channelId } = useParams();
   const [addNotice, setAddNotice] = useState(false);
   const {
     value: { userInfo },
@@ -15,12 +15,15 @@ const ChannelNotice = () => {
     window.scrollTo(0, 0);
   }, [addNotice]);
   return addNotice ? (
-    <AddNotice channelId={id} setIsDone={(done) => setAddNotice(!done)} />
+    <AddNotice
+      channelId={channelId}
+      setIsDone={(done) => setAddNotice(!done)}
+    />
   ) : (
     <>
       <Header
         right={
-          userInfo?.managing_channels.has(parseInt(id)) ? (
+          userInfo?.managing_channels.has(parseInt(channelId)) ? (
             <img
               alt="add notice"
               width="58"
@@ -34,7 +37,7 @@ const ChannelNotice = () => {
         공지사항
       </Header>
       <div className="card">
-        <NoticeList channelId={id} />
+        <NoticeList channelId={channelId} />
       </div>
     </>
   );
