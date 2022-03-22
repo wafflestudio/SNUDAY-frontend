@@ -7,12 +7,12 @@ import NoticeList from 'channel/NoticeList';
 import Calendar from 'calendar/Calendar';
 const ChannelHome = () => {
   const navigate = useNavigate();
-  let { id } = useParams();
-  id = +id;
-  console.log(id);
+  let { channelId } = useParams();
+  channelId = +channelId;
+  console.log(channelId);
   const [channelData, setChannelData] = useState(null);
   useEffect(() => {
-    getChannel(id).then((channel) => setChannelData(() => channel));
+    getChannel(channelId).then((channel) => setChannelData(() => channel));
   }, []);
   useEffect(() => {
     const today = document.getElementsByClassName('day today')[0];
@@ -27,17 +27,17 @@ const ChannelHome = () => {
       <section className="card">
         <header
           className="card-header"
-          onClick={() => navigate(`/channel/${id}/notice/`)}
+          onClick={() => navigate(`/channel/${channelId}/notice/`)}
         >
           공지사항
           <img className="arrow" src="/resources/right-arrow.svg" alt="more" />
         </header>
-        <NoticeList channelId={id} limit={3} />
+        <NoticeList channelId={channelId} limit={3} />
       </section>
       <section className="card">
         <header
           className="card-header"
-          onClick={() => navigate(`/channel/${id}/events/`)}
+          onClick={() => navigate(`/channel/${channelId}/events/`)}
         >
           채널 일정
           <img
@@ -47,7 +47,7 @@ const ChannelHome = () => {
           />
         </header>
         <div style={{ height: 'calc(14rem + 2px)', overflow: 'hidden' }}>
-          <Calendar channelId={id} type="mini" />
+          <Calendar channelId={channelId} type="mini" />
         </div>
       </section>
     </div>

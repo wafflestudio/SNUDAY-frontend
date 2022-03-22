@@ -8,7 +8,7 @@ const { useState, useEffect } = require('react');
 
 const ChannelCalendar = ({ id }) => {
   const params = useParams();
-  const channelId = id || +params.id;
+  const channelId = id || +params.channelId;
   const [channelName, setChannelName] = useState('');
   useEffect(() => {
     getChannel(channelId).then((channel) => setChannelName(channel.name));
