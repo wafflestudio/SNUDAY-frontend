@@ -1,11 +1,5 @@
 import React, { useState } from 'react';
-import {
-  Routes,
-  Route,
-  Navigate,
-  useNavigate,
-  useLocation,
-} from 'react-router-dom';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import Home from 'Home';
 import Login from 'auth/Login';
 import Navigation from 'Navigation';
@@ -13,24 +7,18 @@ import Signup from 'auth/Signup';
 import 'App.css';
 import MyPage from 'auth/MyPage';
 import { useAuthContext } from './context/AuthContext';
-import ChannelMain from 'channel/ChannelMain';
-import ChannelHome from 'channel/ChannelHome';
+import MyChannels from 'channel/MyChannels';
 import SearchHome from 'SearchHome';
 import NoticeHome from 'channel/NoticeHome';
-import ChannelNotice from 'channel/ChannelNotice';
-import Notice from 'channel/Notice';
 import FindMyId from 'auth/FindMyId';
 import ChangeUsername from 'auth/ChangeUsername';
 import ChangePassword from 'auth/ChangePassword';
 import FindMyPassword from 'auth/FindMyPassword';
-import ChannelCalendar from 'channel/ChannelCalendar';
 import { AndroidCalendar } from 'calendar/Calendar';
-function copyTouch({ identifier, pageX, pageY }) {
-  return { identifier, pageX, pageY };
-}
+import ChannelPortal from 'channel/ChannelPortal';
+import { refresh } from 'API';
 
 function App() {
-  const [sctop, setsctop] = useState(window.scrollY);
   let lastScrollTop = 0;
   const stickNav = (e) => {
     console.log(window.pageYOffset);
@@ -116,13 +104,26 @@ function App() {
   };
   const {
     value: { isLoggedIn, userInfo },
+    action: { setToken, setIsLoggedIn },
   } = useAuthContext();
-  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(true);
   const location = useLocation();
   console.log(location);
   if (location.pathname === '/android') return <AndroidCalendar />;
   if (!isLoggedIn) {
     // navigate('/signin');
+    if (isLoading) {
+      refresh()
+        .then((data) => {
+          setToken(data); //data.access
+          setIsLoggedIn(true);
+          console.log('welcome back');
+        })
+        .catch((err) => {
+          setIsLoading(false);
+        });
+      return <></>;
+    }
 
     return (
       <Routes>
@@ -130,7 +131,10 @@ function App() {
         <Route path="signin" element={<Login />} />
         <Route path="findmyid" element={<FindMyId />} />
         <Route path="findmypw" element={<FindMyPassword />} />
-        <Route path="*" element={<Navigate to="signin" replace />} />
+        <Route path="/" element={<Home />} />
+
+        <Route path="channel/:id/*" element={<ChannelPortal />} />
+        <Route path="*" element={<Navigate to="signin" />} />
       </Routes>
     );
   }
@@ -140,19 +144,13 @@ function App() {
     <>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="mypage/ChangePw" element={<ChangePassword />} />
-        <Route path="mypage/ChangeId" element={<ChangeUsername />} />
-        <Route path="mypage" element={<MyPage />} />
         <Route path="notice" element={<NoticeHome />} />
         <Route path="search" element={<SearchHome />} />
-        <Route path="channel" element={<ChannelMain />} />
-        <Route
-          path="channel/:channelId/notice/:noticeId"
-          element={<Notice />}
-        />
-        <Route path="channel/:id/notice" element={<ChannelNotice />} />
-        <Route path="channel/:id/events" element={<ChannelCalendar />} />
-        <Route path="channel/:id" element={<ChannelHome />} />
+        <Route path="channel" element={<MyChannels />} />
+        <Route path="channel/:id/*" element={<ChannelPortal />} />
+        <Route path="mypage" element={<MyPage />} />
+        <Route path="mypage/changePw" element={<ChangePassword />} />
+        <Route path="mypage/changeId" element={<ChangeUsername />} />
         <Route path="signup" element={<Signup />} />
         <Route path="signin" element={<Login />} />
         <Route path="findmyid" element={<FindMyId />} />

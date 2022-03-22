@@ -9,17 +9,21 @@ import { useAuthContext } from 'context/AuthContext';
 import AddEventModal from 'AddEventModal';
 import { useSearchParams } from 'react-router-dom';
 import axios from 'axios';
-export const AndroidCalendar = ({}) => {
+export const AndroidCalendar = () => {
   let [searchParams, setSearchParams] = useSearchParams();
   const token = searchParams.get('token');
   axios.defaults.headers['Authorization'] = `Bearer ${token}`;
   const {
-    value: { isLoggedIn, userInfo },
+    value: { isLoggedIn },
     action: { setIsLoggedIn, setToken },
   } = useAuthContext();
   useEffect(() => {
     setToken({ access: token });
     setIsLoggedIn(true);
+    return () => {
+      setToken({ access: null });
+      setIsLoggedIn(false);
+    };
   }, []);
   useEffect(() => {
     const addButton = document.getElementById('add-button');
@@ -37,9 +41,6 @@ export const Calendar = ({ channelId, type }) => {
   const {
     value: { isLoggedIn, userInfo },
   } = useAuthContext();
-  let [searchParams, setSearchParams] = useSearchParams();
-  const token = searchParams.get('token');
-  console.log([...searchParams.entries()]);
   // useEffect(() => {
   //   getMyEvents().then((events) => {
   //     calendar.registerEvents(events);

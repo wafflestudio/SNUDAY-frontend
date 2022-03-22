@@ -28,7 +28,6 @@ const AuthProvider = (props) => {
   };
   const initUserInfo = async () => {
     const userInfo = await getUserMe();
-    console.log(userInfo);
     const managingChannels = await getManagingChannels();
     const subscribingChannels = await getSubscribedChannels();
     const awaitingChannels = await getAwaitingChannels();
@@ -38,14 +37,13 @@ const AuthProvider = (props) => {
       managing_channels: new Set(managingChannels.map((ch) => ch.id)),
       subscribing_channels: new Set(subscribingChannels.map((ch) => ch.id)),
       awaiting_channels: new Set(awaitingChannels.map((ch) => ch.id)),
-      my_channel: myChannel.id,
+      my_channel: myChannel?.id,
     };
     newUserInfo.managing_channels.delete(newUserInfo.my_channel);
     //FIX:오류로 임시 코드. 나중에 지우기. DELETE!
     newUserInfo.managing_channels.delete(36);
     newUserInfo.managing_channels.delete(46);
     //
-    console.log(newUserInfo);
     setState((prev) => ({
       ...prev,
       value: { ...prev.value, userInfo: newUserInfo },
@@ -62,7 +60,6 @@ const AuthProvider = (props) => {
   useEffect(() => {
     if (state.value.access) initUserInfo();
   }, [state.value.access]);
-  console.log(state);
   return (
     <AuthContext.Provider value={state}>{props.children}</AuthContext.Provider>
   );
