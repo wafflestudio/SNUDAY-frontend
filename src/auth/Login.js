@@ -51,7 +51,7 @@ const Login = () => {
   return (
     <>
       <div className="login-header">
-        <Logo className="login-logo" />
+        <Logo onClick={() => navigate('/')} className="login-logo" />
       </div>
       <form className="login-form mobile-max-container">
         <InputBox
