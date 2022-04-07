@@ -28,7 +28,7 @@ const EventTag = ({ event }) => {
   );
 };
 const EventContent = ({ isActive, event, modify }) => {
-  const { fetchEvents } = useCalendarContext();
+  const { fetchMonthlyEvents } = useCalendarContext();
   const {
     value: { userInfo },
   } = useAuthContext();
@@ -69,7 +69,11 @@ const EventContent = ({ isActive, event, modify }) => {
               const proceed = window.confirm('일정을 삭제하시겠습니까?');
               if (proceed) {
                 deleteEvent(event.channel, event.id).then((response) => {
-                  fetchEvents();
+                  // events
+                  fetchMonthlyEvents(
+                    event.start_date.getFullYear(),
+                    event.start_date.getMonth()
+                  ); //FIX: 현재 선택된 달이 fetch되도록
                   isActive(false);
                 });
               }

@@ -13,11 +13,10 @@ const Day = ({ year, monthIndex, day, channelId, events, eventPositions }) => {
   let dateClass = 'date';
   if (holiday) dateClass += ' holiday';
   //api/v1/channels/{channel_id}/events/?date=2021-03-16
-  const { getMonthEvents } = useCalendarContext();
   // console.log('events', date.getDate(), events);
   //event numbers
   let overflow = false;
-  let dayEvents = events?.dayEventsMap.get(date.getDate());
+  let dayEvents = events?.dailyEventsMap.get(date.getDate());
   if (dayEvents) {
     dayEvents = [...dayEvents];
     for (const e of dayEvents) {

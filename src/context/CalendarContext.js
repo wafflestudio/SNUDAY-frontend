@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { getMyEvents } from '../API';
+import { getMyEvents, getChannelEvents } from '../API';
 import { useAuthContext } from './AuthContext';
 import { Calendar } from '../calendar/cal';
 import { COLORS } from '../Constants';
@@ -9,10 +9,10 @@ const CalendarContext = React.createContext({
   setDay: () => {},
   calendar: null,
   events: null,
-  fetchEvents: () => {},
+  fetchMonthlyEvents: () => {},
 });
 export const CalendarContextProvider = ({ value, children }) => {
-  const [events, setEvents] = useState(undefined);
+  const [events, setEvents] = useState(new Map()); //containing all fetched events
   const [isFetching, setIsFetching] = useState(true);
   const [monthEvents, setMonthEvents] = useState(new Map());
   const [channelEvents, setChannelEvents] = useState(new Map());
@@ -25,11 +25,24 @@ export const CalendarContextProvider = ({ value, children }) => {
     return 32 - new Date(year, month, 32).getDate();
   };
   useEffect(() => {
+    fetchMonthlyEvents();
+  }, [userInfo]);
+  useEffect(() => {
+    console.log(events);
+    setMonthlyEventsMap();
+    setChannelEventsMap();
+    setIsFetching(false);
+  }, [events]);
+  useEffect(() => {
+    fetchMonthlyEvents(value.year, value.monthIndex);
+  }, [value.year, value.monthIndex]);
+
+  useEffect(() => {
+    // get/set channel colors
     if (!userInfo) return;
-    console.log('set colors');
+    // console.log('set colors');
     const colors = Object.keys(COLORS);
     const savedColors = localStorage.getItem('channelColors');
-    console.log('savedColors', savedColors);
     if (savedColors) {
       const presetColors = new Map(JSON.parse(savedColors));
       userInfo?.subscribing_channels.forEach((channel, index) => {
@@ -39,6 +52,7 @@ export const CalendarContextProvider = ({ value, children }) => {
             colors[Math.floor(Math.random() * colors.length)]
           );
       });
+      // console.log(presetColors);
       setChannelColors(presetColors);
       localStorage.setItem('channelColors', JSON.stringify([...presetColors]));
     } else {
@@ -48,59 +62,65 @@ export const CalendarContextProvider = ({ value, children }) => {
       );
       setChannelColors(presetColors);
       localStorage.setItem('channelColors', JSON.stringify([...presetColors]));
-      console.log(presetColors);
+      // console.log(presetColors);
     }
   }, [userInfo?.subscribing_channels]);
+
   const setChannelColor = (channel, color) => {
     const newColors = new Map([...channelColors, [channel, color]]);
     setChannelColors((prev) => newColors);
     localStorage.setItem('channelColors', JSON.stringify([...newColors]));
   };
-  useEffect(() => {
-    fetchEvents();
-  }, [userInfo]);
-  useEffect(() => {
-    console.log(events);
-    fetchMonthEvents();
-    fetchChannelEvents();
-    setIsFetching(false);
-  }, [events]);
 
   //fetch map of all events
-  const fetchEvents = () => {
+  //FIX: fetchEvents와 updateEvents로 나누기
+  //전체 새로 로드/변경 이벤트만 로드
+  const fetchMonthlyEvents = async (
+    year = new Date().getFullYear(),
+    monthIndex = new Date().getMonth() + 1
+  ) => {
     setIsFetching(true);
+    //FIX?
     setMonthEvents(new Map());
     setChannelEvents(new Map());
-    const newEvents = new Map();
-    getMyEvents()
-      .then((evts) => {
-        console.log('events:', evts);
-        evts.forEach((ev) =>
-          newEvents.set(ev.id, {
-            ...ev,
-            start_date: new Date(
-              ev.has_time
-                ? ev.start_date + 'T' + ev.start_time + '+09:00'
-                : ev.start_date
-            ),
-            due_date: new Date(
-              ev.has_time
-                ? ev.due_date + 'T' + ev.due_time + '+09:00'
-                : ev.due_date
-            ),
-          })
-        );
-        setEvents(newEvents);
-      })
-      .catch(console.log);
+    //
+    const newEvents = new Map(events);
+    //API: get user events
+    const monthEvents = await getMyEvents({
+      month: `${parseInt(year)}-${parseInt(monthIndex) + 1}`,
+    });
+    console.log('events:', monthEvents);
+    console.log('year,month', value.year, value.monthIndex);
+    //adjust data format
+    monthEvents.forEach((event) => {
+      //skip if no update in an event
+      if (
+        events.has(event.id) &&
+        event.updated_at === events.get(event.id).updated_at
+      )
+        return;
+      newEvents.set(event.id, {
+        ...event,
+        start_date: new Date(
+          event.has_time
+            ? event.start_date + 'T' + event.start_time + '+09:00'
+            : event.start_date
+        ),
+        due_date: new Date(
+          event.has_time
+            ? event.due_date + 'T' + event.due_time + '+09:00'
+            : event.due_date
+        ),
+      });
+    });
+    //save events
+    setEvents(newEvents);
   };
-  //fetch events map sorted by month
-  const fetchMonthEvents = () => {
-    if (!events) {
-      setMonthEvents(new Map());
-      return;
-    }
-    const monthEvents = new Map();
+
+  //sort ${events} by month => ${EventsByMonth}
+  //EventsByMonth = {'2022-4': {1, 2, 3:eventNo}:Set}:Map
+  const sortEventsByMonth = () => {
+    const EventsByMonth = new Map();
     events.forEach((event, id) => {
       const start = event.start_date;
       const due = event.due_date;
@@ -111,45 +131,63 @@ export const CalendarContextProvider = ({ value, children }) => {
         month < months;
         month++, year += month % 12 === 0
       ) {
-        if (!monthEvents.has(`${year}-${month % 12}`))
-          monthEvents.set(`${year}-${month % 12}`, new Set());
-        monthEvents.get(`${year}-${month % 12}`).add(id);
+        if (!EventsByMonth.has(`${year}-${month % 12}`))
+          EventsByMonth.set(`${year}-${month % 12}`, new Set());
+        EventsByMonth.get(`${year}-${month % 12}`).add(id);
       }
     });
-    console.log(monthEvents);
+    return EventsByMonth;
+  };
+  const sortMonthlyEventsByDay = (monthlyEvents, year, monthIndex) => {
+    const sortedMonthlyEvents = new Map();
+    for (const eventNo of monthlyEvents) {
+      const event = events.get(eventNo);
+      let startDate =
+        event.start_date.getMonth() === monthIndex
+          ? event.start_date.getDate()
+          : 1;
+      let dueDate =
+        event.due_date.getMonth() === monthIndex
+          ? event.due_date.getDate()
+          : getNumDays(year, monthIndex);
+      for (let date = startDate; date <= dueDate; date++) {
+        if (!sortedMonthlyEvents.has(date))
+          sortedMonthlyEvents.set(date, new Set());
+        sortedMonthlyEvents.get(date).add(eventNo);
+      }
+    }
+    return sortedMonthlyEvents;
+  };
+  //fetch events map sorted by month
+  //{month:{day:Set([...eventNo]),...},...}
+  const setMonthlyEventsMap = () => {
+    if (!events) {
+      setMonthEvents(new Map());
+      return;
+    }
+    const EventsByMonth = sortEventsByMonth();
     //construct events map per month
-    for (const [year_month, thisMonthEvents] of monthEvents) {
-      console.log(year_month, thisMonthEvents);
+    //{'2022-4':
+    //  {1://2022-04-01
+    //    {1, 2, 3:eventNo}:Set
+    //  }:Map
+    //}:Map
+    for (const [year_month, thisMonthEvents] of EventsByMonth) {
       const [year, monthIndex] = year_month
         .split('-')
         .map((str) => parseInt(str, 10));
       if (thisMonthEvents instanceof Set) {
-        const newThisMonthEvents = new Map();
-        for (const eventNo of thisMonthEvents) {
-          const event = events.get(eventNo);
-          let startDate =
-            event.start_date.getMonth() === monthIndex
-              ? event.start_date.getDate()
-              : 1;
-          let dueDate =
-            event.due_date.getMonth() === monthIndex
-              ? event.due_date.getDate()
-              : getNumDays(year, monthIndex);
-          // console.log(event, startDate, dueDate);
-          for (let date = startDate; date <= dueDate; date++) {
-            if (!newThisMonthEvents.has(date))
-              newThisMonthEvents.set(date, new Set());
-            newThisMonthEvents.get(date).add(eventNo);
-          }
-        }
-        monthEvents.set(year_month, newThisMonthEvents);
+        EventsByMonth.set(
+          year_month,
+          sortMonthlyEventsByDay(thisMonthEvents, year, monthIndex)
+        );
       }
     }
-    console.log(monthEvents);
-    setMonthEvents(new Map(monthEvents));
+    setMonthEvents(EventsByMonth);
   };
+
   //fetch events map sorted by channel_id
-  const fetchChannelEvents = () => {
+  const setChannelEventsMap = () => {
     if (!events) {
       setChannelEvents(new Map());
       return;
@@ -161,50 +199,54 @@ export const CalendarContextProvider = ({ value, children }) => {
     });
     setChannelEvents(new Map(channelEvents));
   };
-  const getMonthEvents = (year, monthIndex) => {
+
+  const getMonthlyEvents = (year, monthIndex) => {
     // while (!monthEvents) await new Promise((r) => setTimeout(r, 2000));
 
     let thisMonthEvents = monthEvents?.get(`${year}-${monthIndex}`);
     if (thisMonthEvents instanceof Set) {
-      const newThisMonthEvents = new Map();
-      for (const eventNo of thisMonthEvents) {
-        const event = events.get(eventNo);
-        let startDate =
-          event.start_date.getMonth() === monthIndex
-            ? event.start_date.getDate()
-            : 1;
-        let dueDate =
-          event.due_date.getMonth() === monthIndex
-            ? event.due_date.getDate()
-            : getNumDays(year, monthIndex);
-        for (let date = startDate; date <= dueDate; date++) {
-          if (!newThisMonthEvents.has(date))
-            newThisMonthEvents.set(date, new Set());
-          newThisMonthEvents.get(date).add(eventNo);
-        }
-      }
+      const newThisMonthEvents = sortMonthlyEventsByDay(
+        thisMonthEvents,
+        year,
+        monthIndex
+      );
       monthEvents.set(`${year}-${monthIndex}`, newThisMonthEvents);
       setMonthEvents(new Map(monthEvents));
-      return newThisMonthEvents;
+      return; //newThisMonthEvents
     }
     return thisMonthEvents;
   };
   //return monthly events for active channels
-  const getMonthActiveEvents = (year, monthIndex, channelId) => {
+  const getMonthlyActiveEvents = async (year, monthIndex, channelId) => {
     //프로미스로 해보기
-    const monthActiveEvents = new Map(getMonthEvents(year, monthIndex));
-    if (!getMonthEvents(year, monthIndex)) {
+    // await fetchMonthlyEvents({ month: `${year}-${monthIndex + 1}` });
+    console.log(year, monthIndex, channelId);
+
+    console.log(monthEvents);
+    const monthlyEvents = getMonthlyEvents(year, monthIndex);
+    console.log(monthlyEvents);
+    if (!monthlyEvents) {
       console.log('!!!!!!!!!!!!!!!!!!!!!!');
       return undefined;
     }
-    console.log(monthActiveEvents);
-    //event IDs of active channels
-    let activeChannelEvents;
+    console.log('monthlyEvents', monthlyEvents);
+    let activeChannelEvents; //list of event IDs of active channels
     if (channelId) {
-      activeChannelEvents = channelEvents.get(parseInt(channelId, 10));
-      if (activeChannelEvents !== undefined)
-        activeChannelEvents = Array.from(activeChannelEvents);
+      //get specific channel's active events
+      if (userInfo?.subscribing_channels?.has(channelId)) {
+        //구독 중인 채널
+        activeChannelEvents = channelEvents.get(parseInt(channelId, 10));
+        if (activeChannelEvents !== undefined)
+          activeChannelEvents = Array.from(activeChannelEvents);
+      } else {
+        //FIXIT: 채널 이벤트가 10개씩 옴. 전체가 오도록 해야할 듯
+        getChannelEvents({ channelId }).then((events) => {
+          console.log(`Channel #${channelId} events`, events);
+          activeChannelEvents = events.results.map((event) => event.id);
+        });
+      }
     } else {
+      //get all monthly active events
       activeChannelEvents = new Map(channelEvents);
       for (const ch of disabledChannels) {
         activeChannelEvents.delete(ch);
@@ -214,9 +256,10 @@ export const CalendarContextProvider = ({ value, children }) => {
         []
       );
     }
-    console.log(activeChannelEvents);
-    for (let [day, events] of monthActiveEvents) {
-      monthActiveEvents.set(
+    console.log('activeChannelEvents', activeChannelEvents);
+    const activeMonthlyEvents = new Map();
+    for (let [day, events] of monthlyEvents) {
+      activeMonthlyEvents.set(
         day,
         new Set([...events].filter((e) => activeChannelEvents?.includes(e)))
       );
@@ -224,19 +267,19 @@ export const CalendarContextProvider = ({ value, children }) => {
     return {
       eventsList: [
         ...new Set(
-          [...monthActiveEvents.values()].reduce(
+          [...activeMonthlyEvents.values()].reduce(
             (prev, curr) => [...prev, ...curr],
             []
           )
         ),
       ],
-      dayEventsMap: monthActiveEvents,
+      dailyEventsMap: activeMonthlyEvents,
     };
   };
-  const getDayEvents = (date) => {
-    const monthEvents = getMonthEvents(date.getFullYear(), date.getMonth());
-    const dayEvents = monthEvents?.get(date.getDate());
-    return dayEvents ? [...dayEvents].map((id) => events.get(id)) : [];
+  const getDailyEvents = (date) => {
+    const monthEvents = getMonthlyEvents(date.getFullYear(), date.getMonth());
+    const dailyEvents = monthEvents?.get(date.getDate());
+    return dailyEvents ? [...dailyEvents].map((id) => events.get(id)) : [];
   };
   const getDateLength = (date1, date2) => {
     const dayInMs = 60 * 60 * 24 * 1000;
@@ -252,11 +295,11 @@ export const CalendarContextProvider = ({ value, children }) => {
         events,
         getEvent: (id) => events.get(id),
         monthEvents,
-        getMonthActiveEvents,
-        getDayEvents,
+        getMonthlyActiveEvents,
+        getDailyEvents,
         channelEvents,
         channelColors,
-        fetchEvents,
+        fetchMonthlyEvents,
         isFetching,
         disabledChannels,
         setDisabledChannels,

@@ -113,7 +113,7 @@ const AddEventModal = ({ isActive, date, event: existingEvent }) => {
   const {
     value: { userInfo },
   } = useAuthContext();
-  const { fetchEvents } = useCalendarContext();
+  const { fetchMonthlyEvents } = useCalendarContext();
   const today = new Date();
   const initialDate = date ? toDateString(date) : toDateString(today);
   const initialState = existingEvent
@@ -187,7 +187,10 @@ const AddEventModal = ({ isActive, date, event: existingEvent }) => {
     (existingEvent ? patchEvent : postEvent)(newEvent.channel, newEvent).then(
       (event) => {
         console.log(event);
-        fetchEvents();
+        //FIX: 현재 선택된 달이 fetch되도록
+        const [year, monthIndex] = event.start_date.split('-');
+        console.log(year, monthIndex);
+        fetchMonthlyEvents(year, monthIndex);
         isActive(false);
       }
     );

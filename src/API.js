@@ -172,10 +172,10 @@ export const checkDuplicateID = (username) =>
         resolve(false);
       });
   });
-export const getMyEvents = (date) =>
+export const getMyEvents = ({ month, date }) =>
   new Promise((resolve, reject) => {
     axios
-      .get(`users/me/events/`, { params: { date } })
+      .get(`users/me/events/`, { params: { month, date } })
       .then((response) => {
         resolve(response.data);
       })

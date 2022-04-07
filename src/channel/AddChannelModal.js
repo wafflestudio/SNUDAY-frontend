@@ -257,7 +257,7 @@ const AddChannelModal = ({ isActive, init }) => {
   const initialState = init ?? {
     name: '',
     description: '',
-    managers: [userInfo],
+    managers_id: userInfo.username, //[userInfo],
     is_private: false,
     image: null,
     //is_official:false
@@ -277,9 +277,9 @@ const AddChannelModal = ({ isActive, init }) => {
     const channelData = {
       ...channel,
       name: channel.name.trim(),
-      managers_id: channel.managers.map((m) => m.username),
+      // managers_id: channel.managers, //.map((m) => m.username),
     };
-    delete channelData.managers;
+    // delete channelData.managers;
     //FIXIT: image upload error
     if (!(channelData.image instanceof Blob)) delete channelData.image;
     // delete channelData.image;

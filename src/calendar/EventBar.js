@@ -10,7 +10,6 @@ const EventBar = ({ eventNo, color, date, pos }) => {
   if (Number.isInteger(eventNo)) {
     e = getEvent(eventNo);
   }
-
   //first day of the month
   const FIRST_DAY = new Date(date.getFullYear(), date.getMonth(), 1);
   const THIS_SUNDAY = new Date(

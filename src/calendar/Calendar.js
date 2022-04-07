@@ -135,6 +135,8 @@ export const Calendar = ({ channelId, type }) => {
     <>
       <CalendarContextProvider
         value={{
+          year,
+          monthIndex,
           day,
           setDay: chooseDay,
         }}
