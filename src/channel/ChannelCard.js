@@ -6,6 +6,7 @@ import { ReactComponent as OfficialMark } from 'resources/checkbox-checked.svg';
 import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from 'context/AuthContext';
 import { ChannelStatusButton, WaitingListButton } from 'channel/ChannelButton';
+import { useState } from 'react';
 const ChannelInfoHeader = ({
   channelData: { name, is_official, is_private },
 }) => {
@@ -25,7 +26,8 @@ const ChannelAvatar = ({ name, image }) => (
   />
 );
 
-const ChannelCard = ({ channelData, verbose }) => {
+const ChannelCard = ({ channelData: initialData, verbose }) => {
+  const [channelData, setChannelData] = useState(initialData);
   const navigate = useNavigate();
   const {
     value: { userInfo },
@@ -53,7 +55,14 @@ const ChannelCard = ({ channelData, verbose }) => {
     >
       <div className="channel-image-with-button">
         <ChannelAvatar name={name} image={image} />
-        {verbose ? <ChannelStatusButton channelData={channelData} /> : <></>}
+        {verbose ? (
+          <ChannelStatusButton
+            channelData={channelData}
+            setChannelData={setChannelData}
+          />
+        ) : (
+          <></>
+        )}
       </div>
       <div className="channel-card-info">
         <ChannelInfoHeader channelData={channelData} />
@@ -70,7 +79,10 @@ const ChannelCard = ({ channelData, verbose }) => {
               ) : (
                 <></>
               )}
-              <ChannelStatusButton channelData={channelData} />
+              <ChannelStatusButton
+                channelData={channelData}
+                setChannelData={setChannelData}
+              />
             </>
           )}
           {/* <Favorite onClick={() => {}} /> */}
