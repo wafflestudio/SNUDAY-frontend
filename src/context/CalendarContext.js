@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Event, Events } from './Event';
 import { getMyEvents, getChannelEvents } from '../API';
 import { useAuthContext } from './AuthContext';
 import { Calendar } from '../calendar/cal';

@@ -8,7 +8,6 @@ import Tag from 'Tag';
 import { useCalendarContext } from 'context/CalendarContext';
 import { COLORS } from 'Constants';
 import { deleteEvent } from 'API';
-import useEvents from 'context/useEvents';
 
 const EventTag = ({ event }) => {
   const navigate = useNavigate();

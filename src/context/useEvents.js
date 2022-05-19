@@ -1,5 +1,5 @@
 import { getMyEvents } from 'API';
-import React, { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   getNumDaysofMonth,
   toDateString,
