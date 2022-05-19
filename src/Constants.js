@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+
 export const usernamePattern = /^[a-z0-9]{5,}$/;
 export const pwPattern = /^(?=.*[A-Za-z])(?=.*\d)(?!.*\s)[A-Za-z\d\w\W]{8,}$/;
 export const namePattern = /^[A-Za-z가-힣]+$/;
@@ -13,6 +15,11 @@ export const COLORS = {
   SKYBLUE: '#4499e3',
   AMETHYST: '#a45eae',
   LAVENDER: '#4b4dbd',
+};
+export const useUpdateLogger = (key, value) => {
+  useEffect(() => {
+    console.log(`UPDATE[${key}]`, value);
+  }, [value]);
 };
 export function getNumDaysofMonth(year, monthIndex) {
   let temp;
@@ -53,3 +60,13 @@ export const toDateString = (date) =>
   `${date.getFullYear()}-${(date.getMonth() + 1 + '').padStart(2, '0')}-${(
     date.getDate() + ''
   ).padStart(2, '0')}`;
+export const toTimeString = (date) =>
+  `${(date.getHours() + '').padStart(2, '0')}:${(
+    date.getMinutes() + ''
+  ).padStart(2, '0')}:${(date.getSeconds() + '').padStart(2, '0')}`;
+export const getDateLength = (date1, date2) => {
+  const dayInMs = 60 * 60 * 24 * 1000;
+  date1 = new Date(date1.getFullYear(), date1.getMonth(), date1.getDate());
+  date2 = new Date(date2.getFullYear(), date2.getMonth(), date2.getDate());
+  return (date2.getTime() - date1.getTime()) / dayInMs + 1;
+};

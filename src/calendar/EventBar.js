@@ -2,10 +2,15 @@ import { useState } from 'react';
 import 'calendar/EventBar.css';
 import { EventModal } from 'calendar/Event';
 import { useCalendarContext } from 'context/CalendarContext';
-import { COLORS, getNumDaysofMonth, isSameDate } from 'Constants';
+import {
+  COLORS,
+  getDateLength,
+  getNumDaysofMonth,
+  isSameDate,
+} from 'Constants';
 const EventBar = ({ eventNo, color, date, pos }) => {
   const [showEvent, setShowEvent] = useState(false);
-  const { getEvent, getDateLength, channelColors } = useCalendarContext();
+  const { getEvent, channelColors } = useCalendarContext();
   let e;
   if (Number.isInteger(eventNo)) {
     e = getEvent(eventNo);
@@ -30,28 +35,20 @@ const EventBar = ({ eventNo, color, date, pos }) => {
   );
   //date: start date of this eventbar
   const firstDate = //start date of the event
-    isSameDate(date, THIS_SUNDAY) && date > e.start_date
+    isSameDate(date, THIS_SUNDAY) && date > e.start
       ? date
-      : new Date(
-          e.start_date.getFullYear(),
-          e.start_date.getMonth(),
-          e.start_date.getDate()
-        );
+      : new Date(e.start.getFullYear(), e.start.getMonth(), e.start.getDate());
   const maxDate =
     THIS_SATURDAY < LAST_DAY_OF_THE_MONTH
       ? THIS_SATURDAY
       : LAST_DAY_OF_THE_MONTH;
   const lastDate = //end date of the bar
-    !isSameDate(maxDate, e.due_date) && e.due_date < maxDate
-      ? new Date(
-          e.due_date.getFullYear(),
-          e.due_date.getMonth(),
-          e.due_date.getDate()
-        )
+    !isSameDate(maxDate, e.end) && e.end < maxDate
+      ? new Date(e.end.getFullYear(), e.end.getMonth(), e.end.getDate())
       : maxDate;
   //determine round edge of the bar
-  const isStart = isSameDate(e.start_date, date);
-  const isEnd = isSameDate(e.due_date, lastDate);
+  const isStart = isSameDate(e.start, date);
+  const isEnd = isSameDate(e.end, lastDate);
   if (
     !(isStart || isSameDate(date, THIS_SUNDAY) || isSameDate(date, FIRST_DAY))
   ) {
