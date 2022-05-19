@@ -53,7 +53,7 @@ const DayEventsModalContent = ({ events, showEvent }) => {
   );
 };
 const DayEventsModal = ({ isActive, date, channelId }) => {
-  const { getDayEvents, getEvent } = useCalendarContext();
+  const { getDailyEvents, getEvent } = useCalendarContext();
   const [selectedEvent, setSelectedEvent] = useState(null);
   console.log(selectedEvent);
   return selectedEvent ? (
@@ -67,10 +67,10 @@ const DayEventsModal = ({ isActive, date, channelId }) => {
         <DayEventsModalContent
           events={
             channelId
-              ? getDayEvents(date).filter(
+              ? getDailyEvents(date).filter(
                   (event) => event.channel === channelId
                 )
-              : getDayEvents(date)
+              : getDailyEvents(date)
           }
           showEvent={setSelectedEvent}
         />

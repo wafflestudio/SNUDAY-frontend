@@ -231,6 +231,7 @@ input[type='time']::-webkit-clear-button {
   margin: 0 16px 0 0;
 }
 .Calendar-date-select {
+  z-index: 1;
   position: absolute;
   left: 0;
   top: 0;

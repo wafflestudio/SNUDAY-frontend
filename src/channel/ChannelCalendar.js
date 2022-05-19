@@ -17,10 +17,10 @@ const ChannelCalendar = ({ id }) => {
   // const [monthIndex, setMonthIndex] = useState(new Date().getMonth());
   //   {getChannel(match.params.id).then((channel) => channel.id)}
   return (
-    <CalendarContextProvider>
+    <>
       <Header>{channelName}</Header>
       <Calendar type="channel" channelId={channelId}></Calendar>
-    </CalendarContextProvider>
+    </>
   );
 };
 export default ChannelCalendar;

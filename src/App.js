@@ -108,7 +108,6 @@ function App() {
   } = useAuthContext();
   const [isLoading, setIsLoading] = useState(true);
   const location = useLocation();
-  console.log(location);
   if (location.pathname === '/android') return <AndroidCalendar />;
   if (!isLoggedIn) {
     // navigate('/signin');

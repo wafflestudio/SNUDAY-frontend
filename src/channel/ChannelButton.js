@@ -1,16 +1,21 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { EditChannelModal } from 'channel/AddChannelModal';
-import { subscribeChannel, unsubscribeChannel } from 'API';
+import { getChannel, subscribeChannel, unsubscribeChannel } from 'API';
 import { useAuthContext } from 'context/AuthContext';
 import ChannelAwaitersModal from './ChannelAwaitersModal';
-export const ChannelStatusButton = ({ channelData }) => {
+export const ChannelStatusButton = ({ channelData, setChannelData }) => {
   //채널 구독 상태에 따라 [구독 버튼], [구독 대기 버튼] [구독 취소 버튼]
   const {
     value: { userInfo },
   } = useAuthContext();
   if (!userInfo) return <></>;
   if (userInfo.managing_channels?.has(channelData.id))
-    return <EditChannelButton channelData={channelData} />;
+    return (
+      <EditChannelButton
+        channelData={channelData}
+        setChannelData={setChannelData}
+      />
+    );
   if (userInfo.subscribing_channels?.has(channelData.id))
     return <CancelSubscriptionButton channelData={channelData} />;
   if (userInfo.awaiting_channels?.has(channelData.id))
@@ -123,8 +128,13 @@ export const WaitingListButton = ({ channelData }) => {
     </>
   );
 };
-export const EditChannelButton = ({ channelData }) => {
+export const EditChannelButton = ({ channelData, setChannelData }) => {
   const [onEdit, setOnEdit] = useState(false);
+  useEffect(() => {
+    if (!onEdit) {
+      getChannel(channelData.id).then((newData) => setChannelData(newData));
+    }
+  }, [onEdit]);
   return (
     <>
       <img

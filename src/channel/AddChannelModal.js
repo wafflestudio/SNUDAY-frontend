@@ -236,7 +236,7 @@ export const EditChannelModal = ({ isActive, channelId }) => {
   useEffect(() => {
     getChannel(channelId).then((channel) => {
       setChannel({
-        managers_id: channel.managers.map((m) => m.id),
+        managers_id: channel.managers.username, //channel.managers.map((m) => m.id),
         ...channel,
       });
     });
@@ -257,7 +257,7 @@ const AddChannelModal = ({ isActive, init }) => {
   const initialState = init ?? {
     name: '',
     description: '',
-    managers: [userInfo],
+    managers_id: userInfo.username, //[userInfo],
     is_private: false,
     image: null,
     //is_official:false
@@ -267,8 +267,7 @@ const AddChannelModal = ({ isActive, init }) => {
     const key = action.key;
     const value = action.value;
     if (key in state) {
-      let newState = { ...state };
-      newState[key] = value;
+      let newState = { ...state, [key]: value };
       return newState;
     }
   };
@@ -277,9 +276,9 @@ const AddChannelModal = ({ isActive, init }) => {
     const channelData = {
       ...channel,
       name: channel.name.trim(),
-      managers_id: channel.managers.map((m) => m.username),
+      // managers_id: channel.managers, //.map((m) => m.username),
     };
-    delete channelData.managers;
+    // delete channelData.managers;
     //FIXIT: image upload error
     if (!(channelData.image instanceof Blob)) delete channelData.image;
     // delete channelData.image;
@@ -288,7 +287,7 @@ const AddChannelModal = ({ isActive, init }) => {
 
     let formData = new FormData();
     for (let key in channelData) {
-      if (!channelData[key]) continue;
+      if (channelData[key] === undefined) continue;
       if (key === 'image')
         formData.append(key, channelData[key], channelData[key].name);
       else

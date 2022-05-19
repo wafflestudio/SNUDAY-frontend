@@ -2,22 +2,22 @@ import React, { useContext, useState } from 'react';
 import { useCalendarContext } from 'context/CalendarContext';
 import DayEventsModal from './DayEventsModal';
 import EventBar from './EventBar';
+import { getNumDaysofMonth } from 'Constants';
 const Day = ({ year, monthIndex, day, channelId, events, eventPositions }) => {
   const date = new Date(year, monthIndex, day);
   const [showEvent, setShowEvent] = useState(false);
-  const { calendar, getNumDays, setDay } = useCalendarContext();
+  const { calendar, setDay } = useCalendarContext();
   let dayClass = 'day';
   if (day < 1) dayClass += ' past';
-  if (day > getNumDays(year, monthIndex)) dayClass += ' next';
+  if (day > getNumDaysofMonth(year, monthIndex)) dayClass += ' next';
   const holiday = calendar.getHoliday(date);
   let dateClass = 'date';
   if (holiday) dateClass += ' holiday';
   //api/v1/channels/{channel_id}/events/?date=2021-03-16
-  const { getMonthEvents } = useCalendarContext();
   // console.log('events', date.getDate(), events);
   //event numbers
   let overflow = false;
-  let dayEvents = events?.dayEventsMap.get(date.getDate());
+  let dayEvents = events?.dailyEventsMap.get(date.getDate());
   if (dayEvents) {
     dayEvents = [...dayEvents];
     for (const e of dayEvents) {
@@ -50,7 +50,7 @@ const Day = ({ year, monthIndex, day, channelId, events, eventPositions }) => {
         setShowEvent(true);
       }}
     >
-      {day < 1 || day > getNumDays(year, monthIndex) ? (
+      {day < 1 || day > getNumDaysofMonth(year, monthIndex) ? (
         <></>
       ) : (
         <>

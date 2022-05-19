@@ -29,6 +29,7 @@ const AuthProvider = (props) => {
   const initUserInfo = async () => {
     const userInfo = await getUserMe();
     const managingChannels = await getManagingChannels();
+    console.log('managingChannels', managingChannels);
     const subscribingChannels = await getSubscribedChannels();
     const awaitingChannels = await getAwaitingChannels();
     const myChannel = managingChannels.find((channel) => channel.is_personal);
