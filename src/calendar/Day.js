@@ -2,13 +2,14 @@ import React, { useContext, useState } from 'react';
 import { useCalendarContext } from 'context/CalendarContext';
 import DayEventsModal from './DayEventsModal';
 import EventBar from './EventBar';
+import { getNumDaysofMonth } from 'Constants';
 const Day = ({ year, monthIndex, day, channelId, events, eventPositions }) => {
   const date = new Date(year, monthIndex, day);
   const [showEvent, setShowEvent] = useState(false);
-  const { calendar, getNumDays, setDay } = useCalendarContext();
+  const { calendar, setDay } = useCalendarContext();
   let dayClass = 'day';
   if (day < 1) dayClass += ' past';
-  if (day > getNumDays(year, monthIndex)) dayClass += ' next';
+  if (day > getNumDaysofMonth(year, monthIndex)) dayClass += ' next';
   const holiday = calendar.getHoliday(date);
   let dateClass = 'date';
   if (holiday) dateClass += ' holiday';
@@ -49,7 +50,7 @@ const Day = ({ year, monthIndex, day, channelId, events, eventPositions }) => {
         setShowEvent(true);
       }}
     >
-      {day < 1 || day > getNumDays(year, monthIndex) ? (
+      {day < 1 || day > getNumDaysofMonth(year, monthIndex) ? (
         <></>
       ) : (
         <>

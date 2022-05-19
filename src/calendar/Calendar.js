@@ -100,20 +100,20 @@ export const Calendar = ({ channelId, type }) => {
   const chooseDay = (d) => {
     //전후 달
     if (d < 1) {
-      if (monthIndex < 1) {
-        setYear(year - 1);
-        setMonthIndex(11);
-      } else setMonthIndex(monthIndex - 1);
+      if (monthIndex === 0) {
+        setYear((year) => year - 1);
+        setMonthIndex(() => 11);
+      } else setMonthIndex((monthIndex) => monthIndex - 1);
 
-      setDay(getNumDaysofMonth(year, monthIndex - 1) + d);
+      setDay(() => getNumDaysofMonth(year, monthIndex - 1) + d);
       return;
     }
     if (d > numDays) {
       setDay(d - numDays);
       if (monthIndex > 10) {
-        setYear(year + 1);
-        setMonthIndex(0);
-      } else setMonthIndex(monthIndex + 1);
+        setYear((year) => year + 1);
+        setMonthIndex(() => 0);
+      } else setMonthIndex((monthIndex) => monthIndex + 1);
 
       return;
     }
@@ -193,6 +193,7 @@ export const Calendar = ({ channelId, type }) => {
             year={year}
             monthIndex={monthIndex}
             channelId={channelId}
+            type={type}
           />
         </div>
       </CalendarContextProvider>
@@ -200,7 +201,13 @@ export const Calendar = ({ channelId, type }) => {
   );
 };
 export default Calendar;
-export const CalendarBody = ({ moveMonth, year, monthIndex, channelId }) => {
+export const CalendarBody = ({
+  moveMonth,
+  year,
+  monthIndex,
+  channelId,
+  type,
+}) => {
   const [targetTouch, setTargetTouch] = useState(null);
   const [scrollTime, setScrollTime] = useState(Date.now());
   useEffect(() => {
@@ -210,7 +217,7 @@ export const CalendarBody = ({ moveMonth, year, monthIndex, channelId }) => {
     <div
       className="Calendar-body"
       onWheel={(e) => {
-        if (Date.now() - scrollTime > 1000) {
+        if (type !== 'mini' && Date.now() - scrollTime > 1000) {
           setScrollTime(Date.now());
           moveMonth(e.deltaY);
         }

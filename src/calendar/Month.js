@@ -1,21 +1,21 @@
 import { useEffect, useState } from 'react';
 import { useCalendarContext } from 'context/CalendarContext';
 import Week from './Week';
+import { getNumDaysofMonth } from 'Constants';
+import { sortBy } from 'lodash';
 const Month = ({ year, monthIndex, channelId }) => {
   const {
-    monthEvents,
+    isFetching,
     getEvent,
     getMonthlyActiveEvents,
-    getDateLength,
     disabledChannels,
-    getNumDays,
   } = useCalendarContext();
   const [monthlyActiveEvents, setMonthlyActiveEvents] = useState(undefined);
   const [posEvents, setPosEvents] = useState(null);
   const date = new Date(year, monthIndex);
   const startDate = 1 - date.getDay();
   const numWeeks = Math.ceil(
-    (date.getDay() + getNumDays(year, monthIndex)) / 7
+    (date.getDay() + getNumDaysofMonth(year, monthIndex)) / 7
   );
 
   useEffect(() => {
@@ -27,79 +27,54 @@ const Month = ({ year, monthIndex, channelId }) => {
   }, []);
 
   useEffect(() => {
+    if (isFetching) return;
     //update events if there is an calendar update
     getMonthlyActiveEvents(year, monthIndex, channelId).then(
       (monthlyActiveEvents) => {
         // if(channel) monthActiveEvents = channelEvents.get(channel)
         setMonthlyActiveEvents(monthlyActiveEvents);
-        console.log(monthlyActiveEvents);
       }
     );
-  }, [monthEvents, disabledChannels]);
+  }, [isFetching, disabledChannels, year, monthIndex]);
 
   useEffect(() => {
     //update position if there is an event update
-    const eventsOrder = new Map();
-    const occupiedPos = new Map();
+    //정렬 순서
+    //1. 날짜 긴 순
+    //2. 시작 시간 앞선 순
+    //3. 이름 순
+    let eventsOrder = [];
     const posEvents = new Map();
-    //[id,start,end]
+    const eventPositions = [];
+    for (let i = 0; i < 32; i++) eventPositions.push([]);
     const eventsPeriod = new Map();
     monthlyActiveEvents?.eventsList.forEach((eventId) => {
-      const start =
-        getEvent(eventId).start_date.getMonth() !== monthIndex
-          ? 1
-          : getEvent(eventId).start_date.getDate();
-      const end =
-        getEvent(eventId).due_date.getMonth() !== monthIndex
-          ? getNumDays(year, monthIndex)
-          : getEvent(eventId).due_date.getDate();
-
-      eventsPeriod.set(eventId, [start, end, end - start]);
+      const event = getEvent(eventId);
+      eventsPeriod.set(eventId, event?.getMonthlyInfo(year, monthIndex));
     });
-
-    monthlyActiveEvents?.eventsList
-      .sort(
-        //이번 달의 기간으로 정렬
-        (a, b) => eventsPeriod.get(b)[2] - eventsPeriod.get(a)[2]
-        // getDateLength(getEvent(b).start_date, getEvent(b).due_date) -
-        // getDateLength(getEvent(a).start_date, getEvent(a).due_date)
-      )
-      .forEach((id, idx) => eventsOrder.set(id, idx));
-    console.log('events order:', eventsOrder);
+    eventsOrder = sortBy(monthlyActiveEvents?.eventsList, [
+      (id) => -eventsPeriod.get(id).len,
+      (id) => getEvent(id).start,
+      (id) => getEvent(id).title,
+    ]);
     if (monthlyActiveEvents)
-      [...eventsOrder.keys()].forEach((id) => {
-        if (!posEvents.get(id)) {
-          let excludedPos = occupiedPos.get(getEvent(id).start_date.getDate());
-          if (!excludedPos) excludedPos = [];
-          let pos = 0;
-          while (excludedPos.includes(pos)) pos++;
-          posEvents.set(id, pos);
-          const start =
-            getEvent(id).start_date.getMonth() !== monthIndex
-              ? 1
-              : getEvent(id).start_date.getDate();
-          const end =
-            getEvent(id).due_date.getMonth() !== monthIndex
-              ? getNumDays(year, monthIndex)
-              : getEvent(id).due_date.getDate();
-          for (let d = start; d <= end; d++)
-            occupiedPos.set(d, [...excludedPos, pos]);
-        }
+      eventsOrder.forEach((id) => {
+        const { start, end } = eventsPeriod.get(id);
+        const occupied = [];
+        let pos = 0;
+        for (let d = start; d <= end; d++)
+          for (let i = 0; i < eventPositions[d].length; i++)
+            if (eventPositions[d][i]) occupied[i] = true;
+        for (; pos < occupied.length; pos++) if (!occupied[pos]) break;
+        for (let d = start; d <= end; d++) eventPositions[d][pos] = id;
+        posEvents.set(id, pos);
       });
-    // [...monthActiveEvents.dailyEventsMap.entries()]
-    //   ?.sort((a, b) => b.length - a.length)
-    //   ?.forEach((d) => {
-    //     const idx = Array.from(new Array(d[1].size), (x, i) => i);
-    //     d[1].forEach((id) => {
-    //       if (posEvents.get(id)) idx.splice(posEvents.get(id), 1);
-    //     });
-    //     [...d[1]]
-    //       .sort((a, b) => eventsOrder.get(a) - eventsOrder.get(b))
-    //       .forEach((id) => {
-    //         if (!posEvents.get(id)) posEvents.set(id, idx.shift());
-    //       });
-    //   });
     setPosEvents(posEvents);
+    // console.log(monthlyActiveEvents);
+    // console.log(eventsPeriod);
+    // console.log(eventPositions);
+    // console.log(posEvents);
+    // console.log(eventsOrder.map((id) => getEvent(id)));
   }, [monthlyActiveEvents]);
 
   return (

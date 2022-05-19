@@ -8,6 +8,7 @@ import Tag from 'Tag';
 import { useCalendarContext } from 'context/CalendarContext';
 import { COLORS } from 'Constants';
 import { deleteEvent } from 'API';
+import useEvents from 'context/useEvents';
 
 const EventTag = ({ event }) => {
   const navigate = useNavigate();
@@ -18,7 +19,7 @@ const EventTag = ({ event }) => {
     <div className="event-modal-header">
       <Tag
         id={event.channel}
-        name={event.channel_name}
+        name={event.channelName}
         onClick={() => {
           if (userInfo.my_channel !== event.channel)
             navigate(`/channel/${event.channel}`);
@@ -28,12 +29,10 @@ const EventTag = ({ event }) => {
   );
 };
 const EventContent = ({ isActive, event, modify }) => {
-  const { fetchMonthlyEvents } = useCalendarContext();
   const {
     value: { userInfo },
   } = useAuthContext();
-  const start = event.start_date;
-  const end = event.due_date;
+  const { deleteEvent: delEvent } = useCalendarContext();
   const options = {
     weekday: 'short',
     year: 'numeric',
@@ -67,16 +66,13 @@ const EventContent = ({ isActive, event, modify }) => {
             alt="delete"
             onClick={() => {
               const proceed = window.confirm('일정을 삭제하시겠습니까?');
-              if (proceed) {
+              if (proceed)
                 deleteEvent(event.channel, event.id).then((response) => {
                   // events
-                  fetchMonthlyEvents(
-                    event.start_date.getFullYear(),
-                    event.start_date.getMonth()
-                  ); //FIX: 현재 선택된 달이 fetch되도록
+                  console.log(response);
+                  delEvent(event);
                   isActive(false);
                 });
-              }
             }}
             className="button"
             style={{
@@ -135,39 +131,47 @@ export const EventListItem = ({ event, showEvent }) => {
   );
 };
 export function eventDateString(event) {
-  const dateOptions = {
+  const dateOptions = (date) => ({
+    year:
+      date.getFullYear() !== new Date().getFullYear() ? 'numeric' : undefined,
     weekday: 'short',
     month: 'long',
     day: 'numeric',
-  };
+  });
   const timeOptions = {
     hour: 'numeric',
     minute: 'numeric',
   };
   const isSingleDay =
-    event.start_date.getFullYear() === event.due_date.getFullYear() &&
-    event.start_date.getMonth() === event.due_date.getMonth() &&
-    event.start_date.getDate() === event.due_date.getDate();
+    event.start.getFullYear() === event.end.getFullYear() &&
+    event.start.getMonth() === event.end.getMonth() &&
+    event.start.getDate() === event.end.getDate();
   console.log(isSingleDay);
-  const dateString = isSingleDay
-    ? event.has_time
-      ? `${event.start_date.toLocaleDateString('ko-KR', {
-          ...dateOptions,
-        })}\n${event.start_date.toLocaleTimeString('ko-KR', {
-          ...timeOptions,
-        })} ~ ${event.due_date.toLocaleTimeString('ko-KR', timeOptions)}`
-      : event.start_date.toLocaleDateString('ko-KR', dateOptions)
-    : event.has_time
-    ? `${event.start_date.toLocaleString('ko-KR', {
-        ...dateOptions,
+  let dateString;
+  if (isSingleDay)
+    if (!event.isAllDay)
+      dateString = `${event.start.toLocaleDateString('ko-KR', {
+        ...dateOptions(event.start),
+      })}\n${event.start.toLocaleTimeString('ko-KR', {
         ...timeOptions,
-      })} ~ \n${event.due_date.toLocaleString('ko-KR', {
-        ...dateOptions,
-        ...timeOptions,
-      })}`
-    : `${event.start_date.toLocaleDateString(
+      })} ~ ${event.end.toLocaleTimeString('ko-KR', timeOptions)}`;
+    else
+      dateString = event.end.toLocaleDateString(
         'ko-KR',
-        dateOptions
-      )} ~ ${event.due_date.toLocaleDateString('ko-KR', dateOptions)}`;
+        dateOptions(event.end)
+      );
+  else if (!event.isAllDay)
+    dateString = `${event.start.toLocaleString('ko-KR', {
+      ...dateOptions(event.start),
+      ...timeOptions,
+    })} ~ \n${event.end.toLocaleString('ko-KR', {
+      ...dateOptions(event.end),
+      ...timeOptions,
+    })}`;
+  else
+    dateString = `${event.start.toLocaleDateString(
+      'ko-KR',
+      dateOptions(event.start)
+    )} ~ ${event.end.toLocaleDateString('ko-KR', dateOptions(event.end))}`;
   return dateString;
 }

@@ -7,7 +7,8 @@ import Modal from 'Modal';
 import ToggleButton from 'ToggleButton';
 import Tag from 'Tag';
 import TagBar from 'calendar/TagBar';
-import { toDateString } from 'Constants';
+import { toDateString, toTimeString, useUpdateLogger } from 'Constants';
+import { Event } from 'context/useEvents';
 const AddEventModalHeader = ({ isModifying }) => {
   return (
     <>
@@ -15,7 +16,7 @@ const AddEventModalHeader = ({ isModifying }) => {
     </>
   );
 };
-const AddEventModalContent = ({ event, setEvent, isModifying }) => {
+const AddEventModalContent = ({ eventObj, setEvent, isModifying }) => {
   const [isSettingChannel, setIsSettingChannel] = useState(false);
   const {
     value: { userInfo },
@@ -26,7 +27,7 @@ const AddEventModalContent = ({ event, setEvent, isModifying }) => {
       style={isSettingChannel ? { overflow: 'hidden' } : {}}
     >
       <Tag
-        id={event.channel}
+        id={eventObj.channel}
         onClick={() => (isModifying ? undefined : setIsSettingChannel(true))}
       />
       {isSettingChannel ? (
@@ -62,37 +63,37 @@ const AddEventModalContent = ({ event, setEvent, isModifying }) => {
         className="input-flat input-title"
         type="text"
         placeholder="제목"
-        value={event.title}
+        value={eventObj.title}
         onChange={(e) => setEvent({ key: 'title', value: e.target.value })}
       ></input>
       <div className="input-datetime-container">
         <label>시작</label>
         <DateTimePicker
-          date={event.start_date}
+          date={eventObj.start_date}
           setDate={(date) => setEvent({ key: 'start_date', value: date })}
-          time={event.has_time ? event.start_time : undefined}
+          time={eventObj.has_time ? eventObj.start_time : undefined}
           setTime={(time) => setEvent({ key: 'start_time', value: time })}
         />
       </div>
       <div className="input-datetime-container">
         <label>종료</label>
         <DateTimePicker
-          date={event.due_date}
+          date={eventObj.due_date}
           setDate={(date) => setEvent({ key: 'due_date', value: date })}
-          time={event.has_time ? event.due_time : undefined}
+          time={eventObj.has_time ? eventObj.due_time : undefined}
           setTime={(time) => setEvent({ key: 'due_time', value: time })}
         />
       </div>
       <div className="button-timeset">
         <label>하루 종일</label>
         <ToggleButton
-          value={!event.has_time}
+          value={!eventObj.has_time}
           sendValue={(value) => setEvent({ key: 'has_time', value: !value })}
         />
       </div>
       <textarea
         className="event-memo"
-        value={event.memo ?? ''}
+        value={eventObj.memo ?? ''}
         onChange={(e) => setEvent({ key: 'memo', value: e.target.value })}
         placeholder="메모"
       ></textarea>
@@ -113,19 +114,17 @@ const AddEventModal = ({ isActive, date, event: existingEvent }) => {
   const {
     value: { userInfo },
   } = useAuthContext();
-  const { fetchMonthlyEvents } = useCalendarContext();
+  const { updateEvent } = useCalendarContext();
   const today = new Date();
   const initialDate = date ? toDateString(date) : toDateString(today);
   const initialState = existingEvent
     ? {
-        ...existingEvent,
-        start_date: existingEvent.start_date.toISOString().substring(0, 10),
-        due_date: existingEvent.due_date.toISOString().substring(0, 10),
-        start_time: existingEvent.start_time
-          ? existingEvent.start_time.substring(0, 5)
+        ...existingEvent.toObject(),
+        start_time: !existingEvent.isAllDay
+          ? toTimeString(existingEvent.start).slice(0, -3)
           : `${(((today.getHours() + 1) % 24) + '').padStart(2, '0')}:00`,
-        due_time: existingEvent.due_time
-          ? existingEvent.due_time.substring(0, 5)
+        due_time: !existingEvent.isAllDay
+          ? toTimeString(existingEvent.end).slice(0, -3)
           : `${(((today.getHours() + 2) % 24) + '').padStart(2, '0')}:00`,
       }
     : {
@@ -155,6 +154,7 @@ const AddEventModal = ({ isActive, date, event: existingEvent }) => {
     }
   };
   const [event, setEvent] = useReducer(reducer, initialState);
+  useUpdateLogger('event', event);
   useEffect(() => {
     if (new Date(event.start_date) > new Date(event.due_date))
       setEvent({ key: 'due_date', value: event.start_date });
@@ -183,14 +183,14 @@ const AddEventModal = ({ isActive, date, event: existingEvent }) => {
       ...event,
       title: event.title === '' ? '새 일정' : event.title,
     };
-    if (newEvent.memo === '') delete newEvent.memo;
+    if (!newEvent.memo) delete newEvent.memo;
     (existingEvent ? patchEvent : postEvent)(newEvent.channel, newEvent).then(
-      (event) => {
-        console.log(event);
+      (eventObj) => {
+        console.log(eventObj);
         //FIX: 현재 선택된 달이 fetch되도록
-        const [year, monthIndex] = event.start_date.split('-');
+        const [year, monthIndex] = eventObj.start_date.split('-');
         console.log(year, monthIndex);
-        fetchMonthlyEvents(year, monthIndex);
+        updateEvent(new Event(eventObj));
         isActive(false);
       }
     );
@@ -201,7 +201,7 @@ const AddEventModal = ({ isActive, date, event: existingEvent }) => {
       header={<AddEventModalHeader isModifying={!!existingEvent} />}
       content={
         <AddEventModalContent
-          event={event}
+          eventObj={event}
           setEvent={setEvent}
           isModifying={!!existingEvent}
         />
