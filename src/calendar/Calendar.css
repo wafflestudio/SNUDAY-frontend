@@ -167,7 +167,8 @@ input[type='time']::-webkit-clear-button {
   position: static;
   margin-left: auto;
   margin-right: -12px;
-  /* transform: rotate(-45deg); */
+  transform: rotate(45deg);
+  background: none;
 }
 .tag:not(.loading)::before {
   content: '# ';

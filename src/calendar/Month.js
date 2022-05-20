@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useCalendarContext } from 'context/CalendarContext';
 import Week from './Week';
 import { getNumDaysofMonth } from 'Constants';
-import { sortBy } from 'lodash';
+import sortBy from 'lodash-es/sortBy';
 const Month = ({ year, monthIndex, channelId }) => {
   const {
     isFetching,
@@ -35,7 +35,7 @@ const Month = ({ year, monthIndex, channelId }) => {
         setMonthlyActiveEvents(monthlyActiveEvents);
       }
     );
-  }, [isFetching, disabledChannels, year, monthIndex]);
+  }, [isFetching, disabledChannels, year, monthIndex, channelId]);
 
   useEffect(() => {
     //update position if there is an event update
