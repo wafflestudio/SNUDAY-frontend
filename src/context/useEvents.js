@@ -211,13 +211,8 @@ const useEvents = ({ year, monthIndex }) => {
     for (let [year, monthIndex] of Event.getMonths(event)) {
       const thisMonthMap = monthlyEvents.get(`${year}-${monthIndex}`);
       if (!thisMonthMap) continue;
-      let startDate =
-        event.start.getMonth() === monthIndex ? event.start.getDate() : 1;
-      let dueDate =
-        event.end.getMonth() === monthIndex
-          ? event.end.getDate()
-          : getNumDaysofMonth(year, monthIndex);
-      for (let date = startDate; date <= dueDate; date++) {
+      const { start, end } = event.getMonthlyInfo(year, monthIndex);
+      for (let date = start; date <= end; date++) {
         thisMonthMap.get(date)?.delete(event.id);
       }
     }
@@ -232,13 +227,9 @@ const useEvents = ({ year, monthIndex }) => {
           newMonthlyEvents.set(`${year}-${monthIndex}`, new Map());
         }
         const thisMonthMap = newMonthlyEvents.get(`${year}-${monthIndex}`);
-        let startDate =
-          event.start.getMonth() === monthIndex ? event.start.getDate() : 1;
-        let dueDate =
-          event.end.getMonth() === monthIndex
-            ? event.end.getDate()
-            : getNumDaysofMonth(year, monthIndex);
-        for (let date = startDate; date <= dueDate; date++) {
+
+        const { start, end } = event.getMonthlyInfo(year, monthIndex);
+        for (let date = start; date <= end; date++) {
           if (!thisMonthMap.has(date)) thisMonthMap.set(date, new Set());
           thisMonthMap.get(date).add(event.id);
         }
