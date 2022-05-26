@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { getMyEvents, getChannelEvents } from '../API';
+import { getChannelEvents } from '../API';
 import { useAuthContext } from './AuthContext';
 import { Calendar } from '../calendar/cal';
-import { COLORS, getNumDaysofMonth } from '../Constants';
+import { COLORS } from '../Constants';
 import useEvents from './useEvents';
 const CalendarContext = React.createContext({
   getNumDays: () => {},
@@ -17,6 +17,7 @@ export const CalendarContextProvider = ({ value, children }) => {
     monthlyEvents,
     channelEvents,
     isFetching,
+    isHoliday,
     updateEvent,
     deleteEvent,
   } = useEvents({
@@ -39,6 +40,10 @@ export const CalendarContextProvider = ({ value, children }) => {
     const savedColors = localStorage.getItem('channelColors');
     if (savedColors) {
       const presetColors = new Map(JSON.parse(savedColors));
+      presetColors.set(
+        userInfo.my_channel,
+        colors[Math.floor(Math.random() * colors.length)]
+      );
       userInfo?.subscribing_channels.forEach((channel, index) => {
         if (!presetColors.has(channel))
           presetColors.set(
@@ -51,6 +56,10 @@ export const CalendarContextProvider = ({ value, children }) => {
       localStorage.setItem('channelColors', JSON.stringify([...presetColors]));
     } else {
       const presetColors = new Map();
+      presetColors.set(
+        userInfo.my_channel,
+        colors[Math.floor(Math.random() * colors.length)]
+      );
       userInfo?.subscribing_channels.forEach((channel, index) =>
         presetColors.set(channel, colors[index % colors.length])
       );
@@ -137,6 +146,7 @@ export const CalendarContextProvider = ({ value, children }) => {
         events,
         channelEvents,
         isFetching,
+        isHoliday,
         updateEvent,
         deleteEvent,
         getEvent: (id) => events.get(id),
