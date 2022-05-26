@@ -114,9 +114,11 @@ const useEvents = ({ year, monthIndex }) => {
     setIsFetching(() => (newEvents.size === 0 ? false : true));
   }, [newEvents]);
   useEffect(() => {
-    console.log(year, monthIndex);
+    console.log(year, monthIndex, `${year}-${monthIndex + 1}`);
     getMyEvents(
-      year && monthIndex ? { month: `${year}-${monthIndex + 1}` } : {}
+      year !== undefined && monthIndex !== undefined
+        ? { month: `${year}-${monthIndex + 1}` }
+        : {}
     ).then((evts) => {
       evts = evts.map((event) => new Event(event));
       const freshEvents = [];
@@ -139,17 +141,9 @@ const useEvents = ({ year, monthIndex }) => {
     if (newEvents.size === 0) return;
 
     ////update monthlyEvents
-    for (const [id, event] of newEvents) {
-      if (events.has(id)) {
-        //update event
-        deleteEventFromMonthlyMap(event.id);
-      } else {
-        //add event
-        // console.log('newEvent');
-      }
-      addEventToMonthlyMap(event);
-    }
-
+    for (const [id, event] of newEvents)
+      if (events.has(id)) deleteEventFromMonthlyMap(event.id);
+    addEventsToMonthlyMap([...newEvents.values()]);
     ////update channelEvents
     setChannelEvents((channelEvents) => {
       const newChannelEvents = new Map(channelEvents);
@@ -219,29 +213,44 @@ const useEvents = ({ year, monthIndex }) => {
     setMonthlyEvents(() => new Map(monthlyEvents));
   };
 
-  const addEventToMonthlyMap = (event) => {
-    setMonthlyEvents((prev) => {
-      const newMonthlyEvents = new Map(prev);
-      for (let [year, monthIndex] of Event.getMonths(event)) {
-        if (!newMonthlyEvents.has(`${year}-${monthIndex}`)) {
-          newMonthlyEvents.set(`${year}-${monthIndex}`, new Map());
-        }
-        const thisMonthMap = newMonthlyEvents.get(`${year}-${monthIndex}`);
+  const addEventsToMonthlyMap = (events) => {
+    const newMonthlyEvents = new Map(monthlyEvents);
+    console.log(events);
+    events.forEach((event) => addEventToMonthlyMap(event, newMonthlyEvents));
+    setMonthlyEvents(newMonthlyEvents);
+  };
+  const addEventToMonthlyMap = (event, newMonthlyEvents) => {
+    for (let [year, monthIndex] of Event.getMonths(event)) {
+      if (!newMonthlyEvents.has(`${year}-${monthIndex}`))
+        newMonthlyEvents.set(`${year}-${monthIndex}`, new Map());
 
-        const { start, end } = event.getMonthlyInfo(year, monthIndex);
-        for (let date = start; date <= end; date++) {
-          if (!thisMonthMap.has(date)) thisMonthMap.set(date, new Set());
-          thisMonthMap.get(date).add(event.id);
-        }
+      const thisMonthMap = newMonthlyEvents.get(`${year}-${monthIndex}`);
+
+      const { start, end } = event.getMonthlyInfo(year, monthIndex);
+      for (let date = start; date <= end; date++) {
+        if (!thisMonthMap.has(date)) thisMonthMap.set(date, new Set());
+        thisMonthMap.get(date).add(event.id);
       }
-      return newMonthlyEvents;
-    });
+    }
+  };
+  const isHoliday = (date) => {
+    const HOLIDAY_CHANNEL_ID = 73;
+    if (!channelEvents || !monthlyEvents) return;
+    const holidays = channelEvents.get(HOLIDAY_CHANNEL_ID);
+    const events = monthlyEvents
+      .get(`${date.getFullYear()}-${date.getMonth()}`)
+      ?.get(date.getDate());
+    if (!events) return;
+    for (const event of events) if (holidays.has(event)) return true;
+
+    return false;
   };
   return {
     events,
     monthlyEvents,
     channelEvents,
     isFetching,
+    isHoliday,
     updateEvent,
     deleteEvent,
   };

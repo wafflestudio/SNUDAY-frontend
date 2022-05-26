@@ -69,9 +69,7 @@ const EventBar = ({ eventNo, color, date, pos }) => {
           console.log(e.target);
         }}
         style={{
-          position: 'absolute',
           width: 100 * Math.min(getDateLength(date, lastDate)) + '%',
-          //^FIXIT: min(getDateLength, last date of the month)
           backgroundColor: COLORS[channelColors?.get(e.channel)],
           transform: `translateY(${pos * 105}%)`,
         }}

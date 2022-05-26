@@ -6,11 +6,11 @@ import { getNumDaysofMonth } from 'Constants';
 const Day = ({ year, monthIndex, day, channelId, events, eventPositions }) => {
   const date = new Date(year, monthIndex, day);
   const [showEvent, setShowEvent] = useState(false);
-  const { calendar, setDay } = useCalendarContext();
+  const { calendar, setDay, isHoliday } = useCalendarContext();
   let dayClass = 'day';
   if (day < 1) dayClass += ' past';
   if (day > getNumDaysofMonth(year, monthIndex)) dayClass += ' next';
-  const holiday = calendar.getHoliday(date);
+  const holiday = isHoliday(date);
   let dateClass = 'date';
   if (holiday) dateClass += ' holiday';
   //api/v1/channels/{channel_id}/events/?date=2021-03-16

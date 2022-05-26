@@ -345,7 +345,7 @@ input[type='time']::-webkit-clear-button {
   line-height: 1.5em;
   font-weight: 500;
 }
-.date > .holiday {
+.holiday {
   color: rgb(217, 75, 75);
 }
 .today .date span:first-child {
