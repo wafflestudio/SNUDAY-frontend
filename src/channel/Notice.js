@@ -5,6 +5,7 @@ import { getNotice, deleteNotice as deleteNoticeAPI } from 'API';
 import { useAuthContext } from 'context/AuthContext';
 import Header from 'Header';
 import Tag from 'Tag';
+import { findURL } from 'Constants';
 const Notice = () => {
   let { channelId, noticeId } = useParams();
   channelId = +channelId;
@@ -81,25 +82,5 @@ const Notice = () => {
       )}
     </>
   );
-};
-const addATag = (string) => <a href={string}>string</a>;
-const findURL = (string) => {
-  if (typeof string !== 'string') return;
-  const arr = [];
-  let result;
-  let lastIndex = 0;
-  const reURL = /https?:\/\/[\S]+\.[\S]+/g;
-  console.log(string?.split(reURL));
-  while ((result = reURL.exec(string)) !== null) {
-    console.log(result);
-    console.log(reURL.lastIndex);
-    arr.push(string.slice(lastIndex, result.index));
-    arr.push(<a href={result[0]}>{result[0]}</a>);
-    lastIndex = reURL.lastIndex;
-  }
-  arr.push(string.slice(lastIndex));
-  console.log(arr);
-  return arr;
-  return string?.replaceAll(reURL, `<a href='$&'>$&</a>`);
 };
 export default Notice;
