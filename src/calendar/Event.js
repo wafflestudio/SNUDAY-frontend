@@ -120,7 +120,10 @@ export const EventListItem = ({ event, showEvent }) => {
             cx="0.5rem"
             cy="0.5rem"
             r="0.5rem"
-            fill={COLORS[channelColors.get(event.channel)]}
+            fill={
+              COLORS[channelColors.get(event.channel)] ??
+              channelColors.get(event.channel)
+            }
           ></circle>
         </svg>
       </div>

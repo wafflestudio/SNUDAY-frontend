@@ -70,7 +70,9 @@ const EventBar = ({ eventNo, color, date, pos }) => {
         }}
         style={{
           width: 100 * Math.min(getDateLength(date, lastDate)) + '%',
-          backgroundColor: COLORS[channelColors?.get(e.channel)],
+          backgroundColor:
+            COLORS[channelColors?.get(e.channel)] ??
+            channelColors?.get(e.channel),
           transform: `translateY(${pos * 105}%)`,
         }}
       >
