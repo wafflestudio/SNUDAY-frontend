@@ -6,7 +6,7 @@ import Modal from 'Modal';
 import AddEventModal from 'AddEventModal';
 import Tag from 'Tag';
 import { useCalendarContext } from 'context/CalendarContext';
-import { COLORS } from 'Constants';
+import { COLORS, findURL } from 'Constants';
 import { deleteEvent } from 'API';
 
 const EventTag = ({ event }) => {
@@ -42,7 +42,7 @@ const EventContent = ({ isActive, event, modify }) => {
     <div className="event-modal-content">
       <h3 className="event-title">{event.title}</h3>
       <pre className="event-date">{eventDateString(event)}</pre>
-      <div>{event.memo}</div>
+      <div>{findURL(event.memo)}</div>
       {userInfo?.managing_channels.has(event.channel) ? (
         <div
           style={{
@@ -120,7 +120,10 @@ export const EventListItem = ({ event, showEvent }) => {
             cx="0.5rem"
             cy="0.5rem"
             r="0.5rem"
-            fill={COLORS[channelColors.get(event.channel)]}
+            fill={
+              COLORS[channelColors.get(event.channel)] ??
+              channelColors.get(event.channel)
+            }
           ></circle>
         </svg>
       </div>

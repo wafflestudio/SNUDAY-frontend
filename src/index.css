@@ -48,6 +48,10 @@ body {
   min-height: 100%;
   overflow: hidden;
 }
+a {
+  width: 100%;
+  overflow-wrap: break-word;
+}
 a:link,
 a:visited {
   color: #3b77ff;

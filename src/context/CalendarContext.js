@@ -2,7 +2,11 @@ import React, { useContext, useEffect, useState } from 'react';
 import { getChannelEvents } from '../API';
 import { useAuthContext } from './AuthContext';
 import { Calendar } from '../calendar/cal';
-import { COLORS } from '../Constants';
+import {
+  CHANNEL_ACADEMIC_CALENDAR,
+  CHANNEL_HOLIDAYS,
+  COLORS,
+} from '../Constants';
 import useEvents from './useEvents';
 const CalendarContext = React.createContext({
   getNumDays: () => {},
@@ -63,6 +67,11 @@ export const CalendarContextProvider = ({ value, children }) => {
       userInfo?.subscribing_channels.forEach((channel, index) =>
         presetColors.set(channel, colors[index % colors.length])
       );
+      //Default colors for public channel
+      // if (!presetColors.has(CHANNEL_ACADEMIC_CALENDAR))
+      presetColors.set(CHANNEL_ACADEMIC_CALENDAR, 'rgb(15, 15, 112)');
+      // if (!presetColors.has(CHANNEL_HOLIDAYS))
+      presetColors.set(CHANNEL_HOLIDAYS, COLORS['POMEGRANATE']);
       setChannelColors(presetColors);
       localStorage.setItem('channelColors', JSON.stringify([...presetColors]));
       // console.log(presetColors);
