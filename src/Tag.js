@@ -14,15 +14,26 @@ const Tag = ({
   readonly = true,
   ...props
 }) => {
-  const findColor = (id) =>
-    channelColors
-      ? { value: COLORS[channelColors.get(id)] }
-      : {
-          value:
-            COLORS[
-              new Map(JSON.parse(localStorage.getItem('channelColors'))).get(id)
-            ],
-        };
+  const findColor = (id) => {
+    if (channelColors) {
+      return { value: COLORS[channelColors.get(id)] ?? channelColors.get(id) };
+    } else {
+      const channelColors = new Map(
+        JSON.parse(localStorage.getItem('channelColors'))
+      );
+      return {
+        value: COLORS[channelColors.get(id)] ?? channelColors.get(id),
+      };
+    }
+    // channelColors
+    //   ? { value: COLORS[channelColors.get(id)]??channelColors.get(id) }
+    //   : {
+    //       value:
+    //         COLORS[
+    //           new Map(JSON.parse(localStorage.getItem('channelColors'))).get(id)
+    //         ],
+    //     }
+  };
   const { channelColors, setChannelColor } = useCalendarContext();
   const [channel, setChannel] = useState(null);
   const [longPress, setLongPress] = useState(false);
