@@ -1,3 +1,22 @@
+:root {
+  /*SNU Color*/
+  /*https://identity.snu.ac.kr/color/1/*/
+  --snu-blue: rgb(15, 15, 112);
+  --snu-beige: rgb(220, 218, 178);
+  --snu-gray: rgb(102, 102, 102);
+  --snu-gold: rgb(133, 109, 80);
+  --snu-silver: rgb(142, 144, 147);
+  /*Waffle Color Theme*/
+  --waffle-pomegranate: #d4515d;
+  --waffle-orange: #e8914f;
+  --waffle-yellow: #f3c550;
+  --waffle-lightgreen: #b2d652;
+  --waffle-green: #60bf70;
+  --waffle-meditteranean: #60cdc8;
+  --waffle-skyblue: #4499e3;
+  --waffle-amethyst: #a45eae;
+  --waffle-lavender: #4b4dbd;
+}
 .grey-line {
   color: #dddddd;
 }
