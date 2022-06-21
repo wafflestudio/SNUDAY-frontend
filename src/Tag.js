@@ -22,7 +22,8 @@ const Tag = ({
         JSON.parse(localStorage.getItem('channelColors'))
       );
       return {
-        value: COLORS[channelColors.get(id)] ?? channelColors.get(id),
+        value:
+          COLORS[channelColors.get(id)] ?? channelColors.get(id) ?? '#b8b8b8',
       };
     }
     // channelColors
