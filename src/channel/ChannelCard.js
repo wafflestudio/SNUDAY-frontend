@@ -11,7 +11,7 @@ const ChannelInfoHeader = ({
   channelData: { name, is_official, is_private },
 }) => {
   return (
-    <div className="channel-card-info-row">
+    <div className="channel-card-info-row first">
       <span className="channel-card-name"># {name}</span>
       {is_official ? <OfficialMark /> : <></>}
       {is_private ? <ClosedLock /> : <OpenLock />}
@@ -26,6 +26,77 @@ const ChannelAvatar = ({ name, image }) => (
   />
 );
 
+// const ChannelCard = ({ channelData: initialData, verbose }) => {
+//   const [channelData, setChannelData] = useState(initialData);
+//   const navigate = useNavigate();
+//   const {
+//     value: { userInfo },
+//   } = useAuthContext();
+//   const {
+//     id,
+//     name,
+//     image,
+//     description,
+//     subscribers_count,
+//     is_private,
+//     // is_official,
+//     //is_personal,
+//     //created_at,
+//     //updated_at,
+//   } = channelData;
+//   return (
+//     <div
+//       className="channel-card"
+//       onClick={() =>
+//         verbose || (is_private && !userInfo?.subscribing_channels?.has(id))
+//           ? undefined
+//           : navigate(`/channel/${id}`)
+//       }
+//     >
+//       {/* <div className="channel-image-with-button"> */}
+//       <ChannelAvatar name={name} image={image} />
+//       {verbose ? (
+//         <ChannelStatusButton
+//           channelData={channelData}
+//           setChannelData={setChannelData}
+//         />
+//       ) : (
+//         <></>
+//       )}
+//       {/* </div> */}
+//       {/* <div className="channel-card-info"> */}
+//       <ChannelInfoHeader channelData={channelData} />
+//       <div className="channel-card-info-row">
+//         <div className="channel-card-subscribers">
+//           구독자 {subscribers_count}명
+//         </div>
+//         {verbose ? (
+//           <></>
+//         ) : (
+//           <>
+//             {userInfo?.managing_channels?.has(channelData.id) ? (
+//               <WaitingListButton channelData={channelData} />
+//             ) : (
+//               <></>
+//             )}
+//             <ChannelStatusButton
+//               channelData={channelData}
+//               setChannelData={setChannelData}
+//             />
+//           </>
+//         )}
+//         {/* <Favorite onClick={() => {}} /> */}
+//       </div>
+//       {verbose ? (
+//         <div className="channel-card-subscribers">{description}</div>
+//       ) : (
+//         <></>
+//       )}
+//       {/* </div> */}
+//     </div>
+//   );
+// };
+
 const ChannelCard = ({ channelData: initialData, verbose }) => {
   const [channelData, setChannelData] = useState(initialData);
   const navigate = useNavigate();
@@ -39,32 +110,62 @@ const ChannelCard = ({ channelData: initialData, verbose }) => {
     description,
     subscribers_count,
     is_private,
-    // is_official,
+    is_official,
     //is_personal,
     //created_at,
     //updated_at,
   } = channelData;
   return (
     <div
-      className="channel-card"
+      className="grid-channel-card"
       onClick={() =>
         verbose || (is_private && !userInfo?.subscribing_channels?.has(id))
           ? undefined
           : navigate(`/channel/${id}`)
       }
     >
-      <div className="channel-image-with-button">
-        <ChannelAvatar name={name} image={image} />
+      {/* <div className="channel-image-with-button"> */}
+      <ChannelAvatar name={name} image={image} />
+      {verbose ? (
+        <ChannelStatusButton
+          channelData={channelData}
+          setChannelData={setChannelData}
+        />
+      ) : (
+        <></>
+      )}
+      {/* </div> */}
+      <div className="channel-card-info-row first">
+        <span className="channel-card-name"># {name}</span>
+        {is_official ? <OfficialMark /> : <></>}
+        {is_private ? <ClosedLock /> : <OpenLock />}
+      </div>
+      <div className="channel-card-info-row second">
+        <div className="channel-card-subscribers">
+          구독자 {subscribers_count}명
+        </div>
         {verbose ? (
-          <ChannelStatusButton
-            channelData={channelData}
-            setChannelData={setChannelData}
-          />
-        ) : (
           <></>
+        ) : (
+          <>
+            {userInfo?.managing_channels?.has(channelData.id) ? (
+              <WaitingListButton channelData={channelData} />
+            ) : (
+              <></>
+            )}
+            <ChannelStatusButton
+              channelData={channelData}
+              setChannelData={setChannelData}
+            />
+          </>
         )}
       </div>
-      <div className="channel-card-info">
+      {verbose ? (
+        <div className="channel-card-subscribers">{description}</div>
+      ) : (
+        <></>
+      )}
+      {/* <div className="channel-card-info">
         <ChannelInfoHeader channelData={channelData} />
         <div className="channel-card-info-row">
           <div className="channel-card-subscribers">
@@ -85,14 +186,13 @@ const ChannelCard = ({ channelData: initialData, verbose }) => {
               />
             </>
           )}
-          {/* <Favorite onClick={() => {}} /> */}
         </div>
         {verbose ? (
           <div className="channel-card-subscribers">{description}</div>
         ) : (
           <></>
         )}
-      </div>
+      </div> */}
     </div>
   );
 };

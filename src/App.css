@@ -61,14 +61,6 @@
 .avatar {
   object-fit: cover;
   clip-path: circle();
-  height: 64px;
-  width: 64px;
-}
-.avatar-small {
-  object-fit: cover;
-  clip-path: circle();
-  height: 30px;
-  width: 30px;
 }
 .card {
   background-color: white;

@@ -29,6 +29,7 @@ export const SubscribeButton = ({ channelData: { id, is_private } }) => {
   } = useAuthContext();
   return (
     <button
+      class="subscribe-button"
       onClick={(e) => {
         e.stopPropagation();
         subscribeChannel(id).then((response) => {
@@ -44,7 +45,7 @@ export const SubscribeButton = ({ channelData: { id, is_private } }) => {
               });
         });
       }}
-      style={{ fontSize: '0.9rem' }}
+      style={{ fontSize: '0.8rem' }}
     >
       구독
     </button>
@@ -57,7 +58,7 @@ export const CancelSubscriptionButton = ({ channelData: { id, name } }) => {
   } = useAuthContext();
   return (
     <button
-      className="button-blue"
+      className="button-blue cancel-subscription-button"
       onClick={(e) => {
         e.stopPropagation();
         if (window.confirm(`'${name}'의 구독을 그만둘까요?`))
@@ -71,7 +72,7 @@ export const CancelSubscriptionButton = ({ channelData: { id, name } }) => {
               });
           });
       }}
-      style={{ fontSize: '0.9rem' }}
+      style={{ fontSize: '0.8rem' }}
     >
       구독중
     </button>
@@ -84,7 +85,7 @@ export const AwaitSubscriptionButton = ({ channelData: { name, id } }) => {
   } = useAuthContext();
   return (
     <button
-      className="button-blue"
+      className="button-blue await-subscription-button"
       onClick={(e) => {
         e.stopPropagation();
         if (window.confirm(`'${name}'의 구독 신청을 취소할까요?`))
@@ -97,7 +98,7 @@ export const AwaitSubscriptionButton = ({ channelData: { name, id } }) => {
               });
           });
       }}
-      style={{ fontSize: '0.9rem' }}
+      style={{ fontSize: '0.8rem' }}
     >
       대기
     </button>
@@ -108,6 +109,7 @@ export const WaitingListButton = ({ channelData }) => {
   return (
     <>
       <img
+        class="waiting-list-button"
         alt="waiters"
         // style={{
         //   height: '28px',
@@ -139,6 +141,7 @@ export const EditChannelButton = ({ channelData, setChannelData }) => {
     <>
       <img
         alt="edit"
+        class="edit-channel-button"
         style={{
           height: '28px',
           border: '1px solid #3b77ff',
