@@ -14,6 +14,33 @@
   padding: 10px 15px;
   border-bottom: 1px solid #dddddd;
 }
+.grid-channel-card {
+  background-color: white;
+  display: grid;
+  grid-template-rows: [top] 30px 30px auto [bottom];
+  grid-template-columns: [start] 64px 1fr [end];
+  row-gap: 4px;
+  column-gap: 10px;
+  /* align-items: flex-start;
+  align-content: stretch; */
+  padding: 10px;
+  border-bottom: 1px solid #dddddd;
+}
+.grid-channel-card > .avatar {
+  width: 64px;
+  height: 64px;
+  grid-area: 1 / 1 / 3 / 2;
+}
+.grid-channel-card > .channel-card-info-row.first {
+  grid-area: 1 / 2 / 2 / 3;
+}
+.grid-channel-card > .channel-card-info-row.second {
+  grid-area: 2 / 2 / 3 / 3;
+}
+.grid-channel-card > [class$='button'] {
+  grid-area: 3 / 1 / 4 / 2;
+  justify-self: stretch;
+}
 .channel-image-with-button {
   display: flex;
   flex-direction: column;
