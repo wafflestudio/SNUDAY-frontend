@@ -3,7 +3,7 @@ import { useCalendarContext } from 'context/CalendarContext';
 import Week from './Week';
 import { getNumDaysofMonth } from 'Constants';
 import sortBy from 'lodash-es/sortBy';
-const Month = ({ year, monthIndex, channelId }) => {
+const Month = ({ year, monthIndex, channelList }) => {
   const {
     isFetching,
     getEvent,
@@ -29,13 +29,14 @@ const Month = ({ year, monthIndex, channelId }) => {
   useEffect(() => {
     if (isFetching) return;
     //update events if there is an calendar update
-    getMonthlyActiveEvents(year, monthIndex, channelId).then(
+    getMonthlyActiveEvents(year, monthIndex, channelList).then(
       (monthlyActiveEvents) => {
         // if(channel) monthActiveEvents = channelEvents.get(channel)
         setMonthlyActiveEvents(monthlyActiveEvents);
+        console.log(monthlyActiveEvents);
       }
     );
-  }, [isFetching, disabledChannels, year, monthIndex, channelId]);
+  }, [isFetching, disabledChannels, year, monthIndex, channelList]);
 
   useEffect(() => {
     //update position if there is an event update
@@ -85,7 +86,7 @@ const Month = ({ year, monthIndex, channelId }) => {
           year={year}
           monthIndex={monthIndex}
           day={startDate + 7 * weekNo}
-          channelId={channelId}
+          channelId={channelList}
           events={monthlyActiveEvents}
           eventPositions={posEvents}
         />

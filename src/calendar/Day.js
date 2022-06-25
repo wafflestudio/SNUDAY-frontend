@@ -6,7 +6,7 @@ import { getNumDaysofMonth } from 'Constants';
 const Day = ({ year, monthIndex, day, channelId, events, eventPositions }) => {
   const date = new Date(year, monthIndex, day);
   const [showEvent, setShowEvent] = useState(false);
-  const { calendar, setDay, isHoliday } = useCalendarContext();
+  const { setDay, isHoliday } = useCalendarContext();
   let dayClass = 'day';
   if (day < 1) dayClass += ' past';
   if (day > getNumDaysofMonth(year, monthIndex)) dayClass += ' next';

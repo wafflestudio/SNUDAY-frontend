@@ -18,6 +18,10 @@ export const COLORS = {
 };
 export const CHANNEL_ACADEMIC_CALENDAR = 65;
 export const CHANNEL_HOLIDAYS = 73;
+export const defaultColors = {
+  [CHANNEL_ACADEMIC_CALENDAR]: 'rgb(15, 15, 112)',
+  [CHANNEL_HOLIDAYS]: COLORS['POMEGRANATE'],
+};
 export const useUpdateLogger = (key, value) => {
   useEffect(() => {
     console.log(`UPDATE[${key}]`, value);

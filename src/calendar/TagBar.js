@@ -9,7 +9,7 @@ const TagBar = ({ category, onTagClick, isMain, ...props }) => {
   const [isOverflowing, setIsOverflowing] = useState(false);
   const tagbarRef = useRef(null);
   const {
-    value: { userInfo },
+    value: { userInfo, default_channels },
   } = useAuthContext();
   if (category === 'active')
     onTagClick = (channel) =>
@@ -31,7 +31,7 @@ const TagBar = ({ category, onTagClick, isMain, ...props }) => {
     switch (category) {
       case 'active':
         const subscribingChannels = Array.from(
-          userInfo?.subscribing_channels ?? []
+          userInfo ? userInfo.subscribing_channels : [...default_channels]
         );
         subscribingChannels.sort(
           (a, b) => disabledChannels.includes(a) - disabledChannels.includes(b)
