@@ -103,7 +103,7 @@ function App() {
     }
   };
   const {
-    value: { isLoggedIn, userInfo },
+    value: { isLoggedIn },
     action: { setToken, setIsLoggedIn },
   } = useAuthContext();
   const [isLoading, setIsLoading] = useState(true);
@@ -114,6 +114,7 @@ function App() {
     if (isLoading) {
       refresh()
         .then((data) => {
+          setIsLoading(false);
           setToken(data); //data.access
           setIsLoggedIn(true);
           console.log('welcome back');
@@ -133,7 +134,10 @@ function App() {
         <Route path="/" element={<Home />} />
 
         <Route path="channel/:channelId/*" element={<ChannelPortal />} />
-        <Route path="*" element={<Navigate to="signin" />} />
+        <Route
+          path="*"
+          element={<Navigate to="signin" state={{ prev: location.pathname }} />}
+        />
       </Routes>
     );
   }
@@ -154,6 +158,10 @@ function App() {
         <Route path="signin" element={<Login />} />
         <Route path="findmyid" element={<FindMyId />} />
         <Route path="findmypw" element={<FindMyPassword />} />
+        <Route
+          path="*"
+          element={<Home />} //FIXIT:404 Page 만들기
+        />
       </Routes>
       <Navigation />
     </>

@@ -1,9 +1,10 @@
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuthContext } from 'context/AuthContext';
 import axios from 'axios';
 import Header from 'Header';
 const MyPage = () => {
   let navigate = useNavigate();
+  let location = useLocation();
   const {
     value: { isLoggedIn, userInfo },
     action: { setIsLoggedIn, setUserInfo, setToken },
@@ -76,7 +77,12 @@ const MyPage = () => {
       </div>
     </>
   ) : (
-    <>{setTimeout(() => navigate('/signin'), 0)}</>
+    <>
+      {setTimeout(
+        () => navigate('/signin', { state: { prev: location.pathname } }),
+        0
+      )}
+    </>
   );
 };
 export default MyPage;
