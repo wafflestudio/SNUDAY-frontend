@@ -12,7 +12,10 @@ const ChannelHome = () => {
   console.log(channelId);
   const [channelData, setChannelData] = useState(null);
   useEffect(() => {
-    getChannel(channelId).then((channel) => setChannelData(() => channel));
+    getChannel(channelId).then((channel) => {
+      document.title = channel.name + ' | SNUDAY';
+      setChannelData(() => channel);
+    });
   }, []);
   useEffect(() => {
     const today = document.getElementsByClassName('day today')[0];
