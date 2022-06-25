@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useCalendarContext } from '../context/CalendarContext';
+import { useAuthContext } from '../context/AuthContext';
 import { EventListItem, EventModal } from './Event';
 import Modal from 'Modal';
 import ModalButton from 'AddButton';
@@ -7,6 +8,9 @@ import AddEventModal from 'AddEventModal';
 import { toDateString } from 'Constants';
 
 const DayEventsModalHeader = ({ date }) => {
+  const {
+    value: { isLoggedIn },
+  } = useAuthContext();
   const options = {
     weekday: 'short',
     year: 'numeric',
@@ -24,17 +28,23 @@ const DayEventsModalHeader = ({ date }) => {
             {date.toLocaleDateString('ko-KR', options)}
           </div>
         </div>
-        <ModalButton
-          style={{
-            position: 'absolute',
-            top: 0,
-            right: 0,
-            height: '100%',
-          }}
-          component={AddEventModal}
-          button={<img src="/resources\plus.svg" style={{ height: '100%' }} />}
-          date={date}
-        />
+        {isLoggedIn ? (
+          <ModalButton
+            style={{
+              position: 'absolute',
+              top: 0,
+              right: 0,
+              height: '100%',
+            }}
+            component={AddEventModal}
+            button={
+              <img src="/resources\plus.svg" style={{ height: '100%' }} />
+            }
+            date={date}
+          />
+        ) : (
+          <></>
+        )}
       </div>
       <hr></hr>
     </>
