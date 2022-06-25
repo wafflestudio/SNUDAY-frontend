@@ -4,7 +4,7 @@ const Header = ({ children, left, right }) => {
   const navigate = useNavigate();
   useEffect(() => {
     document.title = children + ' | SNUDAY';
-  }, []);
+  }, [children]);
   return (
     <>
       <div className="header-background"></div>
