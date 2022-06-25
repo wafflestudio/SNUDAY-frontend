@@ -3,10 +3,11 @@ import { InputBox } from 'Input';
 import { checkDuplicateID, patchUser } from 'API';
 import { usernamePattern } from 'Constants';
 import Header from 'Header';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuthContext } from 'context/AuthContext';
 const ChangeUsername = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const {
     value: { isLoggedIn },
     action: { initUserInfo },
@@ -26,7 +27,7 @@ const ChangeUsername = () => {
   useEffect(() => {
     checkDuplicateID(username).then(setIsDuplicateId);
   }, [username]);
-  if (!isLoggedIn) navigate('/signin');
+  if (!isLoggedIn) navigate('/signin', { state: { prev: location.pathname } });
   return (
     <>
       <Header>아이디 변경</Header>
@@ -55,7 +56,7 @@ const ChangeUsername = () => {
           disabled={!usernamePattern.test(username) || isDuplicateId}
           className="button-big"
           onClick={() => sendUsername()}
-          style={{ width: '100%', margin: '1rem 0' }}
+          style={{ width: '100%', marginTop: '45px' }}
         >
           변경
         </button>

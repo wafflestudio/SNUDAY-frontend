@@ -6,7 +6,6 @@ const Home = () => {
   useEffect(() => {
     document.title = 'SNUDAY';
   }, []);
-  // if (!isLoggedIn) navigate('/signin', { replace: true });
   return <Calendar type="main" />;
 };
 export default Home;

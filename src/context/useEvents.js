@@ -1,19 +1,21 @@
-import { getMyEvents } from 'API';
+import { getChannelEvents, getMyEvents } from 'API';
 import { useEffect, useState } from 'react';
 import {
   getNumDaysofMonth,
   toDateString,
   toTimeString,
   useUpdateLogger,
+  CHANNEL_HOLIDAYS,
 } from '../Constants';
+import { useAuthContext } from './AuthContext';
 export class Event {
   constructor(event) {
-    if (event instanceof Event) {
+    if (event instanceof Event)
       for (let [k, v] of Object.assign({}, event)) {
         this[k] = v;
         return;
       }
-    }
+
     this.id = event.id;
     this.title = event.title;
     this.memo = event.memo;
@@ -99,40 +101,74 @@ export class Event {
   }
 }
 
-const useEvents = ({ year, monthIndex }) => {
+const useEvents = ({ year, monthIndex, channelList }) => {
   const [events, setEvents] = useState(new Map());
   const [newEvents, setNewEvents] = useState(new Map());
   const [isFetching, setIsFetching] = useState(false);
   const [monthlyEvents, setMonthlyEvents] = useState(null);
   const [channelEvents, setChannelEvents] = useState(null);
+  const {
+    value: { isLoggedIn, default_channels },
+  } = useAuthContext();
+  console.log(default_channels);
   useUpdateLogger('events', events);
   useUpdateLogger('monthlyEvents', monthlyEvents);
   useUpdateLogger('channelEvents', channelEvents);
   useUpdateLogger('newEvents', newEvents);
   useUpdateLogger('isFetching', isFetching);
+
+  const filterNewEvents = (evts) => {
+    evts = evts.map((event) => new Event(event));
+    const freshEvents = [];
+    for (const event of evts) {
+      if (event.updatedAt === events?.get(event.id)?.updatedAt) continue;
+      freshEvents.push(event);
+    }
+    setNewEvents((prev) => {
+      const curr = new Map(prev);
+      freshEvents.forEach((e) => curr.set(e.id, e));
+      return curr;
+    });
+    //FIX: deleted event???
+  };
+
   useEffect(() => {
     setIsFetching(() => (newEvents.size === 0 ? false : true));
   }, [newEvents]);
   useEffect(() => {
-    console.log(year, monthIndex, `${year}-${monthIndex + 1}`);
-    getMyEvents(
+    const month =
       year !== undefined && monthIndex !== undefined
-        ? { month: `${year}-${monthIndex + 1}` }
-        : {}
-    ).then((evts) => {
-      evts = evts.map((event) => new Event(event));
-      const freshEvents = [];
-      for (const event of evts) {
-        if (event.updatedAt === events?.get(event.id)?.updatedAt) continue;
-        freshEvents.push(event);
-      }
-      setNewEvents((prev) => {
-        const curr = new Map(prev);
-        freshEvents.forEach((e) => curr.set(e.id, e));
-        return curr;
-      });
-      //FIX: deleted event???
-    });
+        ? `${year}-${monthIndex + 1}`
+        : '';
+    console.log(year, monthIndex, month);
+    if (channelList) {
+      Promise.all(
+        channelList.map((channelId) => getChannelEvents({ channelId, month }))
+      ).then((eventsArray) =>
+        filterNewEvents(
+          eventsArray.reduce(
+            (first, second) => first.concat(second.results),
+            []
+          )
+        )
+      );
+      return;
+    }
+    if (isLoggedIn)
+      getMyEvents({ month }).then((events) => filterNewEvents(events));
+    else
+      Promise.all(
+        [...default_channels].map((channelId) =>
+          getChannelEvents({ channelId, month })
+        )
+      ).then((eventsArray) =>
+        filterNewEvents(
+          eventsArray.reduce(
+            (first, second) => first.concat(second.results),
+            []
+          )
+        )
+      );
   }, [year, monthIndex]);
 
   useEffect(() => {
@@ -158,16 +194,54 @@ const useEvents = ({ year, monthIndex }) => {
     ////add ${newEvents} to ${events}
     setEvents((events) => {
       const latestEvents = new Map(events);
-      for (const [id, event] of newEvents) {
-        latestEvents.set(id, event);
-      }
+      for (const [id, event] of newEvents) latestEvents.set(id, event);
+
       return latestEvents;
     });
 
     ////empty queue
     setNewEvents(() => new Map());
   }, [newEvents]);
+  const getEvent = (id) => events.get(id);
+  const getMonthlyEvents = () => {
+    //프로미스로 해보기
+    // await fetchMonthlyEvents({ month: `${year}-${monthIndex + 1}` });
+    console.log(year, monthIndex, channelList);
 
+    // console.log(monthEvents);
+    const monthEvents = monthlyEvents.get(`${year}-${monthIndex}`);
+    if (!monthEvents) {
+      console.log('!!!!!!!!!!!!!!!!!!!!!!');
+      return undefined;
+    }
+    let activeChannelEvents = []; //list of event IDs of active channels
+    //get all monthly active events
+    activeChannelEvents = new Map(channelEvents);
+    activeChannelEvents = [...activeChannelEvents.values()].reduce(
+      (prev, curr) => [...prev, ...curr],
+      []
+    );
+
+    console.log('activeChannelEvents', activeChannelEvents);
+    const activeMonthlyEvents = new Map();
+    for (let [day, events] of monthEvents) {
+      activeMonthlyEvents.set(
+        day,
+        new Set([...events].filter((e) => activeChannelEvents?.includes(e)))
+      );
+    }
+    return {
+      eventsList: [
+        ...new Set(
+          [...activeMonthlyEvents.values()].reduce(
+            (prev, curr) => [...prev, ...curr],
+            []
+          )
+        ),
+      ],
+      dailyEventsMap: activeMonthlyEvents,
+    };
+  };
   const updateEvent = (event) => {
     //update single event directly
     setNewEvents((prev) => {
@@ -206,9 +280,8 @@ const useEvents = ({ year, monthIndex }) => {
       const thisMonthMap = monthlyEvents.get(`${year}-${monthIndex}`);
       if (!thisMonthMap) continue;
       const { start, end } = event.getMonthlyInfo(year, monthIndex);
-      for (let date = start; date <= end; date++) {
+      for (let date = start; date <= end; date++)
         thisMonthMap.get(date)?.delete(event.id);
-      }
     }
     setMonthlyEvents(() => new Map(monthlyEvents));
   };
@@ -234,9 +307,9 @@ const useEvents = ({ year, monthIndex }) => {
     }
   };
   const isHoliday = (date) => {
-    const HOLIDAY_CHANNEL_ID = 73;
     if (!channelEvents || !monthlyEvents) return;
-    const holidays = channelEvents.get(HOLIDAY_CHANNEL_ID);
+    const holidays = channelEvents.get(CHANNEL_HOLIDAYS);
+    if (!holidays) return;
     const events = monthlyEvents
       .get(`${date.getFullYear()}-${date.getMonth()}`)
       ?.get(date.getDate());
@@ -251,6 +324,8 @@ const useEvents = ({ year, monthIndex }) => {
     channelEvents,
     isFetching,
     isHoliday,
+    getEvent,
+    getMonthlyEvents,
     updateEvent,
     deleteEvent,
   };

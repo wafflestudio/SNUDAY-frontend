@@ -4,10 +4,13 @@ import TagBar from './TagBar';
 import './Calendar.css';
 import { getNumDaysofMonth } from 'Constants';
 import ModalButton from 'AddButton';
-import { CalendarContextProvider } from 'context/CalendarContext';
+import {
+  CalendarContextProvider,
+  useCalendarContext,
+} from 'context/CalendarContext';
 import { useAuthContext } from 'context/AuthContext';
 import AddEventModal from 'AddEventModal';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 export const AndroidCalendar = () => {
   let [searchParams, setSearchParams] = useSearchParams();
@@ -32,22 +35,35 @@ export const AndroidCalendar = () => {
   if (!isLoggedIn) return <></>;
   return <Calendar type="main" />;
 };
-export const Calendar = ({ channelId, type }) => {
+
+export const Calendar = ({ type, channelId }) => {
   const today = new Date();
   const [year, setYear] = useState(today.getFullYear());
   const [monthIndex, setMonthIndex] = useState(today.getMonth());
   const [day, setDay] = useState(today.getDate());
   const [numDays, setNumDays] = useState(getNumDaysofMonth(year, monthIndex));
+  const [channelList, setChannelList] = useState([]);
   const {
-    value: { isLoggedIn, userInfo },
+    value: { isLoggedIn, userInfo, default_channels },
   } = useAuthContext();
+  useEffect(() => {
+    if (type === 'main')
+      if (isLoggedIn && userInfo)
+        setChannelList([...userInfo.subscribing_channels]);
+      else setChannelList([...default_channels]);
+    if (type === 'channel' || type === 'mini')
+      if (Number.isInteger(channelId)) setChannelList([channelId]);
+      else if (Array.isArray()) setChannelList(channelId);
+  }, [type, channelId, userInfo, isLoggedIn, default_channels]);
   const navigate = useNavigate();
+  const location = useLocation();
   // useEffect(() => {
   //   getMyEvents().then((events) => {
   //     calendar.registerEvents(events);
   //   });
   //   console.log(calendar.getEvents());
   // }, []);
+  //// DATE Util Function
   const moveMonth = (direction) => {
     if (direction < 0) {
       //previous month
@@ -61,6 +77,41 @@ export const Calendar = ({ channelId, type }) => {
       return;
     }
   };
+  const chooseDay = (d) => {
+    //전후 달
+    if (d < 1) {
+      if (monthIndex === 0) {
+        setYear((year) => year - 1);
+        setMonthIndex(() => 11);
+      } else setMonthIndex((monthIndex) => monthIndex - 1);
+
+      setDay(() => getNumDaysofMonth(year, monthIndex - 1) + d);
+      return;
+    }
+    if (d > numDays) {
+      setDay(d - numDays);
+      if (monthIndex > 10) {
+        setYear((year) => year + 1);
+        setMonthIndex(() => 0);
+      } else setMonthIndex((monthIndex) => monthIndex + 1);
+
+      return;
+    }
+    setDay(d);
+  };
+  const goToday = () => {
+    if (
+      day === today.getDate() &&
+      monthIndex === today.getMonth() &&
+      year === today.getFullYear()
+    )
+      return;
+    setYear(today.getFullYear());
+    setMonthIndex(today.getMonth());
+    setDay(today.getDate());
+    //document.getElementById(today.toLocaleDateString('ko-KR'))?.classList.remove('active');
+  };
+  ////
   useEffect(() => {
     setNumDays(getNumDaysofMonth(year, monthIndex));
     document.getElementById('Calendar-content').scrollLeft = window.innerWidth;
@@ -97,40 +148,7 @@ export const Calendar = ({ channelId, type }) => {
     //   }
     // );
   }, [day]);
-  const chooseDay = (d) => {
-    //전후 달
-    if (d < 1) {
-      if (monthIndex === 0) {
-        setYear((year) => year - 1);
-        setMonthIndex(() => 11);
-      } else setMonthIndex((monthIndex) => monthIndex - 1);
 
-      setDay(() => getNumDaysofMonth(year, monthIndex - 1) + d);
-      return;
-    }
-    if (d > numDays) {
-      setDay(d - numDays);
-      if (monthIndex > 10) {
-        setYear((year) => year + 1);
-        setMonthIndex(() => 0);
-      } else setMonthIndex((monthIndex) => monthIndex + 1);
-
-      return;
-    }
-    setDay(d);
-  };
-  const goToday = () => {
-    if (
-      day === today.getDate() &&
-      monthIndex === today.getMonth() &&
-      year === today.getFullYear()
-    )
-      return;
-    setYear(today.getFullYear());
-    setMonthIndex(today.getMonth());
-    setDay(today.getDate());
-    //document.getElementById(today.toLocaleDateString('ko-KR'))?.classList.remove('active');
-  };
   return (
     <>
       <CalendarContextProvider
@@ -164,9 +182,11 @@ export const Calendar = ({ channelId, type }) => {
               />
             </h1>
             <button onClick={() => goToday()}>오늘</button>
-            {!isLoggedIn ? (
+            {!isLoggedIn && type == 'main' ? (
               <button
-                onClick={() => navigate('/signin')}
+                onClick={() =>
+                  navigate('/signin', { state: { prev: location.pathname } })
+                }
                 style={{
                   marginLeft: 'auto',
                   backgroundColor: 'transparent',
@@ -192,7 +212,7 @@ export const Calendar = ({ channelId, type }) => {
             moveMonth={moveMonth}
             year={year}
             monthIndex={monthIndex}
-            channelId={channelId}
+            channelList={channelList}
             type={type}
           />
         </div>
@@ -205,11 +225,22 @@ export const CalendarBody = ({
   moveMonth,
   year,
   monthIndex,
-  channelId,
+  channelList,
   type,
 }) => {
   const [targetTouch, setTargetTouch] = useState(null);
   const [scrollTime, setScrollTime] = useState(Date.now());
+  const [activeChannelList, setActiveChannelList] = useState(channelList);
+  const { disabledChannels } = useCalendarContext();
+  useEffect(() => {
+    if (type === 'main') {
+      setActiveChannelList(
+        channelList.filter((channel) => !disabledChannels.includes(channel))
+      );
+    } else {
+      setActiveChannelList(channelList);
+    }
+  }, [channelList, disabledChannels]);
   useEffect(() => {
     // setScrollTime(null);
   }, [monthIndex]);
@@ -249,9 +280,8 @@ export const CalendarBody = ({
           const movedPositionY =
             e.changedTouches[0].clientY - targetTouch.clientY;
           const slope = movedPositionY / movedPositionX;
-          if (Math.abs(movedPositionX) > 20 && Math.abs(slope) < 0.6) {
+          if (Math.abs(movedPositionX) > 20 && Math.abs(slope) < 0.6)
             moveMonth(-movedPositionX);
-          }
         }}
       >
         {/* <div
@@ -293,7 +323,7 @@ export const CalendarBody = ({
           key={`${year}-${monthIndex}`}
           year={year}
           monthIndex={monthIndex}
-          channelId={channelId}
+          channelList={type === 'main' ? null : activeChannelList}
         />
         {/* <Month
           key={`${year}-${monthIndex + 1}-`}

@@ -48,7 +48,10 @@ const Tag = ({
     value: { userInfo },
   } = useAuthContext();
   useEffect(() => {
-    if (!name) getChannel(id).then(setChannel);
+    if (!name) {
+      name = JSON.parse(localStorage.getItem('channel'))[id];
+      getChannel(id).then(setChannel);
+    }
     setColor(findColor(id));
     return () => {
       setChannel(null);
@@ -64,10 +67,12 @@ const Tag = ({
   return (
     <>
       <div
+        {...props}
         className={disabled ? 'tag disabled' : 'tag'}
         style={{
           backgroundColor: color.value,
           zIndex: longPress ? '999' : '',
+          ...props.style,
         }}
         onTouchStart={(e) => {
           if (showColorPicker) {
@@ -98,7 +103,7 @@ const Tag = ({
         onTouchEnd={(e) => {
           clearTimeout(timerId);
         }}
-        {...props}
+        // {...props}
         onClick={(e) => {
           props.onClick?.(e);
           setLongPress(false);

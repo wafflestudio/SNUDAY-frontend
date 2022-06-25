@@ -27,8 +27,6 @@
   border-bottom: 1px solid #dddddd;
 }
 .grid-channel-card > .avatar {
-  width: 64px;
-  height: 64px;
   grid-area: 1 / 1 / 3 / 2;
 }
 .grid-channel-card > .channel-card-info-row.first {
@@ -78,7 +76,10 @@
   border: 1px solid #dddddd;
   background-color: white;
 }
-.channel-card-subscribers {
+.grid-channel-card > button {
+  max-height: 28px;
+}
+.channel-card-main-text {
   font-size: 0.8rem;
   line-height: 1rem;
   /* max-height: 2rem; */
@@ -86,5 +87,6 @@
   text-overflow: ellipsis; */
   color: #4d4d4d;
   padding-left: 0.5rem;
+  padding-right: 10px;
   flex-basis: 100%;
 }

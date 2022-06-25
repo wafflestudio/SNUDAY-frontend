@@ -1,6 +1,6 @@
 import { ReactComponent as Logo } from 'resources/logo.svg';
 import './Login.css';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { loginUser, refresh } from 'API';
 import { useEffect, useState } from 'react';
 import { useAuthContext } from 'context/AuthContext';
@@ -8,6 +8,10 @@ import { InputBox } from 'Input';
 import { usernamePattern, pwPattern } from 'Constants';
 const Login = () => {
   let navigate = useNavigate();
+  let location = useLocation();
+  useEffect(() => {
+    document.title = '로그인 | SNUDAY';
+  }, []);
   const [isLoading, setIsLoading] = useState(true);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -20,9 +24,10 @@ const Login = () => {
       .then((data) => {
         setToken(data);
         setIsLoggedIn(true);
-        navigate('/');
+        navigate(location.state?.prev ? -1 : '/');
       })
       .catch((status) => {
+        console.log(status);
         setShowMessage(true);
       });
   };
@@ -31,7 +36,7 @@ const Login = () => {
   }, [username, password]);
   useEffect(() => {
     if (isLoggedIn) {
-      navigate(-1);
+      navigate(location.state?.prev ? -1 : '/');
       console.log('goback');
     } //FIX: 이미 로그인시 이전 페이지 유지
     if (!isLoggedIn) {
@@ -39,7 +44,7 @@ const Login = () => {
         .then((data) => {
           setToken(data); //data.access
           setIsLoggedIn(true);
-          navigate(-1);
+          navigate(location.state?.prev ? -1 : '/');
           console.log('goback!');
         })
         .catch((err) => {

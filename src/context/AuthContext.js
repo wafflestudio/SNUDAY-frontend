@@ -54,6 +54,7 @@ const AuthProvider = (props) => {
     access: undefined,
     refresh: undefined,
     userInfo: null,
+    default_channels: new Set([65, 73]),
   };
   const action = { setToken, setIsLoggedIn, setUserInfo, initUserInfo };
   const [state, setState] = useState({ value: defaultValue, action });

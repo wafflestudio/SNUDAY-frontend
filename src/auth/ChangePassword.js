@@ -3,10 +3,11 @@ import { InputBox } from 'Input';
 import { patchUserPassword } from 'API';
 import { pwPattern } from 'Constants';
 import Header from 'Header';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuthContext } from 'context/AuthContext';
 const ChangePassword = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const {
     value: { isLoggedIn },
     action: { initUserInfo },
@@ -24,7 +25,7 @@ const ChangePassword = () => {
       })
       .catch(() => alert('다시 시도해주세요.'));
   };
-  if (!isLoggedIn) navigate('/signin');
+  if (!isLoggedIn) navigate('/signin', { state: { prev: location.pathname } });
   return (
     <>
       <Header>비밀번호 변경</Header>
@@ -73,7 +74,7 @@ const ChangePassword = () => {
             disabled={!(pw.match(pwPattern) && pw === pwAgain)}
             className="button-big"
             onClick={() => sendPassword()}
-            style={{ width: '100%', marginTop: '100px' }}
+            style={{ width: '100%', marginTop: '45px' }}
           >
             변경
           </button>

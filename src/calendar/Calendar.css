@@ -138,8 +138,14 @@ input[type='time']::-webkit-clear-button {
   font-weight: 500;
   border-radius: calc(1rem + 12px);
 }
+.tagbar .tag {
+  transition: background-color 0.25s;
+}
+.tag:not(.loading) {
+}
 .tag.loading {
-  background-color: rgb(184, 184, 184);
+  background-color: transparent;
+  /* rgb(184, 184, 184); */
   min-width: 60px;
 }
 .tagbar .plus {

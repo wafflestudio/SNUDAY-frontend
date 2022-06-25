@@ -7,9 +7,7 @@ const ChannelAwaitersModal = ({ channelId, content, isActive, style }) => {
   return (
     <Modal
       isActive={isActive}
-      header={
-        isLoading ? undefined : <h3 className="title">구독 대기자 명단</h3>
-      }
+      header={isLoading ? undefined : <h3 className="title">구독 신청자</h3>}
       content={
         <ChannelAwaitersList channelId={channelId} isLoading={setIsLoading} />
       }
@@ -34,7 +32,7 @@ const ChannelAwaitersList = ({ channelId, isLoading }) => {
   });
   if (awaitersList === null) return <></>;
   if (awaitersList.length === 0)
-    return <div className="error">구독 대기자가 없습니다.</div>;
+    return <div className="error">현재 구독 신청자가 없습니다.</div>;
   return (
     <div>
       {awaitersList.map((awaiter) => (
