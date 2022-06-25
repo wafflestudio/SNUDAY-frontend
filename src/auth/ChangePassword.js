@@ -74,7 +74,7 @@ const ChangePassword = () => {
             disabled={!(pw.match(pwPattern) && pw === pwAgain)}
             className="button-big"
             onClick={() => sendPassword()}
-            style={{ width: '100%', marginTop: '100px' }}
+            style={{ width: '100%', marginTop: '45px' }}
           >
             변경
           </button>

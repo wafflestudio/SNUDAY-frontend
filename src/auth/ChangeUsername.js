@@ -56,7 +56,7 @@ const ChangeUsername = () => {
           disabled={!usernamePattern.test(username) || isDuplicateId}
           className="button-big"
           onClick={() => sendUsername()}
-          style={{ width: '100%', margin: '1rem 0' }}
+          style={{ width: '100%', marginTop: '45px' }}
         >
           변경
         </button>
