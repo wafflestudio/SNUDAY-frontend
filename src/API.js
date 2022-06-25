@@ -222,10 +222,10 @@ export const patchEvent = (channelId, event) =>
         reject(e);
       });
   });
-export const getChannelEvents = ({ channelId, date }) =>
+export const getChannelEvents = ({ channelId, month, date }) =>
   new Promise((resolve, reject) => {
     axios
-      .get(`channels/${channelId}/events/`, { params: { date } })
+      .get(`channels/${channelId}/events/`, { params: { month, date } })
       .then((response) => {
         resolve(response.data);
       })
@@ -370,6 +370,13 @@ export const getChannel = (id) =>
       .get(`channels/${id}/`)
       .then((response) => {
         resolve(response.data);
+        localStorage.setItem(
+          'channel',
+          JSON.stringify({
+            ...(JSON.parse(localStorage.getItem('channel')) ?? {}),
+            [id]: response.data.name,
+          })
+        );
       })
       .catch((e) => {
         logError(e);
