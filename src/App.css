@@ -61,6 +61,8 @@
 .avatar {
   object-fit: cover;
   clip-path: circle();
+  width: 64px;
+  height: 64px;
 }
 .card {
   background-color: white;
@@ -87,7 +89,7 @@
 }
 .search-box input {
   position: absolute;
-  padding-left: 120px;
+  padding-left: 85px;
 }
 .search-box input:focus {
   padding-left: 16px;

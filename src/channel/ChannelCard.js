@@ -67,7 +67,7 @@ const ChannelAvatar = ({ name, image }) => (
 //       {/* <div className="channel-card-info"> */}
 //       <ChannelInfoHeader channelData={channelData} />
 //       <div className="channel-card-info-row">
-//         <div className="channel-card-subscribers">
+//         <div className="channel-card-main-text">
 //           구독자 {subscribers_count}명
 //         </div>
 //         {verbose ? (
@@ -88,7 +88,7 @@ const ChannelAvatar = ({ name, image }) => (
 //         {/* <Favorite onClick={() => {}} /> */}
 //       </div>
 //       {verbose ? (
-//         <div className="channel-card-subscribers">{description}</div>
+//         <div className="channel-card-main-text">{description}</div>
 //       ) : (
 //         <></>
 //       )}
@@ -141,7 +141,7 @@ const ChannelCard = ({ channelData: initialData, verbose }) => {
         {is_private ? <ClosedLock /> : <OpenLock />}
       </div>
       <div className="channel-card-info-row second">
-        <div className="channel-card-subscribers">
+        <div className="channel-card-main-text">
           구독자 {subscribers_count}명
         </div>
         {verbose ? (
@@ -161,14 +161,14 @@ const ChannelCard = ({ channelData: initialData, verbose }) => {
         )}
       </div>
       {verbose ? (
-        <div className="channel-card-subscribers">{description}</div>
+        <div className="channel-card-main-text">{description}</div>
       ) : (
         <></>
       )}
       {/* <div className="channel-card-info">
         <ChannelInfoHeader channelData={channelData} />
         <div className="channel-card-info-row">
-          <div className="channel-card-subscribers">
+          <div className="channel-card-main-text">
             구독자 {subscribers_count}명
           </div>
           {verbose ? (
@@ -188,7 +188,7 @@ const ChannelCard = ({ channelData: initialData, verbose }) => {
           )}
         </div>
         {verbose ? (
-          <div className="channel-card-subscribers">{description}</div>
+          <div className="channel-card-main-text">{description}</div>
         ) : (
           <></>
         )}

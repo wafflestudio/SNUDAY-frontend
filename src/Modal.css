@@ -10,7 +10,8 @@
   right: 0;
   /*  */
   z-index: 999;
-  animation: dim 0.2s forwards;
+  /* animation: dim 0.2s forwards; */
+  background-color: rgba(0, 0, 0, 0.3);
 }
 @keyframes dim {
   from {
