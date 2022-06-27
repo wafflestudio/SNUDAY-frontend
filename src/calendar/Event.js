@@ -6,7 +6,7 @@ import Modal from 'Modal';
 import AddEventModal from 'AddEventModal';
 import Tag from 'Tag';
 import { useCalendarContext } from 'context/CalendarContext';
-import { COLORS, findURL } from 'Constants';
+import { COLORS, parseURL } from 'Constants';
 import { deleteEvent } from 'API';
 
 const EventTag = ({ event }) => {
@@ -42,7 +42,7 @@ const EventContent = ({ isActive, event, modify }) => {
     <div className="event-modal-content">
       <h3 className="event-title">{event.title}</h3>
       <pre className="event-date">{eventDateString(event)}</pre>
-      <div>{findURL(event.memo)}</div>
+      <div>{parseURL(event.memo)}</div>
       {userInfo?.managing_channels.has(event.channel) ? (
         <div
           style={{

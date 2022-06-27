@@ -69,6 +69,7 @@
   margin: 16px 0;
 }
 .notice-content {
+  line-height: 1.4rem;
   padding: 20px 16px;
   border-bottom: 1px solid #b8b8b8;
   white-space: pre-wrap;

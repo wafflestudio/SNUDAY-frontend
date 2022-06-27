@@ -1,7 +1,5 @@
 import { useEffect, useReducer, useState } from 'react';
-import { InputButtonBox } from 'Input';
 import Modal from 'Modal';
-import ToggleButton from 'ToggleButton';
 import { ReactComponent as ClosedLock } from 'resources/lock-closed.svg';
 import { ReactComponent as OpenLock } from 'resources/lock-open.svg';
 import {
@@ -13,14 +11,7 @@ import {
 } from 'API';
 import { useAuthContext } from 'context/AuthContext';
 import { ReactComponent as XButton } from 'resources/x.svg';
-import { usernamePattern } from 'Constants';
-const AddChannelModalHeader = () => {
-  return (
-    <>
-      <h3 className="title">새로운 채널 만들기</h3>
-    </>
-  );
-};
+
 const ImageSelector = ({ image, setImage }) => {
   console.log('image', image);
   return (

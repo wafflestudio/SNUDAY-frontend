@@ -5,7 +5,7 @@ import { getNotice, deleteNotice as deleteNoticeAPI } from 'API';
 import { useAuthContext } from 'context/AuthContext';
 import Header from 'Header';
 import Tag from 'Tag';
-import { findURL } from 'Constants';
+import { parseURL } from 'Constants';
 const Notice = () => {
   let { channelId, noticeId } = useParams();
   channelId = +channelId;
@@ -31,7 +31,7 @@ const Notice = () => {
     });
     window.scrollTo(0, 0);
   }, [isModifying]);
-  console.log(findURL(notice?.contents));
+  console.log(parseURL(notice?.contents));
   return isModifying ? (
     <AddNotice
       channelId={channelId}
@@ -57,7 +57,7 @@ const Notice = () => {
             </div>
             <div className="grey-text">{notice.writer_name}</div>
           </div>
-          <div className="notice-content">{findURL(notice.contents)}</div>
+          <div className="notice-content">{parseURL(notice.contents)}</div>
           {userInfo?.managing_channels.has(channelId) ? (
             <div className="notice-menu">
               <button
