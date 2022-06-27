@@ -49,7 +49,7 @@ const Tag = ({
   } = useAuthContext();
   useEffect(() => {
     if (!name) {
-      name = JSON.parse(localStorage.getItem('channel'))[id];
+      name = JSON.parse(localStorage.getItem('channel'))?.[id];
       getChannel(id).then(setChannel);
     }
     setColor(findColor(id));

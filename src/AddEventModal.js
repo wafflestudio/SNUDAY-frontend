@@ -69,18 +69,18 @@ const AddEventModalContent = ({ eventObj, setEvent, isModifying }) => {
       <div className="input-datetime-container">
         <label>시작</label>
         <DateTimePicker
-          date={eventObj.start_date}
+          dateString={eventObj.start_date}
           setDate={(date) => setEvent({ key: 'start_date', value: date })}
-          time={eventObj.has_time ? eventObj.start_time : undefined}
+          timeString={eventObj.has_time ? eventObj.start_time : undefined}
           setTime={(time) => setEvent({ key: 'start_time', value: time })}
         />
       </div>
       <div className="input-datetime-container">
         <label>종료</label>
         <DateTimePicker
-          date={eventObj.due_date}
+          dateString={eventObj.due_date}
           setDate={(date) => setEvent({ key: 'due_date', value: date })}
-          time={eventObj.has_time ? eventObj.due_time : undefined}
+          timeString={eventObj.has_time ? eventObj.due_time : undefined}
           setTime={(time) => setEvent({ key: 'due_time', value: time })}
         />
       </div>
@@ -110,7 +110,7 @@ const AddEventModalButton = ({ addEvent }) => {
     </div>
   );
 };
-const AddEventModal = ({ isActive, date, event: existingEvent }) => {
+const AddEventModal = ({ isActive, date, event: existingEvent, channelId }) => {
   const {
     value: { userInfo },
   } = useAuthContext();
@@ -128,9 +128,9 @@ const AddEventModal = ({ isActive, date, event: existingEvent }) => {
           : `${(((today.getHours() + 2) % 24) + '').padStart(2, '0')}:00`,
       }
     : {
-        channel: [...userInfo.managing_channels][
-          userInfo.managing_channels.size - 1
-        ],
+        channel:
+          channelId ??
+          [...userInfo.managing_channels][userInfo.managing_channels.size - 1],
         //FIX
         //userInfo.managing_channels.values().next().value,
         title: '',
@@ -203,7 +203,7 @@ const AddEventModal = ({ isActive, date, event: existingEvent }) => {
         <AddEventModalContent
           eventObj={event}
           setEvent={setEvent}
-          isModifying={!!existingEvent}
+          isModifying={channelId || !!existingEvent}
         />
       }
       button={<AddEventModalButton addEvent={addEvent} />}

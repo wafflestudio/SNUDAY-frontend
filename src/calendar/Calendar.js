@@ -162,7 +162,7 @@ export const Calendar = ({ type, channelId }) => {
         {isLoggedIn &&
         userInfo &&
         (!channelId || userInfo.managing_channels.has(channelId)) ? (
-          <ModalButton component={AddEventModal} />
+          <ModalButton component={AddEventModal} channelId={channelId} />
         ) : (
           <></>
         )}
