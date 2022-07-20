@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 export const usernamePattern = /^[a-z0-9]{5,}$/;
 export const pwPattern = /^(?=.*[A-Za-z])(?=.*\d)(?!.*\s)[A-Za-z\d\w\W]{8,}$/;
 export const namePattern = /^[A-Za-z가-힣]+$/;
-export const emailPattern = /^\S+@snu.ac.kr$/;
+export const emailPattern = /^(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@snu\.ac.kr$/;
 export const authNumberPattern = /^[a-zA-Z0-9]{6,6}$/;
 export const COLORS = {
   POMEGRANATE: '#d4515d',

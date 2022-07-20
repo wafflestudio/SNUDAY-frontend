@@ -90,7 +90,7 @@ const Signup = () => {
         setTimeout(() => setIsSent(() => false), 60000);
       })
       .catch((error) => {
-        console.log(error);
+        alert(error.response.data);
         setIsSent(() => false);
       });
   };
@@ -167,7 +167,7 @@ const Signup = () => {
           type="email"
           value={email}
           setValue={setEmail}
-          pattern={/^[\w-.]+@snu.ac.kr$/}
+          pattern={emailPattern}
           disabled={isSent || isVerified}
           message="구성원 인증이 필요합니다."
         />
