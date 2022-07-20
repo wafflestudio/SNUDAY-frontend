@@ -114,6 +114,7 @@ input[type='time']::-webkit-clear-button {
   border-radius: 0 0 16px 16px;
   right: 0;
   width: 100vw;
+  overflow: hidden;
   /* padding-right: 28px; */
 }
 @keyframes fade-in {
@@ -330,7 +331,6 @@ input[type='time']::-webkit-clear-button {
   width: calc(100% / 7);
 }
 .day {
-  height: 7rem;
 }
 .weekday {
   height: 3rem;
