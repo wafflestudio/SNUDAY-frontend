@@ -28,7 +28,8 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "eslint ./ --ignore-path .gitignore",
-    "lint:fix": "npm run lint -- --fix"
+    "lint:fix": "npm run lint -- --fix",
+    "deploy":"aws s3 sync ./build s3://snuday --profile=gitiss"
   },
   "eslintConfig": {},
   "browserslist": {
