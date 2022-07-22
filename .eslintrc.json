@@ -3,7 +3,7 @@
   "rules": { "curly": ["warn", "multi"] },
   "overrides": [
     {
-      "files": ["**/*.js?(x)"],
+      "files": ["**/*.[tj]s?(x)"],
       "rules": {
         "react/prop-types": 0,
         "no-unused-vars": "warn"
