@@ -5,19 +5,21 @@
   align-items: stretch;
   flex-direction: column;
 }
-@supports (height: 100dvh) {
+@supports (height: 100svh) {
   .login-page {
-    height: 100dvh;
+    height: 100svh;
   }
 }
 .login-logo {
   height: 100px;
+  margin: 50px 0;
   animation: fadeIn ease-out 0.82s;
 }
 @keyframes fadeIn {
   0% {
     opacity: 0;
-    margin-top: -82px;
+    /* margin-top: -82px; */
+    transform: translateY(-41px);
   }
   100% {
     opacity: 1;
@@ -25,7 +27,7 @@
 }
 .login-header {
   position: relative;
-  padding: 50px 0;
+  /* padding: 50px 0; */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -46,6 +48,9 @@
   }
   .login-header {
     width: 200px;
+  }
+  .login-logo {
+    margin: 0 0 100px;
   }
 }
 .login-form {
