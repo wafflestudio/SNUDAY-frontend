@@ -5,6 +5,11 @@
   align-items: stretch;
   flex-direction: column;
 }
+@supports (height: 100dvh) {
+  .login-page {
+    height: 100dvh;
+  }
+}
 .login-logo {
   height: 100px;
   animation: fadeIn ease-out 0.82s;
