@@ -42,7 +42,7 @@ input[type='time']::-webkit-clear-button {
   transition: background-color 0.3s;
 }
 .button-off {
-  background-color: #b8b8b8;
+  background-color: var(--grey);
 }
 .button-toggle-circle {
   transform: translate(0, 0);
