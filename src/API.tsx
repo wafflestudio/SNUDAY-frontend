@@ -10,7 +10,7 @@ const logError = (error: AxiosError) => {
 };
 axios.defaults.headers['Accept'] = 'application/json';
 axios.defaults.baseURL =
-  'https://ec2-52-79-115-201.ap-northeast-2.compute.amazonaws.com/api/v1/';
+  'http://ec2-52-79-115-201.ap-northeast-2.compute.amazonaws.com/api/v1/';
 //USERS
 export const refresh = () =>
   new Promise((resolve, reject) => {
