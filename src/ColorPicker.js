@@ -10,7 +10,15 @@ const ColorPicker = ({
 }) => {
   const colorMap = Object.entries(COLORS);
   console.log(target);
-  const left = ((targetBoundingRect.left << 1) + targetBoundingRect.width) >> 1;
+  const targetLeft =
+    ((targetBoundingRect.left << 1) + targetBoundingRect.width) >> 1;
+  const arrowLeft =
+    targetLeft + 24 > window.innerWidth - (12 + 20)
+      ? undefined
+      : targetLeft < 12 + 20
+      ? 32 - 12
+      : targetLeft - 12;
+  const arrowRight = targetLeft ? undefined : 20;
   const top = targetBoundingRect.top + targetBoundingRect.height;
   return (
     <div className="colorpicker-wrapper" style={{ top }}>
@@ -19,9 +27,9 @@ const ColorPicker = ({
         style={
           !targetBoundingRect
             ? {}
-            : left + 24 > window.innerWidth - (12 + 20)
-            ? { right: 20 }
-            : { left: left < 12 + 20 ? 32 - 12 : left - 12 }
+            : arrowLeft
+            ? { left: arrowLeft }
+            : { right: arrowRight }
         }
       />
       <div className="colorpicker-palette">

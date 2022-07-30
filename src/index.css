@@ -86,9 +86,9 @@ button:active {
   font-weight: bold;
 }
 button:disabled {
-  background-color: #dddddd;
+  background-color: var(--grey-light);
   color: white;
-  border: 1px solid #dddddd;
+  border: 1px solid var(--grey-light);
 }
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
@@ -103,7 +103,7 @@ form > * {
   margin-bottom: 8px;
 }
 hr {
-  border-top: 1px solid #dddddd;
+  border-top: 1px solid var(--grey-light);
   border-bottom: 0;
   border-left: 0;
   border-right: 0;

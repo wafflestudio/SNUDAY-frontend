@@ -110,7 +110,7 @@ const AddChannelModalContent = ({ channel, setChannel }) => {
           margin: '0',
           color: channel.is_private ? '#aaaaaa' : '#3b77ff',
           border: channel.is_private
-            ? '1px solid #b8b8b8'
+            ? '1px solid var(--grey)'
             : '1px solid #3b77ff',
           borderRadius: '12px',
           fontSize: '0.8rem',
@@ -192,7 +192,7 @@ const AddChannelModalContent = ({ channel, setChannel }) => {
             className="userlist dropdown"
             style={{
               marginLeft: '1rem',
-              boxShadow: '0 0 5px #dddddd',
+              boxShadow: '0 0 5px var(--grey-light)',
             }}
           >
             {userSearchList.map((user) => (

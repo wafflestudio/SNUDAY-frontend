@@ -1,10 +1,25 @@
+.login-page {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: stretch;
+  flex-direction: column;
+}
+@supports (height: 100svh) {
+  .login-page {
+    height: 100svh;
+  }
+}
 .login-logo {
+  height: 100px;
+  margin: 50px 0;
   animation: fadeIn ease-out 0.82s;
 }
 @keyframes fadeIn {
   0% {
     opacity: 0;
-    margin-top: -82px;
+    /* margin-top: -82px; */
+    transform: translateY(-41px);
   }
   100% {
     opacity: 1;
@@ -12,10 +27,31 @@
 }
 .login-header {
   position: relative;
-  height: 200px;
+  /* padding: 50px 0; */
   display: flex;
   justify-content: center;
   align-items: center;
+}
+@media (orientation: portrait) and (max-height: 1000px) {
+  .login-page {
+    justify-content: center;
+  }
+  .login-header {
+    padding-top: 0;
+  }
+}
+@media (orientation: landscape) and (max-height: 400px) {
+  .login-page {
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
+  .login-header {
+    width: 200px;
+  }
+  .login-logo {
+    margin: 0 0 100px;
+  }
 }
 .login-form {
   display: flex;
@@ -38,7 +74,7 @@
   background-color: transparent;
   border: none;
   font-size: 0.8rem;
-  color: #b8b8b8;
+  color: var(--grey);
   text-decoration: underline;
 }
 .login-helper > button:active {

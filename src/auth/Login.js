@@ -54,55 +54,57 @@ const Login = () => {
   }, []);
   if (isLoading) return <></>;
   return (
-    <>
+    <div className="login-page">
       <div className="login-header">
         <Logo onClick={() => navigate('/')} className="login-logo" />
       </div>
-      <form className="login-form mobile-max-container">
-        <InputBox
-          aria-label="ID"
-          value={username}
-          setValue={setUsername}
-          type="text"
-          message={showMessage ? '아이디를 입력하세요.' : undefined}
-          showMessage={true}
-          pattern={usernamePattern}
-          placeholder="아이디"
-        />
-        <InputBox
-          aria-label="password"
-          value={password}
-          setValue={setPassword}
-          type="password"
-          message={showMessage ? '비밀번호를 입력하세요.' : undefined}
-          showMessage={showMessage}
-          pattern={pwPattern}
-          placeholder="비밀번호"
-        />
-        {showMessage && username !== '' && password !== '' ? (
-          <p className="input-condition-message">
-            존재하지 않는 아이디이거나 잘못된 비밀번호입니다.
-          </p>
-        ) : (
-          <></>
-        )}
-        <button
-          type="submit"
-          className="button-big"
-          onClick={(e) => {
-            login();
-            e.preventDefault();
-          }}
-        >
-          로그인
-        </button>
-      </form>
-      <div className="login-helper mobile-max-container">
-        <button onClick={() => navigate('/findmyid')}>아이디 찾기</button>
-        <button onClick={() => navigate('/findmypw')}>비밀번호 찾기</button>
-        <button onClick={() => navigate('/signup')}>회원가입</button>
+      <div className="login-body">
+        <form className="login-form mobile-max-container">
+          <InputBox
+            aria-label="ID"
+            value={username}
+            setValue={setUsername}
+            type="text"
+            message={showMessage ? '아이디를 입력하세요.' : undefined}
+            showMessage={true}
+            pattern={usernamePattern}
+            placeholder="아이디"
+          />
+          <InputBox
+            aria-label="password"
+            value={password}
+            setValue={setPassword}
+            type="password"
+            message={showMessage ? '비밀번호를 입력하세요.' : undefined}
+            showMessage={showMessage}
+            pattern={pwPattern}
+            placeholder="비밀번호"
+          />
+          {showMessage && username !== '' && password !== '' ? (
+            <p className="input-condition-message">
+              존재하지 않는 아이디이거나 잘못된 비밀번호입니다.
+            </p>
+          ) : (
+            <></>
+          )}
+          <button
+            type="submit"
+            className="button-big"
+            onClick={(e) => {
+              login();
+              e.preventDefault();
+            }}
+          >
+            로그인
+          </button>
+        </form>
+        <div className="login-helper mobile-max-container">
+          <button onClick={() => navigate('/findmyid')}>아이디 찾기</button>
+          <button onClick={() => navigate('/findmypw')}>비밀번호 찾기</button>
+          <button onClick={() => navigate('/signup')}>회원가입</button>
+        </div>
       </div>
-    </>
+    </div>
   );
 };
 export default Login;

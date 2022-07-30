@@ -55,7 +55,7 @@
   margin: 0;
   height: 4rem;
   line-height: 4rem;
-  border-bottom: 1px solid #dddddd;
+  border-bottom: 1px solid var(--grey-light);
 }
 input {
   border: none;
@@ -65,7 +65,7 @@ input {
 }
 .input-datetime-container {
   padding-bottom: 2px;
-  border-bottom: 1px solid #dddddd;
+  border-bottom: 1px solid var(--grey-light);
   display: flex;
   justify-content: space-between;
 }

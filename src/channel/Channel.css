@@ -37,7 +37,7 @@
 .notice-list > li {
   padding: 10px;
   list-style-type: none;
-  border-bottom: 1px solid #dddddd;
+  border-bottom: 1px solid var(--grey-light);
 }
 .notice-list.loading > li {
   border-bottom: 1px solid transparent;
@@ -59,11 +59,11 @@
   line-height: 0.8rem;
   min-height: 0.8rem;
   font-size: 0.8rem;
-  color: #4d4d4d;
+  color: var(--grey-dark);
 }
 .notice-info {
   padding: 10px 0 20px 16px;
-  border-bottom: 1px solid #b8b8b8;
+  border-bottom: 1px solid var(--grey);
 }
 .notice-info > h3 {
   margin: 16px 0;
@@ -71,7 +71,7 @@
 .notice-content {
   line-height: 1.4rem;
   padding: 20px 16px;
-  border-bottom: 1px solid #b8b8b8;
+  border-bottom: 1px solid var(--grey);
   white-space: pre-wrap;
 }
 .notice-menu {

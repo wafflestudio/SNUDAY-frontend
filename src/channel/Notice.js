@@ -55,7 +55,9 @@ const Notice = () => {
             <div>
               {new Date(notice.created_at).toLocaleString('ko-kr').slice(0, -3)}
             </div>
-            <div className="grey-text">{notice.writer_name}</div>
+            <div style={{ color: 'var(--grey-text)' }}>
+              {notice.writer_name}
+            </div>
           </div>
           <div className="notice-content">{parseURL(notice.contents)}</div>
           {userInfo?.managing_channels.has(channelId) ? (

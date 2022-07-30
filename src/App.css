@@ -1,4 +1,7 @@
 :root {
+  --grey-dark: #4d4d4d;
+  --grey: #b8b8b8;
+  --grey-light: #dddddd;
   /*SNU Color*/
   /*https://identity.snu.ac.kr/color/1/*/
   --snu-blue: rgb(15, 15, 112);
@@ -16,18 +19,12 @@
   --waffle-skyblue: #4499e3;
   --waffle-amethyst: #a45eae;
   --waffle-lavender: #4b4dbd;
-}
-.grey-line {
-  color: #dddddd;
-}
-.dark-gray-line {
-  color: #b8b8b8;
-}
-.grey-text {
-  color: #4d4d4d;
+  /*iOS Config*/
+  --ios-homebar-margin-bottom: 21px;
+  --ios-iphone-homebar-margin-bottom: 34px;
 }
 /* .loading {
-  background: linear-gradient(90deg, #b8b8b8, #dddddd 45% 55%, #b8b8b8);
+  background: linear-gradient(90deg, var(--grey), var(--grey-light) 45% 55%, var(--grey));
   background-size: 200%;
   animation-name: loading;
   animation-duration: 2s;
@@ -75,7 +72,7 @@
   padding: 10px 16px 10px 10px;
   font-size: 1.2rem;
   font-weight: bold;
-  border-bottom: 1px solid #b8b8b8;
+  border-bottom: 1px solid var(--grey);
 }
 .card-header-small {
   padding: 10px 16px 0 4px;
@@ -103,7 +100,7 @@
   background-repeat: no-repeat;
   background-position-x: calc(100% - 15px);
   background-position-y: 19px;
-  border: 1px #dddddd solid;
+  border: 1px var(--grey-light) solid;
   border-radius: 1.5rem;
   padding: 0 2rem 0 1rem;
   margin: 0;
@@ -130,7 +127,7 @@
   color: #3b77ff;
 }
 .button-blue:disabled {
-  color: #b8b8b8;
+  color: var(--grey);
   opacity: 1;
 }
 .button-blue:active {
@@ -148,10 +145,10 @@
 }
 .button-grey {
   background-color: white;
-  color: #b8b8b8;
+  color: var(--grey);
 }
 .button-grey:active {
-  color: #4d4d4d;
+  color: var(--grey-dark);
 }
 .button-in-input {
   height: 80%;
@@ -179,7 +176,7 @@ button:active {
   display: flex;
   align-items: center;
   justify-content: center;
-  border-bottom: 0.5px solid #b8b8b8;
+  border-bottom: 0.5px solid var(--grey);
   -webkit-backdrop-filter: saturate(180%) blur(20px);
   backdrop-filter: saturate(180%) blur(20px);
   background-color: hsla(0, 0%, 100%, 0.72);
@@ -209,7 +206,7 @@ textarea {
   resize: none;
   width: 100%;
   min-height: 6rem;
-  border: 1px solid #dddddd;
+  border: 1px solid var(--grey-light);
   border-radius: 1.5rem;
   -webkit-appearance: none;
   box-shadow: none !important;
@@ -264,7 +261,7 @@ input:not([type='checkbox']):not([type='radio']) {
   z-index: 200;
 }
 .input-round {
-  border: 1px solid #dddddd;
+  border: 1px solid var(--grey-light);
   border-radius: 1.5rem;
   padding: 0 1rem;
   font: inherit;
@@ -278,7 +275,7 @@ input:not([type='checkbox']):not([type='radio']) {
   border-top: 0;
   border-left: 0;
   border-right: 0;
-  border-bottom: 1px solid #dddddd;
+  border-bottom: 1px solid var(--grey-light);
   padding: 0;
 }
 .search-box .input-with-button {
@@ -316,7 +313,7 @@ input:not([type='checkbox']):not([type='radio']) {
   padding: 16px;
 }
 .menu-list > li:not(:last-child) {
-  border-bottom: 1px solid #dddddd;
+  border-bottom: 1px solid var(--grey-light);
 }
 .selectable:active {
   background: rgba(240, 240, 240, 1);
