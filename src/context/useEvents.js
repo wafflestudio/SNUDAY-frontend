@@ -143,7 +143,9 @@ const useEvents = ({ year, monthIndex, channelList }) => {
     console.log(year, monthIndex, month);
     if (channelList) {
       Promise.all(
-        channelList.map((channelId) => getChannelEvents({ channelId, month }))
+        channelList.map((channelId) =>
+          getChannelEvents({ channelId, month, getAll: true })
+        )
       ).then((eventsArray) =>
         filterNewEvents(
           eventsArray.reduce(
@@ -159,7 +161,7 @@ const useEvents = ({ year, monthIndex, channelList }) => {
     else
       Promise.all(
         [...default_channels].map((channelId) =>
-          getChannelEvents({ channelId, month })
+          getChannelEvents({ channelId, month, getAll: true })
         )
       ).then((eventsArray) =>
         filterNewEvents(

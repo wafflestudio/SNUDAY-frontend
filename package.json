@@ -29,7 +29,8 @@
     "eject": "react-scripts eject",
     "lint": "eslint ./ --ignore-path .gitignore",
     "lint:fix": "npm run lint -- --fix",
-    "deploy":"aws s3 sync ./build s3://snuday --profile=gitiss"
+    "deploy": "aws s3 sync ./build s3://snuday --profile=gitiss",
+    "invalidate": "aws cloudfront create-invalidation --profile=gitiss --distribution-id E3U9KORYZHZC65 --paths /*"
   },
   "eslintConfig": {},
   "browserslist": {

@@ -240,25 +240,42 @@ export const patchEvent = (channelId: Channel['id'], event: Partial<Event>) =>
         reject(e);
       });
   });
-export const getChannelEvents = ({
+export const getChannelEvents = async ({
   channelId,
   month,
   date,
+  cursor,
+  getAll = false,
 }: {
   channelId: Channel['id'];
   month: string;
   date: string;
+  cursor: string;
+  getAll: boolean;
 }) =>
-  new Promise((resolve, reject) => {
-    axios
-      .get(`channels/${channelId}/events/`, { params: { month, date } })
-      .then((response) => {
-        resolve(response.data);
-      })
-      .catch((e) => {
-        logError(e);
-        reject(e);
+  new Promise(async (resolve, reject) => {
+    cursor = cursor?.substring(cursor.indexOf('?cursor='));
+    const response = await axios.get(
+      `channels/${channelId}/events/${cursor ?? ''}`,
+      {
+        params: { month, date },
+      }
+    );
+    console.log('data', response.data);
+
+    if (getAll && response.data.next) {
+      let results = response.data.results;
+      let data: any = await getChannelEvents({
+        channelId,
+        month,
+        date,
+        cursor: response.data.next,
+        getAll: true,
       });
+      console.log(data.results);
+      resolve({ results: results.concat(data.results) });
+    }
+    resolve(response.data);
   });
 export const subscribeChannel = (id: Channel['id']) => {
   return new Promise((resolve, reject) => {
