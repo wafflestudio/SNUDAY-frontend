@@ -77,8 +77,8 @@ const DayEventsModal = ({ isActive, date, channelId }) => {
         <DayEventsModalContent
           events={
             channelId
-              ? getDailyEvents(date).filter(
-                  (event) => event.channel === channelId
+              ? getDailyEvents(date).filter((event) =>
+                  channelId.includes(event.channel)
                 )
               : getDailyEvents(date)
           }
