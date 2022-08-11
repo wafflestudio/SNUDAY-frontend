@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { useAuthContext } from 'context/AuthContext';
 import axios from 'axios';
 import Header from 'Header';
@@ -23,7 +23,9 @@ const MyPage = () => {
         ? `${userInfo.first_name} ${userInfo.last_name}`
         : userInfo.last_name + userInfo.first_name
       : undefined;
-  return isLoggedIn && userInfo ? (
+  if (!name)
+    return <Navigate to="/signin" state={{ prev: location.pathname }} />;
+  return (
     <>
       <Header left={<></>}>My Page</Header>
       <div className="main-container">
@@ -75,13 +77,6 @@ const MyPage = () => {
           </ul>
         </div>
       </div>
-    </>
-  ) : (
-    <>
-      {setTimeout(
-        () => navigate('/signin', { state: { prev: location.pathname } }),
-        0
-      )}
     </>
   );
 };

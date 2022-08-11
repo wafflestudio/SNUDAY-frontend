@@ -4,9 +4,16 @@ import {
   getSubscribedChannels,
   getAwaitingChannels,
   getUserMe,
-} from '../API';
+} from 'API';
+import { loginUser } from '../API';
 const AuthContext = React.createContext();
 const AuthProvider = (props) => {
+  const setValue = ({ type, value }) => {
+    setState((prev) => ({
+      ...prev,
+      value: { ...prev.value, [type]: value },
+    }));
+  };
   const setToken = ({
     access = state.value.access,
     refresh = state.value.refresh ?? localStorage.getItem('refresh'),
@@ -16,16 +23,10 @@ const AuthProvider = (props) => {
       value: { ...prev.value, access, refresh },
     }));
   };
-  const setIsLoggedIn = (isLoggedIn) => {
-    let newState = { ...state };
-    newState.value.isLoggedIn = isLoggedIn;
-    setState((prev) => ({ ...prev, value: { ...prev.value, isLoggedIn } }));
-  };
-  const setUserInfo = (userInfo) => {
-    let newState = { ...state };
-    newState.value.userInfo = userInfo;
-    setState((prev) => ({ ...prev, value: { ...prev.value, userInfo } }));
-  };
+  const setIsLoggedIn = (isLoggedIn) =>
+    setValue({ type: 'isLoggedIn', value: isLoggedIn });
+  const setUserInfo = (userInfo) =>
+    setValue({ type: 'userInfo', value: userInfo });
   const initUserInfo = async () => {
     const userInfo = await getUserMe();
     const managingChannels = await getManagingChannels();
@@ -44,11 +45,23 @@ const AuthProvider = (props) => {
     // newUserInfo.managing_channels.delete(36);
     // newUserInfo.managing_channels.delete(46);
     //
-    setState((prev) => ({
-      ...prev,
-      value: { ...prev.value, userInfo: newUserInfo },
-    }));
+    setUserInfo(newUserInfo);
   };
+  const login = async ({ username, password }) =>
+    new Promise(async (resolve, reject) => {
+      loginUser({ username, password })
+        .then((data) => {
+          setToken(data);
+          initUserInfo()
+            .catch(reject)
+            .then(() => {
+              setIsLoggedIn(true);
+              resolve(data);
+            });
+        })
+        .catch(reject);
+    });
+
   const defaultValue = {
     isLoggedIn: false,
     access: undefined,
@@ -56,7 +69,7 @@ const AuthProvider = (props) => {
     userInfo: null,
     default_channels: new Set([65, 73]),
   };
-  const action = { setToken, setIsLoggedIn, setUserInfo, initUserInfo };
+  const action = { initUserInfo, login, setIsLoggedIn, setToken, setUserInfo };
   const [state, setState] = useState({ value: defaultValue, action });
   useEffect(() => {
     if (state.value.access) initUserInfo();

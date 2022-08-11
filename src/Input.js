@@ -14,16 +14,18 @@ export const InputBox = ({
   const [showMsg, setShowMsg] = useState(showMessage);
   return (
     <div className="input-box">
-      {label || message ? (
+      {label || (message && showMsg && !value.match(pattern)) ? (
         <div className="input-box-label-container">
           {label ? (
             <label style={label ? {} : { paddingRight: '0' }}>{label}</label>
           ) : (
             <></>
           )}
-          <div className="input-condition-message">
-            {showMsg && !value.match(pattern) ? message : ` `}
-          </div>
+          {message ? (
+            <div className="input-condition-message">{message}</div>
+          ) : (
+            <></>
+          )}
         </div>
       ) : (
         <></>
