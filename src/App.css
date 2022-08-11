@@ -1,4 +1,7 @@
 :root {
+  --main-color: #3b77ff;
+  --blue: var(--main-color);
+  --red: #f93822;
   --grey-dark: #4d4d4d;
   --grey: #b8b8b8;
   --grey-light: #dddddd;
@@ -22,6 +25,15 @@
   /*iOS Config*/
   --ios-homebar-margin-bottom: 21px;
   --ios-iphone-homebar-margin-bottom: 34px;
+  --nav-height: calc(0.5px + 10px + 39px + max());
+}
+@supports (padding-top: env(safe-area-inset-top)) {
+  body {
+    --safe-area-inset-top: env(safe-area-inset-top);
+    --safe-area-inset-left: env(safe-area-inset-left);
+    --safe-area-inset-right: env(safe-area-inset-right);
+    --safe-area-inset-bottom: env(safe-area-inset-bottom);
+  }
 }
 /* .loading {
   background: linear-gradient(90deg, var(--grey), var(--grey-light) 45% 55%, var(--grey));
@@ -45,7 +57,8 @@
   margin: auto;
 }
 .main-container {
-  width: 100vw;
+  /* width: 100vw; */
+  width: 100%;
   max-height: calc(100% - 3rem);
   overflow: auto;
   display: flex;
@@ -124,24 +137,24 @@
 }
 .button-blue {
   background-color: white;
-  color: #3b77ff;
+  color: var(--blue);
 }
 .button-blue:disabled {
   color: var(--grey);
   opacity: 1;
 }
 .button-blue:active {
-  background-color: #3b77ff;
+  background-color: var(--blue);
   color: white;
 }
 .button-delete {
   background-color: white;
-  color: #f93822;
+  color: var(--red);
 }
 .button-delete:active {
-  background-color: #f93822;
+  background-color: var(--red);
   color: white;
-  border-color: #f93822;
+  border-color: var(--red);
 }
 .button-grey {
   background-color: white;
@@ -170,9 +183,9 @@ button:active {
   z-index: 99;
   height: 3rem;
   line-height: 3rem;
-
   position: fixed;
   top: 0;
+  left: 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -192,11 +205,11 @@ button:active {
 }
 .header > .header-left {
   position: absolute;
-  left: 16px;
+  left: max(16px, env(safe-area-inset-left));
 }
 .header > .header-right {
   position: absolute;
-  right: 16px;
+  right: max(16px, env(safe-area-inset-left));
 }
 .small-text {
   font-size: 0.8rem;
@@ -239,7 +252,7 @@ input:not([type='checkbox']):not([type='radio']) {
   line-height: 1rem;
 }
 .input-condition-message {
-  color: #f93822;
+  color: var(--red);
   font-size: 0.7rem;
   line-height: 0.7rem;
   height: 0.7rem;

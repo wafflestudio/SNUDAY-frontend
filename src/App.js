@@ -64,12 +64,14 @@ function App() {
       if (id >= 0)
         if (touch.clientY < ongoingTouches[id].clientY - 12) {
           //scrollDown
-          if (NavBar) NavBar.style.bottom = '-' + NavBar.offsetHeight + 'px';
+          // if (NavBar) NavBar.style.bottom = '-' + NavBar.offsetHeight + 'px';
+          if (NavBar) NavBar.classList.add(['hide']);
           if (NavBar && AddButton) AddButton.style.bottom = '0';
           ongoingTouches.splice(id, 1, touch);
         } else if (touch.clientY > ongoingTouches[id].clientY + 12) {
           //scrollUp
-          if (NavBar) NavBar.style.bottom = '0';
+          // if (NavBar) NavBar.style.bottom = '0';
+          if (NavBar) NavBar.classList.remove(['hide']);
           if (NavBar && AddButton)
             AddButton.style.bottom = NavBar.offsetHeight + 'px';
           ongoingTouches.splice(id, 1, touch);
@@ -90,11 +92,13 @@ function App() {
       if (id >= 0) {
         if (touch.clientY < ongoingTouches[id].clientY - 5) {
           //scrollDown
-          if (NavBar) NavBar.style.bottom = '-' + NavBar.offsetHeight + 'px';
+          // if (NavBar) NavBar.style.bottom = '-' + NavBar.offsetHeight + 'px';
+          if (NavBar) NavBar.classList.add(['hide']);
           if (NavBar && AddButton) AddButton.style.bottom = '0';
         } else if (touch.clientY > ongoingTouches[id].clientY + 5) {
           //scrollUp
-          if (NavBar) NavBar.style.bottom = '0';
+          // if (NavBar) NavBar.style.bottom = '0';
+          if (NavBar) NavBar.classList.remove(['hide']);
           if (NavBar && AddButton)
             AddButton.style.bottom = NavBar.offsetHeight + 'px';
         }

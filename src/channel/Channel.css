@@ -23,7 +23,7 @@
 .error {
   min-height: 62px;
   padding: 20px 0;
-  color: #aaaaaa;
+  color: var(--grey);
   text-align: center;
 }
 .arrow {

@@ -77,6 +77,22 @@ const ChannelList = ({ category, isLoggedIn, type, keyword, style }) => {
       {channels?.results.map((channelData) => (
         <ChannelCard key={channelData.id} channelData={channelData} />
       ))}
+      {isLoggedIn &&
+      !keyword &&
+      category === 'managed' &&
+      !(channels?.results.length > 0) ? (
+        <div className="error">관리 중인 채널이 없습니다.</div>
+      ) : (
+        <></>
+      )}
+      {isLoggedIn &&
+      !keyword &&
+      category === 'subscribed' &&
+      !(channels?.results.length > 0) ? (
+        <div className="error">구독 중인 채널이 없습니다.</div>
+      ) : (
+        <></>
+      )}
     </div>
   );
 };

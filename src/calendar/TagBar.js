@@ -31,7 +31,9 @@ const TagBar = ({ category, onTagClick, isMain, ...props }) => {
     switch (category) {
       case 'active':
         const subscribingChannels = Array.from(
-          userInfo ? userInfo.subscribing_channels : [...default_channels]
+          userInfo
+            ? userInfo.subscribing_channels.add(userInfo.my_channel)
+            : [...default_channels]
         );
         subscribingChannels.sort(
           (a, b) => disabledChannels.includes(a) - disabledChannels.includes(b)
@@ -39,10 +41,19 @@ const TagBar = ({ category, onTagClick, isMain, ...props }) => {
         setChannels(subscribingChannels);
         break;
       case 'managing':
-        setChannels(Array.from(userInfo?.managing_channels ?? []));
+        if (userInfo?.managing_channels)
+          setChannels(
+            Array.from(
+              userInfo.managing_channels.add(userInfo.my_channel) ?? []
+            )
+          );
         break;
       case 'subscribing':
-        setChannels(Array.from(userInfo?.subscribing_channels ?? []));
+        setChannels(
+          Array.from(
+            userInfo.subscribing_channels.add(userInfo.my_channel) ?? []
+          )
+        );
         break;
       default:
         break;

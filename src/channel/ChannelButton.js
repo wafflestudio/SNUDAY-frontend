@@ -153,7 +153,7 @@ export const WaitingListButton = ({ channelData }) => {
         alt="waiters"
         // style={{
         //   height: '28px',
-        //   border: '1px solid #3b77ff',
+        //   border: '1px solid var(--blue)',
         //   borderRadius: '14px',
         // }}
         src="/resources/person.svg"
@@ -184,7 +184,7 @@ export const EditChannelButton = ({ channelData, setChannelData }) => {
         className="edit-channel-button"
         style={{
           height: '28px',
-          border: '1px solid #3b77ff',
+          border: '1px solid var(--blue)',
           borderRadius: '14px',
         }}
         src="/resources/edit-no-border.svg"
