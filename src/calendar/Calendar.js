@@ -157,6 +157,7 @@ export const Calendar = ({ type, channelId }) => {
           monthIndex,
           day,
           setDay: chooseDay,
+          channelList,
         }}
       >
         {isLoggedIn &&
@@ -191,7 +192,7 @@ export const Calendar = ({ type, channelId }) => {
                   marginLeft: 'auto',
                   backgroundColor: 'transparent',
                   border: 'none',
-                  color: '#3b77ff',
+                  color: 'var(--blue)',
                 }}
               >
                 로그인

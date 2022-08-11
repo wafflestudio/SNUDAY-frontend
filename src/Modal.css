@@ -105,7 +105,7 @@ input {
   margin: 0 auto 0.8rem;
   font-size: 133.3%;
   border-radius: 1.925rem;
-  width: 70%;
+  width: min(70%, 300px);
   padding: 1rem;
 }
 /*EventModal*/
@@ -150,4 +150,21 @@ input {
 }
 .date-events-modal-content > .event-container {
   margin-bottom: 0.67rem;
+}
+@media (orientation: landscape) and (max-height: 500px) {
+  .modal-container {
+    max-height: calc(100% - env(safe-area-inset-bottom));
+    max-width: 75%;
+    margin-bottom: env(safe-area-inset-bottom);
+  }
+  .title {
+    height: 3rem;
+    line-height: 3rem;
+    font-size: 17px;
+  }
+  .Calendar.main ~ .modal-background .title {
+    height: 50px;
+    line-height: 50px;
+    font-size: 17px;
+  }
 }

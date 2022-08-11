@@ -63,7 +63,7 @@ const Navigation = () => {
         { name: 'My Page', image: MyPage, route: '/mypage' },
       ];
   return (
-    <div className="nav-container" id="navigation-bar">
+    <nav className="nav-container" id="navigation-bar">
       {menuList.map((menu, index) => (
         <Menu
           key={index}
@@ -72,7 +72,7 @@ const Navigation = () => {
           route={menu.route}
         />
       ))}
-    </div>
+    </nav>
   );
 };
 export default Navigation;

@@ -108,10 +108,10 @@ const AddChannelModalContent = ({ channel, setChannel }) => {
           width: 'fit-content',
           padding: '2px 10px',
           margin: '0',
-          color: channel.is_private ? '#aaaaaa' : '#3b77ff',
+          color: channel.is_private ? '#aaaaaa' : 'var(--blue)',
           border: channel.is_private
             ? '1px solid var(--grey)'
-            : '1px solid #3b77ff',
+            : '1px solid var(--blue)',
           borderRadius: '12px',
           fontSize: '0.8rem',
           transition: 'none',

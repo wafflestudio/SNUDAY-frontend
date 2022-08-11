@@ -229,7 +229,7 @@ const Signup = () => {
             />
             <Uncheckedbox className="checkmark" />
             스누데이 이용약관 동의
-            <span style={{ color: '#3b77ff' }}>(필수)</span>
+            <span style={{ color: 'var(--blue)' }}>(필수)</span>
           </label>
           <label className="label-agreement">
             <input
@@ -245,7 +245,7 @@ const Signup = () => {
             />
             <Uncheckedbox className="checkmark" />
             개인정보 수집 및 이용 동의
-            <span style={{ color: '#3b77ff' }}>(필수)</span>
+            <span style={{ color: 'var(--blue)' }}>(필수)</span>
           </label>
         </div>
         <button

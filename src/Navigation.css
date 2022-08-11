@@ -1,16 +1,22 @@
 .nav-container {
   z-index: 10;
   height: fit-content;
-  width: 100vw;
+  width: 100%;
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
   position: fixed;
   bottom: 0;
-  border-top: 1pt rgb(221, 221, 221) solid;
+  left: 0;
+  border-top: 0.5px solid var(--grey);
+  padding: 2px;
   background-color: white;
-  transition: bottom 0.3s;
+  transition: transform 0.3s;
   user-select: none;
 }
+.nav-container.hide {
+  transform: translateY(100%);
+}
+
 @media screen and (orientation: landscape) {
   .nav-container {
     bottom: 0;
@@ -22,59 +28,60 @@
   }
 }
 .nav-item {
+  max-width: 120px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
   flex: 1;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  margin-bottom: env(safe-area-inset-bottom);
+  border-radius: 5px;
   text-align: center;
   font-size: min(0.75rem, 4vw);
   font-weight: bold;
+  -webkit-tap-highlight-color: transparent;
 }
 .nav-item svg {
   width: 100%;
   height: 24px;
-  margin: 10px 0 5px;
+  margin-bottom: 5px;
 }
 .nav-item:active {
   background-color: rgb(237, 237, 237);
 }
+@media (hover: hover) {
+  .nav-item:hover {
+    background-color: rgb(237, 237, 237);
+  }
+}
 .nav-item:active,
 .nav-item.active {
-  color: #3b77ff;
-  fill: #3b77ff;
+  color: var(--blue);
+  fill: var(--blue);
 }
 .nav-item p {
   margin: 0;
-  line-height: 1rem;
-  margin-bottom: 10px;
+  line-height: 10px;
+  font-size: 10px;
+  font-weight: 500;
   transition: margin-bottom 0.5s;
 }
 /*iOS*/
 @supports (-webkit-touch-callout: none) {
-  .nav-item p {
-    margin-bottom: var(--ios-homebar-margin-bottom);
-  }
-  /*iPhone browser portrait*/
-  @media (orientation: portrait) and (max-width: 700px) {
-    .nav-item p {
-      margin-bottom: 10px;
-    }
+  .nav-item {
+    margin-bottom: calc(env(safe-area-inset-bottom) - 6px);
   }
   /*PWA*/
   @media only screen and (display-mode: standalone) {
-    .nav-container {
-      border-top: 0.5px solid var(--grey);
-    }
-    .nav-item p {
-      font-size: 10px;
-      font-weight: 500;
-      line-height: 10px;
-    }
     /*iPhone*/
     @media (orientation: portrait) and (max-width: 700px) {
-      .nav-item p {
-        margin-bottom: var(--ios-iphone-homebar-margin-bottom);
+      .nav-item:first-child {
+        border-bottom-left-radius: 6px 25px;
+      }
+      .nav-item:last-child {
+        border-bottom-right-radius: 6px 25px;
       }
     }
   }

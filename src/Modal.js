@@ -39,7 +39,7 @@ const Modal = ({ header, content, button, isActive, style }) => {
         {button}
       </div>
     </ModalBackground>,
-    document.body
+    document.getElementById('root')
   );
 };
 export default Modal;

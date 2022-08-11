@@ -18,7 +18,7 @@ const NoticeHome = () => {
             setSearchOption={setSearchOption}
           />
         </div>
-        <div className="card" style={{ maxHeight: 'calc(100% - 45px)' }}>
+        <div className="card">
           <NoticeList type={searchOption} keyword={searchValue} />
         </div>
       </div>

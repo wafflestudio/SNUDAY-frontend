@@ -25,11 +25,11 @@ const MyChannels = () => {
       <div
         ref={listRef}
         style={{
-          width: '100vw',
+          width: '100%',
           height: `calc(${
             listRef.current?.parentElement.getBoundingClientRect().height
           }px - 3rem)`,
-          position: 'fixed',
+          position: 'absolute',
           top: '3rem',
           backgroundColor: 'white',
         }}
