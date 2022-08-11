@@ -1,11 +1,12 @@
 import React, { useContext, useEffect, useState } from 'react';
+import axios from 'axios';
 import {
   getManagingChannels,
   getSubscribedChannels,
   getAwaitingChannels,
   getUserMe,
+  loginUser,
 } from 'API';
-import { loginUser } from '../API';
 const AuthContext = React.createContext();
 const AuthProvider = (props) => {
   const setValue = ({ type, value }) => {
@@ -46,6 +47,11 @@ const AuthProvider = (props) => {
     // newUserInfo.managing_channels.delete(46);
     //
     setUserInfo(newUserInfo);
+    const disabledChannels = JSON.parse(
+      localStorage.getItem('disabled_channels')
+    )?.[userInfo.id];
+    if (disabledChannels)
+      setValue({ type: 'disabled_channels', value: disabledChannels });
   };
   const login = async ({ username, password }) =>
     new Promise(async (resolve, reject) => {
@@ -61,19 +67,48 @@ const AuthProvider = (props) => {
         })
         .catch(reject);
     });
-
+  const logout = () => {
+    delete axios.defaults.headers['Authorization'];
+    localStorage.removeItem('refresh');
+    setState((prev) => ({ ...prev, value: defaultValue }));
+  };
   const defaultValue = {
     isLoggedIn: false,
     access: undefined,
     refresh: undefined,
     userInfo: null,
     default_channels: new Set([65, 73]),
+    disabled_channels: [],
   };
-  const action = { initUserInfo, login, setIsLoggedIn, setToken, setUserInfo };
+  const action = {
+    initUserInfo,
+    login,
+    logout,
+    setIsLoggedIn,
+    setToken,
+    setUserInfo,
+    setValue,
+  };
   const [state, setState] = useState({ value: defaultValue, action });
   useEffect(() => {
     if (state.value.access) initUserInfo();
   }, [state.value.access]);
+  useEffect(() => {
+    let prev = localStorage.getItem('disabled_channels');
+    if (prev) prev = JSON.parse(prev);
+    localStorage.setItem(
+      'disabled_channels',
+      JSON.stringify(
+        prev
+          ? {
+              ...prev,
+              [state.value.userInfo?.id]: state.value.disabled_channels,
+            }
+          : { [state.value.userInfo?.id]: state.value.disabled_channels }
+      )
+    );
+  }, [state.value.disabled_channels]);
+  console.log(state.value);
   return (
     <AuthContext.Provider value={state}>{props.children}</AuthContext.Provider>
   );

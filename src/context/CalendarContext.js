@@ -30,10 +30,9 @@ export const CalendarContextProvider = ({ value, children }) => {
     year: value.year,
     monthIndex: value.monthIndex,
   });
-  const [disabledChannels, setDisabledChannels] = useState([]);
   const [channelColors, setChannelColors] = useState(undefined);
   const {
-    value: { userInfo, default_channels },
+    value: { userInfo, default_channels, disabled_channels },
   } = useAuthContext();
   useEffect(() => {
     // fetchMonthlyEvents();
@@ -151,7 +150,7 @@ export const CalendarContextProvider = ({ value, children }) => {
     } else {
       //get all monthly active events
       activeChannelEvents = new Map(channelEvents);
-      for (const ch of disabledChannels) {
+      for (const ch of disabled_channels) {
         activeChannelEvents.delete(ch);
       }
       activeChannelEvents = [...activeChannelEvents.values()].reduce(
@@ -201,8 +200,6 @@ export const CalendarContextProvider = ({ value, children }) => {
         getDailyEvents,
         channelColors,
         // fetchMonthlyEvents,
-        disabledChannels,
-        setDisabledChannels,
         setChannelColor,
         calendar: new Calendar(),
         ...value,

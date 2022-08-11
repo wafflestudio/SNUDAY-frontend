@@ -4,29 +4,32 @@ import { useCalendarContext } from 'context/CalendarContext';
 import Tag from 'Tag';
 
 const TagBar = ({ category, onTagClick, isMain, ...props }) => {
-  const { disabledChannels, setDisabledChannels } = useCalendarContext();
   const [channels, setChannels] = useState([]);
   const [isOverflowing, setIsOverflowing] = useState(false);
   const tagbarRef = useRef(null);
   const {
-    value: { userInfo, default_channels },
+    action: { setValue },
+    value: { userInfo, default_channels, disabled_channels },
   } = useAuthContext();
   if (category === 'active')
-    onTagClick = (channel) =>
-      setDisabledChannels((channels) => {
-        return channels.includes(channel)
-          ? [...channels].filter((ch) => ch !== channel)
-          : [...channels, channel];
+    onTagClick = (channel) => {
+      setValue({
+        type: 'disabled_channels',
+        value: disabled_channels.includes(channel)
+          ? [...disabled_channels].filter((ch) => ch !== channel)
+          : [...disabled_channels, channel],
       });
+    };
   useEffect(() => {
     if (category === 'active') {
       setChannels((channels) =>
         [...channels].sort(
-          (a, b) => disabledChannels.includes(a) - disabledChannels.includes(b)
+          (a, b) =>
+            disabled_channels.includes(a) - disabled_channels.includes(b)
         )
       );
     }
-  }, [disabledChannels]);
+  }, [disabled_channels]);
   useEffect(() => {
     switch (category) {
       case 'active':
@@ -36,7 +39,8 @@ const TagBar = ({ category, onTagClick, isMain, ...props }) => {
             : [...default_channels]
         );
         subscribingChannels.sort(
-          (a, b) => disabledChannels.includes(a) - disabledChannels.includes(b)
+          (a, b) =>
+            disabled_channels.includes(a) - disabled_channels.includes(b)
         );
         setChannels(subscribingChannels);
         break;
@@ -91,7 +95,7 @@ const TagBar = ({ category, onTagClick, isMain, ...props }) => {
           id={channelId}
           onClick={() => (onTagClick ? onTagClick(channelId) : undefined)}
           disabled={
-            category === 'active' && disabledChannels.includes(channelId)
+            category === 'active' && disabled_channels.includes(channelId)
           }
         />
       ))}

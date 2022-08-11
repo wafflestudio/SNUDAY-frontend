@@ -7,15 +7,8 @@ const MyPage = () => {
   let location = useLocation();
   const {
     value: { isLoggedIn, userInfo },
-    action: { setIsLoggedIn, setUserInfo, setToken },
+    action: { logout },
   } = useAuthContext();
-  const logout = () => {
-    delete axios.defaults.headers['Authorization'];
-    localStorage.removeItem('refresh');
-    setToken({ access: null, refresh: null });
-    setIsLoggedIn(false);
-    setUserInfo(null);
-  };
   console.log(userInfo);
   const name =
     isLoggedIn && userInfo
