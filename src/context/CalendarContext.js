@@ -93,8 +93,6 @@ export const CalendarContextProvider = ({ value, children }) => {
   const getMonthlyActiveEvents = async (year, monthIndex, channelList) => {
     //프로미스로 해보기
     // await fetchMonthlyEvents({ month: `${year}-${monthIndex + 1}` });
-    console.log(year, monthIndex, channelList);
-
     // console.log(monthEvents);
     let monthEvents = monthlyEvents.get(`${year}-${monthIndex}`);
     if (!monthEvents) {

@@ -31,7 +31,6 @@ const AuthProvider = (props) => {
   const initUserInfo = async () => {
     const userInfo = await getUserMe();
     const managingChannels = await getManagingChannels();
-    console.log('managingChannels', managingChannels);
     const subscribingChannels = await getSubscribedChannels();
     const awaitingChannels = await getAwaitingChannels();
     const newUserInfo = {
@@ -108,7 +107,6 @@ const AuthProvider = (props) => {
       )
     );
   }, [state.value.disabled_channels]);
-  console.log(state.value);
   return (
     <AuthContext.Provider value={state}>{props.children}</AuthContext.Provider>
   );
