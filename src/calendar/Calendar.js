@@ -232,16 +232,16 @@ export const CalendarBody = ({
   const [targetTouch, setTargetTouch] = useState(null);
   const [scrollTime, setScrollTime] = useState(Date.now());
   const [activeChannelList, setActiveChannelList] = useState(channelList);
-  const { disabledChannels } = useCalendarContext();
+  const {
+    value: { disabled_channels },
+  } = useAuthContext();
   useEffect(() => {
-    if (type === 'main') {
+    if (type === 'main')
       setActiveChannelList(
-        channelList.filter((channel) => !disabledChannels.includes(channel))
+        channelList.filter((channel) => !disabled_channels.includes(channel))
       );
-    } else {
-      setActiveChannelList(channelList);
-    }
-  }, [channelList, disabledChannels]);
+    else setActiveChannelList(channelList);
+  }, [channelList, disabled_channels]);
   useEffect(() => {
     // setScrollTime(null);
   }, [monthIndex]);

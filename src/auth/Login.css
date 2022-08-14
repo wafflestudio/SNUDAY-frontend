@@ -60,6 +60,7 @@
 .login-form {
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
   padding: 0 48px;
 }
 .login-form > * {

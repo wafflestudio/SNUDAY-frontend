@@ -1,15 +1,14 @@
 import { useEffect, useState } from 'react';
 import { useCalendarContext } from 'context/CalendarContext';
+import { useAuthContext } from '../context/AuthContext';
 import Week from './Week';
 import { getNumDaysofMonth } from 'Constants';
 import sortBy from 'lodash-es/sortBy';
 const Month = ({ year, monthIndex, channelList }) => {
+  const { isFetching, getEvent, getMonthlyActiveEvents } = useCalendarContext();
   const {
-    isFetching,
-    getEvent,
-    getMonthlyActiveEvents,
-    disabledChannels,
-  } = useCalendarContext();
+    value: { disabled_channels },
+  } = useAuthContext();
   const [monthlyActiveEvents, setMonthlyActiveEvents] = useState(undefined);
   const [posEvents, setPosEvents] = useState(null);
   const date = new Date(year, monthIndex);
@@ -36,8 +35,8 @@ const Month = ({ year, monthIndex, channelList }) => {
         console.log(monthlyActiveEvents);
       }
     );
-  }, [isFetching, disabledChannels, year, monthIndex, channelList]);
-
+  }, [isFetching, disabled_channels, year, monthIndex, channelList]);
+  console.log(disabled_channels);
   useEffect(() => {
     //update position if there is an event update
     //정렬 순서

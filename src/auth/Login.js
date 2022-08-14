@@ -16,14 +16,13 @@ const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showMessage, setShowMessage] = useState(false);
+  const isInvalidAccount = showMessage && username !== '' && password !== '';
   const {
-    action: { isLoggedIn, setToken, setIsLoggedIn },
+    action: { isLoggedIn, setToken, setIsLoggedIn, login },
   } = useAuthContext();
-  const login = () => {
-    loginUser({ username, password })
+  const processLogin = () => {
+    login({ username, password })
       .then((data) => {
-        setToken(data);
-        setIsLoggedIn(true);
         navigate(location.state?.prev ? -1 : '/');
       })
       .catch((status) => {
@@ -65,7 +64,13 @@ const Login = () => {
             value={username}
             setValue={setUsername}
             type="text"
-            message={showMessage ? '아이디를 입력하세요.' : undefined}
+            message={
+              showMessage && !isInvalidAccount
+                ? username
+                  ? '아이디는 5글자 이상입니다.'
+                  : '아이디를 입력하세요.'
+                : undefined
+            }
             showMessage={true}
             pattern={usernamePattern}
             placeholder="아이디"
@@ -75,12 +80,16 @@ const Login = () => {
             value={password}
             setValue={setPassword}
             type="password"
-            message={showMessage ? '비밀번호를 입력하세요.' : undefined}
+            message={
+              showMessage && !isInvalidAccount
+                ? '비밀번호를 입력하세요.'
+                : undefined
+            }
             showMessage={showMessage}
             pattern={pwPattern}
             placeholder="비밀번호"
           />
-          {showMessage && username !== '' && password !== '' ? (
+          {isInvalidAccount ? (
             <p className="input-condition-message">
               존재하지 않는 아이디이거나 잘못된 비밀번호입니다.
             </p>
@@ -91,7 +100,7 @@ const Login = () => {
             type="submit"
             className="button-big"
             onClick={(e) => {
-              login();
+              processLogin();
               e.preventDefault();
             }}
           >

@@ -1,12 +1,20 @@
 import React, { useContext, useEffect, useState } from 'react';
+import axios from 'axios';
 import {
   getManagingChannels,
   getSubscribedChannels,
   getAwaitingChannels,
   getUserMe,
-} from '../API';
+  loginUser,
+} from 'API';
 const AuthContext = React.createContext();
 const AuthProvider = (props) => {
+  const setValue = ({ type, value }) => {
+    setState((prev) => ({
+      ...prev,
+      value: { ...prev.value, [type]: value },
+    }));
+  };
   const setToken = ({
     access = state.value.access,
     refresh = state.value.refresh ?? localStorage.getItem('refresh'),
@@ -16,16 +24,10 @@ const AuthProvider = (props) => {
       value: { ...prev.value, access, refresh },
     }));
   };
-  const setIsLoggedIn = (isLoggedIn) => {
-    let newState = { ...state };
-    newState.value.isLoggedIn = isLoggedIn;
-    setState((prev) => ({ ...prev, value: { ...prev.value, isLoggedIn } }));
-  };
-  const setUserInfo = (userInfo) => {
-    let newState = { ...state };
-    newState.value.userInfo = userInfo;
-    setState((prev) => ({ ...prev, value: { ...prev.value, userInfo } }));
-  };
+  const setIsLoggedIn = (isLoggedIn) =>
+    setValue({ type: 'isLoggedIn', value: isLoggedIn });
+  const setUserInfo = (userInfo) =>
+    setValue({ type: 'userInfo', value: userInfo });
   const initUserInfo = async () => {
     const userInfo = await getUserMe();
     const managingChannels = await getManagingChannels();
@@ -44,10 +46,31 @@ const AuthProvider = (props) => {
     // newUserInfo.managing_channels.delete(36);
     // newUserInfo.managing_channels.delete(46);
     //
-    setState((prev) => ({
-      ...prev,
-      value: { ...prev.value, userInfo: newUserInfo },
-    }));
+    setUserInfo(newUserInfo);
+    const disabledChannels = JSON.parse(
+      localStorage.getItem('disabled_channels')
+    )?.[userInfo.id];
+    if (disabledChannels)
+      setValue({ type: 'disabled_channels', value: disabledChannels });
+  };
+  const login = async ({ username, password }) =>
+    new Promise(async (resolve, reject) => {
+      loginUser({ username, password })
+        .then((data) => {
+          setToken(data);
+          initUserInfo()
+            .catch(reject)
+            .then(() => {
+              setIsLoggedIn(true);
+              resolve(data);
+            });
+        })
+        .catch(reject);
+    });
+  const logout = () => {
+    delete axios.defaults.headers['Authorization'];
+    localStorage.removeItem('refresh');
+    setState((prev) => ({ ...prev, value: defaultValue }));
   };
   const defaultValue = {
     isLoggedIn: false,
@@ -55,12 +78,37 @@ const AuthProvider = (props) => {
     refresh: undefined,
     userInfo: null,
     default_channels: new Set([65, 73]),
+    disabled_channels: [],
   };
-  const action = { setToken, setIsLoggedIn, setUserInfo, initUserInfo };
+  const action = {
+    initUserInfo,
+    login,
+    logout,
+    setIsLoggedIn,
+    setToken,
+    setUserInfo,
+    setValue,
+  };
   const [state, setState] = useState({ value: defaultValue, action });
   useEffect(() => {
     if (state.value.access) initUserInfo();
   }, [state.value.access]);
+  useEffect(() => {
+    let prev = localStorage.getItem('disabled_channels');
+    if (prev) prev = JSON.parse(prev);
+    localStorage.setItem(
+      'disabled_channels',
+      JSON.stringify(
+        prev
+          ? {
+              ...prev,
+              [state.value.userInfo?.id]: state.value.disabled_channels,
+            }
+          : { [state.value.userInfo?.id]: state.value.disabled_channels }
+      )
+    );
+  }, [state.value.disabled_channels]);
+  console.log(state.value);
   return (
     <AuthContext.Provider value={state}>{props.children}</AuthContext.Provider>
   );
