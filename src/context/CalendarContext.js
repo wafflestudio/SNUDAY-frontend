@@ -48,22 +48,19 @@ export const CalendarContextProvider = ({ value, children }) => {
       setChannelColors(presetColors);
       return;
     }
-    // console.log('set colors');
     const colors = Object.keys(COLORS);
     const savedColors = localStorage.getItem('channelColors');
     if (savedColors) {
       const presetColors = new Map(JSON.parse(savedColors));
-      presetColors.set(
-        userInfo.my_channel,
-        colors[Math.floor(Math.random() * colors.length)]
-      );
-      userInfo?.subscribing_channels.forEach((channel, index) => {
-        if (!presetColors.has(channel))
-          presetColors.set(
-            channel,
-            colors[Math.floor(Math.random() * colors.length)]
-          );
-      });
+      userInfo?.subscribing_channels
+        .add(userInfo.my_channel)
+        .forEach((channel, index) => {
+          if (!presetColors.has(channel))
+            presetColors.set(
+              channel,
+              colors[Math.floor(Math.random() * colors.length)]
+            );
+        });
       // console.log(presetColors);
       setChannelColors(presetColors);
       localStorage.setItem('channelColors', JSON.stringify([...presetColors]));
@@ -99,7 +96,7 @@ export const CalendarContextProvider = ({ value, children }) => {
     console.log(year, monthIndex, channelList);
 
     // console.log(monthEvents);
-    const monthEvents = monthlyEvents.get(`${year}-${monthIndex}`);
+    let monthEvents = monthlyEvents.get(`${year}-${monthIndex}`);
     if (!monthEvents) {
       console.log('!!!!!!!!!!!!!!!!!!!!!!');
       return undefined;
@@ -119,13 +116,17 @@ export const CalendarContextProvider = ({ value, children }) => {
         [[], []]
       );
       console.log(subscribing_channels, other_channels);
-      subscribing_channels.forEach((channelId) => {
+      channelList.forEach((channelId) => {
         const events = channelEvents.get(parseInt(channelId, 10));
         if (events) activeChannelEvents.push(...events);
       });
       // const other_channels_events = await Promise.all(
       //   other_channels.map((channelId) =>
-      //     getChannelEvents({ channelId }).then((events) => {
+      //     getChannelEvents({
+      //       channelId,
+      //       month: `${year}-${monthIndex}`,
+      //       getAll: true,
+      //     }).then((events) => {
       //       console.log(`Channel #${channelId} events`, events);
       //       return events.results.map((event) => event.id);
       //     })
