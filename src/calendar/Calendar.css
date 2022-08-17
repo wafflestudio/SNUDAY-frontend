@@ -372,7 +372,7 @@ input[type='time']::-webkit-clear-button {
   margin: -2px;
   border-radius: 0.5rem;
 }
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
   /* .Calendar {
     filter: invert(1);
   }
@@ -409,4 +409,4 @@ input[type='time']::-webkit-clear-button {
   .tag {
     filter: none;
   }
-}
+} */
