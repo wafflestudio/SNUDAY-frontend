@@ -1,6 +1,6 @@
 .login-page {
-  position: absolute;
-  top: 50%;
+  position: fixed;
+  top: 50vh;
   transform: translateY(-50%);
   width: 100%;
   display: flex;
@@ -9,7 +9,7 @@
 }
 @supports (height: 100svh) {
   .login-page {
-    height: 100dvh;
+    height: 100svh;
     width: 100dvw;
   }
 }
