@@ -223,12 +223,12 @@ const useEvents = ({ year, monthIndex, channelList }) => {
 
     console.log('activeChannelEvents', activeChannelEvents);
     const activeMonthlyEvents = new Map();
-    for (let [day, events] of monthEvents) {
+    for (let [day, events] of monthEvents)
       activeMonthlyEvents.set(
         day,
         new Set([...events].filter((e) => activeChannelEvents?.includes(e)))
       );
-    }
+
     return {
       eventsList: [
         ...new Set(

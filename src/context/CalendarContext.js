@@ -94,7 +94,7 @@ export const CalendarContextProvider = ({ value, children }) => {
     //프로미스로 해보기
     // await fetchMonthlyEvents({ month: `${year}-${monthIndex + 1}` });
     // console.log(monthEvents);
-    let monthEvents = monthlyEvents.get(`${year}-${monthIndex}`);
+    let monthEvents = monthlyEvents?.get(`${year}-${monthIndex}`);
     if (!monthEvents) {
       console.log('!!!!!!!!!!!!!!!!!!!!!!');
       return undefined;
