@@ -110,7 +110,6 @@ const useEvents = ({ year, monthIndex, channelList }) => {
   const {
     value: { isLoggedIn, default_channels },
   } = useAuthContext();
-  console.log(default_channels);
   useUpdateLogger('events', events);
   useUpdateLogger('monthlyEvents', monthlyEvents);
   useUpdateLogger('channelEvents', channelEvents);
@@ -131,16 +130,11 @@ const useEvents = ({ year, monthIndex, channelList }) => {
     });
     //FIX: deleted event???
   };
-
-  useEffect(() => {
-    setIsFetching(() => (newEvents.size === 0 ? false : true));
-  }, [newEvents]);
   useEffect(() => {
     const month =
       year !== undefined && monthIndex !== undefined
         ? `${year}-${monthIndex + 1}`
         : '';
-    console.log(year, monthIndex, month);
     if (channelList) {
       Promise.all(
         channelList.map((channelId) =>
@@ -171,13 +165,16 @@ const useEvents = ({ year, monthIndex, channelList }) => {
           )
         )
       );
-  }, [year, monthIndex]);
+  }, [year, monthIndex, channelList, isLoggedIn, default_channels]);
 
   useEffect(() => {
     //update new events
 
-    if (newEvents.size === 0) return;
-
+    if (newEvents.size === 0) {
+      setIsFetching(false);
+      return;
+    }
+    setIsFetching(true);
     ////update monthlyEvents
     for (const [id, event] of newEvents)
       if (events.has(id)) deleteEventFromMonthlyMap(event.id);
