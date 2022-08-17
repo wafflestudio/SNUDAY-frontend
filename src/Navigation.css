@@ -71,7 +71,7 @@
 /*iOS*/
 @supports (-webkit-touch-callout: none) {
   .nav-item {
-    margin-bottom: calc(env(safe-area-inset-bottom) - 6px);
+    margin-bottom: max(0px, calc(env(safe-area-inset-bottom) - 6px));
   }
   /*PWA*/
   @media only screen and (display-mode: standalone) {
