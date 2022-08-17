@@ -17,6 +17,7 @@ import FindMyPassword from 'auth/FindMyPassword';
 import { AndroidCalendar } from 'calendar/Calendar';
 import ChannelPortal from 'channel/ChannelPortal';
 import { refresh } from 'API';
+import { useEffect } from 'react';
 
 function App() {
   let lastScrollTop = 0;
@@ -106,29 +107,13 @@ function App() {
       }
     }
   };
+  const location = useLocation();
   const {
     value: { isLoggedIn },
-    action: { setToken, setIsLoggedIn },
   } = useAuthContext();
-  const [isLoading, setIsLoading] = useState(true);
-  const location = useLocation();
   if (location.pathname === '/android') return <AndroidCalendar />;
-  if (!isLoggedIn) {
-    // navigate('/signin');
-    if (isLoading) {
-      refresh()
-        .then((data) => {
-          setIsLoading(false);
-          setToken(data); //data.access
-          setIsLoggedIn(true);
-          console.log('welcome back');
-        })
-        .catch((err) => {
-          setIsLoading(false);
-        });
-      return <></>;
-    }
-
+  // if (isLoading) return <></>;
+  if (!isLoggedIn)
     return (
       <Routes>
         <Route path="signup" element={<Signup />} />
@@ -136,7 +121,6 @@ function App() {
         <Route path="findmyid" element={<FindMyId />} />
         <Route path="findmypw" element={<FindMyPassword />} />
         <Route path="/" element={<Home />} />
-
         <Route path="channel/:channelId/*" element={<ChannelPortal />} />
         <Route
           path="*"
@@ -144,9 +128,6 @@ function App() {
         />
       </Routes>
     );
-  }
-  //FIX: userInfo takes time to update after refresh
-  // if (!userInfo) return <></>;
   return (
     <>
       <Routes>
@@ -167,9 +148,9 @@ function App() {
           element={<Home />} //FIXIT:404 Page 만들기
         />
       </Routes>
+      <footer />
       <Navigation />
     </>
   );
 }
-
 export default App;
