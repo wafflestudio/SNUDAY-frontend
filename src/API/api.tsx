@@ -4,7 +4,7 @@ import EventAPI from './EventAPI';
 import NoticeAPI from './NoticeAPI';
 import UserAPI from './UserAPI';
 
-axios.defaults.headers['Accept'] = 'application/json';
+axios.defaults.headers.common['Accept'] = 'application/json';
 axios.defaults.baseURL =
   'http://ec2-52-79-115-201.ap-northeast-2.compute.amazonaws.com/api/v1/';
 

@@ -8,7 +8,7 @@ class UserAPI {
       axios
         .post('users/refresh/', { refresh: token })
         .then((response) => {
-          axios.defaults.headers[
+          axios.defaults.headers.common[
             'Authorization'
           ] = `Bearer ${response.data.access}`;
           resolve(response.data);
@@ -23,7 +23,7 @@ class UserAPI {
       axios
         .post('users/login/', data)
         .then((response) => {
-          axios.defaults.headers[
+          axios.defaults.headers.common[
             'Authorization'
           ] = `Bearer ${response.data.access}`;
           localStorage.setItem('refresh', response.data.refresh);
