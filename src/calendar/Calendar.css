@@ -373,12 +373,12 @@ input[type='time']::-webkit-clear-button {
   border-radius: 0.5rem;
 }
 /* @media (prefers-color-scheme: dark) {
-  /* .Calendar {
+   .Calendar {
     filter: invert(1);
   }
   .Calendar-header {
     filter: invert(1);
-  } */
+  } 
   .Calendar-header button {
     border: none;
   }
