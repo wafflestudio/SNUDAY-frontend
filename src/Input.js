@@ -21,7 +21,7 @@ export const InputBox = ({
           ) : (
             <></>
           )}
-          {message ? (
+          {message && showMsg && !value.match(pattern) ? (
             <div className="input-condition-message">{message}</div>
           ) : (
             <></>
