@@ -1,23 +1,21 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
-import Home from 'Home';
-import Login from 'auth/Login';
-import Navigation from 'Navigation';
-import Signup from 'auth/Signup';
 import 'App.css';
-import MyPage from 'auth/MyPage';
+import { AndroidCalendar } from 'calendar/Calendar';
 import { useAuthContext } from './context/AuthContext';
+import Home from 'Home';
+import Navigation from 'Navigation';
+import ChannelPortal from 'channel/ChannelPortal';
 import MyChannels from 'channel/MyChannels';
-import SearchHome from 'SearchHome';
 import NoticeHome from 'channel/NoticeHome';
+import SearchHome from 'SearchHome';
+import Signup from 'auth/Signup';
+import Login from 'auth/Login';
 import FindMyId from 'auth/FindMyId';
+import FindMyPassword from 'auth/FindMyPassword';
+import MyPage from 'auth/MyPage';
 import ChangeUsername from 'auth/ChangeUsername';
 import ChangePassword from 'auth/ChangePassword';
-import FindMyPassword from 'auth/FindMyPassword';
-import { AndroidCalendar } from 'calendar/Calendar';
-import ChannelPortal from 'channel/ChannelPortal';
-import { refresh } from 'API';
-import { useEffect } from 'react';
 
 function App() {
   let lastScrollTop = 0;
