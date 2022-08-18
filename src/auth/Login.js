@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { useAuthContext } from 'context/AuthContext';
 import { InputBox } from 'Input';
 import { usernamePattern, pwPattern } from 'Constants';
+import Spinner from 'Spinner';
 const Login = () => {
   let navigate = useNavigate();
   let location = useLocation();
@@ -90,13 +91,13 @@ const Login = () => {
           <button
             disabled={isProcessing}
             type="submit"
-            className="button-big"
+            className={`button-big ${isProcessing ? 'progress' : ''}`}
             onClick={(e) => {
               processLogin();
               e.preventDefault();
             }}
           >
-            로그인
+            {isProcessing ? <Spinner size={30} /> : '로그인'}
           </button>
         </form>
         <div className="login-helper mobile-max-container">

@@ -85,6 +85,9 @@ a:active {
   -webkit-tap-highlight-color: transparent;
 }
 button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   min-width: fit-content;
   font-size: 1.2rem;
   padding: 0.2rem 0.75rem;
@@ -95,16 +98,23 @@ button {
   outline: none;
   user-select: none;
 }
-button:active {
+button:active,
+button.progress:disabled {
   background-color: white;
   color: var(--blue);
   border-color: var(--blue);
   font-weight: bold;
 }
-button:disabled {
+button:not(.progress):disabled {
   background-color: var(--grey-light);
   color: white;
   border: 1px solid var(--grey-light);
+}
+button.progress:disabled *:not(.spinner, .spinner *) {
+  display: none;
+}
+button.progress:disabled .spinner .path {
+  stroke: currentColor;
 }
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
