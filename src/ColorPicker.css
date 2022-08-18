@@ -1,16 +1,20 @@
 .colorpicker-wrapper {
   background-color: #fff;
   position: fixed;
-  left: 0;
+  left: env(safe-area-inset-left);
   padding: 5px 5px;
   margin: 12px;
-  width: calc(100vw - 24px);
+  width: calc(
+    100% - 24px - env(safe-area-inset-left) - env(safe-area-inset-right)
+  );
   border-radius: 20px;
   z-index: 999;
   filter: drop-shadow(0 0 0.5rem rgba(0, 0, 0, 0.1));
 }
 .colorpicker-arrow {
   /* layout */
+  /* transform: translateX(calc(0 - env(safe-area-inset-left))); */
+  margin-left: -24px;
   content: '';
   position: absolute;
   width: 0;
@@ -33,3 +37,8 @@
   width: 30px;
   height: 30px;
 }
+/* @media (prefers-color-scheme: dark) {
+  .colorpicker-color {
+    filter: invert(1);
+  }
+} */
