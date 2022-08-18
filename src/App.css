@@ -234,6 +234,9 @@ img {
 }
 input {
   background-color: #fff;
+  border: none;
+  border-radius: 0;
+  outline: none;
 }
 input:not([type='checkbox']):not([type='radio']) {
   -webkit-appearance: none;

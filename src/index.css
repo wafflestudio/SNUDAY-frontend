@@ -5,6 +5,7 @@
     'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;
   box-sizing: border-box;
   scroll-behavior: smooth;
+  -webkit-tap-highlight-color: transparent;
 }
 /* @media all and (display-mode: standalone) {
   body {
@@ -19,34 +20,49 @@
   }
 } */
 html {
-  /* background-color: #ededed; */
-  height: 100%;
-  overflow: hidden;
-  font-size: 15px;
-}
-
-body {
-  background-color: white;
   width: 100%;
-  height: 100%;
+  font-size: 15px;
+  -webkit-text-size-adjust: 100%;
+}
+body {
+  width: 100%;
   overflow: auto;
+  /* padding-bottom: env(safe-area-inset-bottom); */
   margin: 0;
   overscroll-behavior: contain;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+/* @media (prefers-color-scheme: dark) {
+  html {
+    background-color: black;
+  }
+  html > * {
+    filter: invert(1);
+  }
+  img.avatar {
+    filter: invert(1);
+  }
+} */
 @media only screen and (display-mode: standalone) {
   /*PWA*/
-  @supports (-webkit-touch-callout: none) {
-    /*iOS*/
-    body {
-      height: calc(100% - 83.5px) !important;
-    }
+  /* @supports (-webkit-touch-callout: none) { */
+  /*iOS*/
+  body {
+    padding-bottom: calc(
+      49.5px + max(10px, env(safe-area-inset-bottom))
+    ) !important;
   }
+  /* } */
 }
 #root {
-  min-height: 100%;
-  overflow: hidden;
+  box-sizing: content-box;
+  position: relative;
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+  min-height: 100vh;
+  min-height: 100svh;
+  max-height: 100vh;
 }
 a {
   width: 100%;
@@ -54,7 +70,7 @@ a {
 }
 a:link,
 a:visited {
-  color: #3b77ff;
+  color: var(--blue);
   background-color: transparent;
   text-decoration: none;
 }
@@ -69,30 +85,43 @@ a:active {
   -webkit-tap-highlight-color: transparent;
 }
 button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   min-width: fit-content;
   font-size: 1.2rem;
   padding: 0.2rem 0.75rem;
   border-radius: 1.6rem;
   border: 1px solid currentColor;
-  background-color: #3b77ff;
+  background-color: var(--blue);
   color: white;
   outline: none;
   user-select: none;
 }
-button:active {
+button:active,
+button.progress:disabled {
   background-color: white;
-  color: #3b77ff;
-  border-color: #3b77ff;
+  color: var(--blue);
+  border-color: var(--blue);
   font-weight: bold;
 }
-button:disabled {
+button:not(.progress):disabled {
   background-color: var(--grey-light);
   color: white;
   border: 1px solid var(--grey-light);
 }
+button.progress:disabled *:not(.spinner, .spinner *) {
+  display: none;
+}
+button.progress:disabled .spinner .path {
+  stroke: currentColor;
+}
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+:not(.Calendar) + footer {
+  height: 100px;
 }
 form {
   display: flex;

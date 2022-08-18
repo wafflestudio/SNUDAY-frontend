@@ -10,8 +10,8 @@ input[type='time']::-webkit-clear-button {
 .button-add-container {
   position: fixed;
   /* bottom: calc(49px + 1rem); browser */
-  bottom: 83px;
-  right: 0;
+  bottom: calc(49.5px + max(env(safe-area-inset-bottom), 10px));
+  right: env(safe-area-inset-right);
   z-index: 10;
   transition: bottom 0.3s, transform 0.15s;
   user-select: none;
@@ -103,17 +103,16 @@ input[type='time']::-webkit-clear-button {
   /* transition-property: width, height;
   transition-duration: 0.5s; */
 }
-.tagbar > .tag:not(.disabled) {
-  /* animation: fade-in 1s; */
-}
-
+/* .tagbar > .tag:not(.disabled) {
+  animation: fade-in 1s;
+} */
 .tagbar.expand {
   position: relative;
   flex-wrap: wrap;
   /* min-height: fit-content; */
   border-radius: 0 0 16px 16px;
   right: 0;
-  width: 100vw;
+  width: 100%;
   overflow: hidden;
   /* padding-right: 28px; */
 }
@@ -142,8 +141,8 @@ input[type='time']::-webkit-clear-button {
 .tagbar .tag {
   transition: background-color 0.25s;
 }
-.tag:not(.loading) {
-}
+/* .tag:not(.loading) {
+} */
 .tag.loading {
   background-color: transparent;
   /* rgb(184, 184, 184); */
@@ -185,31 +184,26 @@ input[type='time']::-webkit-clear-button {
 }
 .Calendar {
   position: relative;
+  width: 100%;
   user-select: none;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 .Calendar.main {
-  position: fixed;
-  width: 100vw;
-  height: 100%;
+  top: 0;
+  max-height: 100vh;
+  max-height: 100svh;
 }
 .Calendar.channel {
-  position: fixed;
-  top: 3rem;
-  width: 100vw;
   height: calc(100% - 3rem);
 }
 .Calendar.mini {
   position: relative;
-  width: 100%;
   height: 100%;
 }
 .Calendar.mini * {
   animation: none;
-}
-.Calendar > * {
-  background-color: white;
 }
 .Calendar-header {
   /* z-index: 99; */
@@ -259,14 +253,12 @@ input[type='time']::-webkit-clear-button {
   margin: 0;
 }
 .Calendar-body {
+  display: flex;
+  flex-direction: column;
   flex: 1;
   z-index: 0;
   -webkit-touch-callout: none; /* iOS Safari */
-  -webkit-user-select: none; /* Safari */
-  -khtml-user-select: none; /* Konqueror HTML */
-  -moz-user-select: none; /* Old versions of Firefox */
-  -ms-user-select: none; /* Internet Explorer/Edge */
-  user-select: none; /* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */
+  user-select: none;
 }
 .main .Calendar-body,
 .channel .Calendar-body {
@@ -274,6 +266,7 @@ input[type='time']::-webkit-clear-button {
   position: sticky;
   top: 6rem;
   overflow-x: hidden;
+  overflow-y: hidden;
 }
 .main .Calendar-content,
 .channel .Calendar-content {
@@ -289,10 +282,10 @@ input[type='time']::-webkit-clear-button {
   display: none;
 }
 .Calendar-content {
-  position: absolute;
+  /* position: absolute; */
   top: 3rem;
   display: flex;
-  flex: none;
+  /* flex: none; */
   width: 100%;
   padding-top: 2px;
   overflow-y: auto;
@@ -303,7 +296,7 @@ input[type='time']::-webkit-clear-button {
 }
 .week:not(.weekdays) {
   display: flex;
-  border-bottom: 1px rgb(221, 221, 221) solid;
+  border-bottom: 1px var(--grey-light) solid;
   justify-content: space-around;
 }
 .Calendar.mini .weekdays,
@@ -311,15 +304,14 @@ input[type='time']::-webkit-clear-button {
   display: none;
 }
 .weekdays {
-  position: absolute;
+  position: sticky;
   top: 0;
   width: 100%;
   height: 3rem;
   z-index: 2;
   display: flex;
   justify-content: space-around;
-  border-bottom: 1px rgb(221, 221, 221) solid;
-  background-color: white;
+  border-bottom: 1px var(--grey-light) solid;
 }
 .day,
 .weekday {
@@ -330,8 +322,6 @@ input[type='time']::-webkit-clear-button {
 .week .weekday {
   width: calc(100% / 7);
 }
-.day {
-}
 .weekday {
   height: 3rem;
   line-height: 3rem;
@@ -339,11 +329,11 @@ input[type='time']::-webkit-clear-button {
 }
 .weekday:first-child,
 .day:first-child {
-  color: rgb(217, 75, 75);
+  color: #d94b4b;
 }
 .weekday:last-child,
 .day:last-child {
-  color: rgb(60, 105, 227);
+  color: #3c69e3;
   border-right: 0;
 }
 .date {
@@ -352,12 +342,12 @@ input[type='time']::-webkit-clear-button {
   font-weight: 500;
 }
 .holiday {
-  color: rgb(217, 75, 75);
+  color: #d94b4b;
 }
 .today .date span:first-child {
   padding: 0 0.25em;
   color: white;
-  background-color: rgb(59, 119, 255);
+  background-color: var(--blue);
   border-radius: 0.45em;
 }
 .day.past .date,
@@ -376,3 +366,41 @@ input[type='time']::-webkit-clear-button {
   margin: -2px;
   border-radius: 0.5rem;
 }
+/* @media (prefers-color-scheme: dark) {
+   .Calendar {
+    filter: invert(1);
+  }
+  .Calendar-header {
+    filter: invert(1);
+  } 
+  .Calendar-header button {
+    border: none;
+  }
+  .Calendar-body {
+    filter: invert(1);
+    background-color: #131313;
+    color: white;
+  }
+  .week:not(.weekdays) {
+    border-bottom: 1px #262626 solid;
+  }
+  .tagbar {
+    background-color: #262626;
+    filter: invert(1);
+  }
+  .tagbar .plus {
+    background: linear-gradient(
+      to right,
+      hsla(0, 0%, 85%, 0) 0%,
+      hsla(0, 0%, 85%, 0.5) 20%,
+      hsla(0, 0%, 85%, 0.75) 30%,
+      hsla(0, 0%, 85%, 0.9) 40%,
+      hsla(0, 0%, 85%, 1) 100%
+    );
+    color: white;
+    filter: invert(1);
+  }
+  .tag {
+    filter: none;
+  }
+} */

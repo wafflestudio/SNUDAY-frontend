@@ -19,7 +19,6 @@ const Menu = ({ name, image, route }) => {
     setIsActive('/' + location.pathname.split('/')[1] === route);
     // console.log(name, location.pathname.split('/')[1]);
   }, [location]);
-
   return (
     <div
       className={`nav-item${isActive ? ' active' : ''}`}

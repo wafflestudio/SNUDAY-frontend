@@ -1,32 +1,35 @@
-import { ReactComponent as Logo } from 'resources/logo.svg';
 import './Login.css';
+import { ReactComponent as Logo } from 'resources/logo.svg';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { loginUser, refresh } from 'API';
 import { useEffect, useState } from 'react';
 import { useAuthContext } from 'context/AuthContext';
 import { InputBox } from 'Input';
 import { usernamePattern, pwPattern } from 'Constants';
+import Spinner from 'Spinner';
 const Login = () => {
   let navigate = useNavigate();
   let location = useLocation();
   useEffect(() => {
     document.title = '로그인 | SNUDAY';
   }, []);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isProcessing, setIsProcessing] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showMessage, setShowMessage] = useState(false);
   const isInvalidAccount = showMessage && username !== '' && password !== '';
   const {
-    action: { isLoggedIn, setToken, setIsLoggedIn, login },
+    value: { isLoggedIn, isLoading },
+    action: { login },
   } = useAuthContext();
   const processLogin = () => {
+    setIsProcessing(true);
     login({ username, password })
       .then((data) => {
         navigate(location.state?.prev ? -1 : '/');
       })
       .catch((status) => {
         console.log(status);
+        setIsProcessing(false);
         setShowMessage(true);
       });
   };
@@ -34,24 +37,13 @@ const Login = () => {
     setShowMessage(false);
   }, [username, password]);
   useEffect(() => {
+    console.log(isLoggedIn, isLoading);
     if (isLoggedIn) {
       navigate(location.state?.prev ? -1 : '/');
       console.log('goback');
     } //FIX: 이미 로그인시 이전 페이지 유지
-    if (!isLoggedIn) {
-      refresh()
-        .then((data) => {
-          setToken(data); //data.access
-          setIsLoggedIn(true);
-          navigate(location.state?.prev ? -1 : '/');
-          console.log('goback!');
-        })
-        .catch((err) => {
-          setIsLoading(false);
-        });
-    }
-  }, []);
-  if (isLoading) return <></>;
+  }, [isLoggedIn, isLoading]);
+  if (isLoggedIn) return <></>;
   return (
     <div className="login-page">
       <div className="login-header">
@@ -97,14 +89,15 @@ const Login = () => {
             <></>
           )}
           <button
+            disabled={isProcessing}
             type="submit"
-            className="button-big"
+            className={`button-big ${isProcessing ? 'progress' : ''}`}
             onClick={(e) => {
               processLogin();
               e.preventDefault();
             }}
           >
-            로그인
+            {isProcessing ? <Spinner size={30} /> : '로그인'}
           </button>
         </form>
         <div className="login-helper mobile-max-container">

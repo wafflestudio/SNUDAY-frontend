@@ -8,7 +8,7 @@ const logError = (error: AxiosError) => {
   console.error(log?.data);
   return log?.data;
 };
-axios.defaults.headers['Accept'] = 'application/json';
+axios.defaults.headers.common['Accept'] = 'application/json';
 axios.defaults.baseURL =
   'http://ec2-52-79-115-201.ap-northeast-2.compute.amazonaws.com/api/v1/';
 //USERS
@@ -19,7 +19,7 @@ export const refresh = () =>
     axios
       .post('users/refresh/', { refresh: token })
       .then((response) => {
-        axios.defaults.headers[
+        axios.defaults.headers.common[
           'Authorization'
         ] = `Bearer ${response.data.access}`;
         resolve(response.data);
@@ -37,7 +37,7 @@ export const loginUser = (data: {
       .post('users/login/', data)
       .then((response) => {
         console.log(axios.defaults.headers);
-        axios.defaults.headers[
+        axios.defaults.headers.common[
           'Authorization'
         ] = `Bearer ${response.data.access}`;
         localStorage.setItem('refresh', response.data.refresh);

@@ -1,23 +1,20 @@
 import { Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { useAuthContext } from 'context/AuthContext';
-import axios from 'axios';
 import Header from 'Header';
 const MyPage = () => {
   let navigate = useNavigate();
   let location = useLocation();
   const {
-    value: { isLoggedIn, userInfo },
+    value: { isLoggedIn, isLoading, userInfo },
     action: { logout },
   } = useAuthContext();
-  console.log(userInfo);
-  const name =
-    isLoggedIn && userInfo
-      ? /[a-zA-Z]+/.test(userInfo.last_name + userInfo.first_name)
-        ? `${userInfo.first_name} ${userInfo.last_name}`
-        : userInfo.last_name + userInfo.first_name
-      : undefined;
-  if (!name)
+  if (isLoading) return <></>;
+  if (!isLoggedIn)
     return <Navigate to="/signin" state={{ prev: location.pathname }} />;
+  if (!userInfo) return <></>;
+  const name = /[a-zA-Z]+/.test(userInfo.last_name + userInfo.first_name)
+    ? `${userInfo.first_name} ${userInfo.last_name}`
+    : userInfo.last_name + userInfo.first_name;
   return (
     <>
       <Header left={<></>}>My Page</Header>

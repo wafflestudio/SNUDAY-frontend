@@ -36,7 +36,6 @@ const Month = ({ year, monthIndex, channelList }) => {
       }
     );
   }, [isFetching, disabled_channels, year, monthIndex, channelList]);
-  console.log(disabled_channels);
   useEffect(() => {
     //update position if there is an event update
     //정렬 순서

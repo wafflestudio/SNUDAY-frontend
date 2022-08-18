@@ -7,6 +7,7 @@ import {
   getUserMe,
   loginUser,
 } from 'API';
+import { refresh } from '../API';
 const AuthContext = React.createContext();
 const AuthProvider = (props) => {
   const setValue = ({ type, value }) => {
@@ -31,7 +32,6 @@ const AuthProvider = (props) => {
   const initUserInfo = async () => {
     const userInfo = await getUserMe();
     const managingChannels = await getManagingChannels();
-    console.log('managingChannels', managingChannels);
     const subscribingChannels = await getSubscribedChannels();
     const awaitingChannels = await getAwaitingChannels();
     const newUserInfo = {
@@ -53,26 +53,40 @@ const AuthProvider = (props) => {
     if (disabledChannels)
       setValue({ type: 'disabled_channels', value: disabledChannels });
   };
-  const login = async ({ username, password }) =>
-    new Promise(async (resolve, reject) => {
+  const login = async ({ username, password }) => {
+    setValue({ type: 'isLoading', value: true });
+    return new Promise(async (resolve, reject) => {
       loginUser({ username, password })
         .then((data) => {
           setToken(data);
           initUserInfo()
-            .catch(reject)
+            .catch((e) => {
+              setValue({ type: 'isLoading', value: false });
+              reject(e);
+            })
             .then(() => {
-              setIsLoggedIn(true);
+              // setIsLoggedIn(true);
+              // setValue({ type: 'isLoading', value: false });
+              setState((prev) => ({
+                ...prev,
+                value: { ...prev.value, isLoggedIn: true, isLoading: false },
+              }));
               resolve(data);
             });
         })
         .catch(reject);
     });
+  };
   const logout = () => {
     delete axios.defaults.headers['Authorization'];
     localStorage.removeItem('refresh');
-    setState((prev) => ({ ...prev, value: defaultValue }));
+    setState((prev) => ({
+      ...prev,
+      value: { ...defaultValue, isLoading: false },
+    }));
   };
   const defaultValue = {
+    isLoading: true,
     isLoggedIn: false,
     access: undefined,
     refresh: undefined,
@@ -108,7 +122,21 @@ const AuthProvider = (props) => {
       )
     );
   }, [state.value.disabled_channels]);
-  console.log(state.value);
+  useEffect(() => {
+    if (!state.value.isLoggedIn && state.value.isLoading)
+      refresh()
+        .then((data) => {
+          console.log(data);
+          setValue({ type: 'isLoading', value: false });
+          setToken(data); //data.access
+          setIsLoggedIn(true);
+          console.log('welcome back');
+        })
+        .catch(() => {
+          setValue({ type: 'isLoading', value: false });
+        });
+  }, [state.value.isLoggedIn, state.value.isLoading]);
+
   return (
     <AuthContext.Provider value={state}>{props.children}</AuthContext.Provider>
   );
