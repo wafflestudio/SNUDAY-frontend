@@ -1,8 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import './Modal.css';
 //!!!Modal should come first of all siblings in order to blur the background content
 export const ModalBackground = ({ children, isActive }) => {
+  useEffect(() => {
+    document.body.classList.add('modal-open');
+    return () => document.body.classList.remove('modal-open');
+  }, []);
   return (
     <div
       className="modal-background"

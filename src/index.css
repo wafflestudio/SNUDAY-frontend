@@ -33,6 +33,9 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+body.modal-open {
+  overflow: hidden;
+}
 /* @media (prefers-color-scheme: dark) {
   html {
     background-color: black;
