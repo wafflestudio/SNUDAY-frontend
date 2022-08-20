@@ -42,7 +42,7 @@ const FindMyPassword = () => {
     <>
       <Header>비밀번호 재발급</Header>
       <div
-        className="card"
+        className="card mobile-max-container"
         style={{
           display: 'flex',
           flexDirection: 'column',

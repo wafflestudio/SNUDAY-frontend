@@ -31,7 +31,7 @@ const ChangeUsername = () => {
   return (
     <>
       <Header>아이디 변경</Header>
-      <div className="card">
+      <div className="card mobile-max-container">
         <div
           style={{
             fontWeight: 'bold',
