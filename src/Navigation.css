@@ -51,11 +51,11 @@
 .nav-item:active {
   background-color: rgb(237, 237, 237);
 }
-@media (hover: hover) {
+/* @media (hover: hover) {
   .nav-item:hover {
     background-color: rgb(237, 237, 237);
   }
-}
+} */
 .nav-item:active,
 .nav-item.active {
   color: var(--blue);
