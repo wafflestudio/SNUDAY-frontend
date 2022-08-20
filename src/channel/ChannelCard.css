@@ -1,7 +1,12 @@
 .channel-list {
+  display: flex;
+  flex-direction: column;
   overflow: auto;
   background-color: white;
   max-height: 100%;
+}
+.channel-list > .spinner {
+  margin: 50px auto;
 }
 .channel-list > li {
   background: linear-gradient(#ddd, #eee, #ddd);

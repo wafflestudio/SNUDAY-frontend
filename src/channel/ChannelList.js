@@ -8,6 +8,7 @@ import {
 import ChannelCard from 'channel/ChannelCard';
 import { useAuthContext } from 'context/AuthContext';
 import useInfiniteScroll from 'useInfiniteScroll';
+import Spinner from 'Spinner';
 
 const ChannelList = ({ category, isLoggedIn, type, keyword, style }) => {
   const listRef = useRef(null);
@@ -72,51 +73,23 @@ const ChannelList = ({ category, isLoggedIn, type, keyword, style }) => {
     fetchChannels();
   }, [category, isLoggedIn, type, keyword]);
 
+  if (channels && isLoggedIn && !keyword && !(channels?.results.length > 0)) {
+    if (category === 'managed')
+      return <div className="error">관리 중인 채널이 없습니다.</div>;
+    if (category === 'subscribed')
+      return <div className="error">구독 중인 채널이 없습니다.</div>;
+  }
+
   return (
     <div ref={listRef} className="channel-list" style={style}>
-      {channels?.results.map((channelData) => (
-        <ChannelCard key={channelData.id} channelData={channelData} />
-      ))}
-      {isLoggedIn &&
-      !keyword &&
-      category === 'managed' &&
-      !(channels?.results.length > 0) ? (
-        <div className="error">관리 중인 채널이 없습니다.</div>
+      {channels ? (
+        channels.results.map((channelData) => (
+          <ChannelCard key={channelData.id} channelData={channelData} />
+        ))
       ) : (
-        <></>
-      )}
-      {isLoggedIn &&
-      !keyword &&
-      category === 'subscribed' &&
-      !(channels?.results.length > 0) ? (
-        <div className="error">구독 중인 채널이 없습니다.</div>
-      ) : (
-        <></>
+        <Spinner color="var(--grey)" size={40} delay="1s" />
       )}
     </div>
   );
 };
 export default ChannelList;
-
-// useEffect(() => {
-//   // console.log(channels);
-//   let options = {
-//     threshold: 0.5,
-//   };
-//   const io = new IntersectionObserver(
-//     (entries, observer) =>
-//       entries.forEach((entry) => {
-//         // eslint-disable-next-line curly
-//         if (entry.isIntersecting && channels?.next) {
-//           // console.log(entry, channels.next);
-//           fetchChannels(channels.next); //callback
-//         }
-//       }),
-//     options
-//   );
-//   if (channels?.next) {
-//     const lastChannel = listRef.current.lastElementChild;
-//     if (lastChannel) io.observe(lastChannel);
-//   }
-//   return () => io.disconnect();
-// }, [channels]);
