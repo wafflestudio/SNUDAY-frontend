@@ -52,7 +52,7 @@ const Notice = () => {
               onClick={() => navigate(`/channel/${notice.channel}`)}
             />
             <h3>{notice?.title}</h3>
-            <time datetime={notice.created_at}>
+            <time dateTime={notice.created_at}>
               {new Date(notice.created_at).toLocaleString('ko-kr').slice(0, -3)}
             </time>
             <div style={{ color: 'var(--grey-text)' }}>
