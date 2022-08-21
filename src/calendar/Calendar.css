@@ -359,7 +359,7 @@ input[type='time']::-webkit-clear-button {
 }
 .day-todo-box {
   position: relative;
-  height: 6em;
+  height: 5.5em;
 }
 .day.active {
   box-sizing: content-box;
