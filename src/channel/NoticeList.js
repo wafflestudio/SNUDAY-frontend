@@ -26,7 +26,7 @@ const NoticeCard = ({ notice, includeChannelName }) => {
         <></>
       )}
       <div className="notice-list-title">{notice?.title}</div>
-      <time className="notice-list-date" datetime={notice.created_at}>
+      <time className="notice-list-date" dateTime={notice.created_at}>
         {notice ? new Date(notice.created_at).toLocaleDateString() : ''}
       </time>
     </li>

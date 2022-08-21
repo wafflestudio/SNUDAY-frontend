@@ -26,7 +26,7 @@ const DayEventsModalHeader = ({ date }) => {
           }월 ${date.getDate()}일`}</h2>
           <time
             className="date-small"
-            datetime={`${date.getFullYear()}-${
+            dateTime={`${date.getFullYear()}-${
               date.getMonth() + 1
             }-${date.getDate()}`}
           >
