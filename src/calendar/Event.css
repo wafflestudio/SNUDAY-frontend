@@ -19,4 +19,5 @@
   grid-row-start: 2;
   margin: 0;
   font-weight: 500;
+  white-space: pre;
 }

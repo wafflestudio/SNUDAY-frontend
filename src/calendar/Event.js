@@ -41,7 +41,7 @@ const EventContent = ({ isActive, event, modify }) => {
   return (
     <div className="event-modal-content">
       <h3 className="event-title">{event.title}</h3>
-      <pre className="event-date">{eventDateString(event)}</pre>
+      <div className="event-date">{eventDateString(event)}</div>
       <div>{parseURL(event.memo)}</div>
       {userInfo?.managing_channels.has(event.channel) ? (
         <div
@@ -128,7 +128,7 @@ export const EventListItem = ({ event, showEvent }) => {
         </svg>
       </div>
       <div className="event-name">{event.title}</div>
-      <pre className="event-date date-small">{dateString}</pre>
+      <div className="event-date date-small">{dateString}</div>
     </div>
   );
 };
