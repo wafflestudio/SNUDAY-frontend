@@ -428,7 +428,7 @@ export const getChannels = (cursor?: string) =>
       });
   });
 export const getChannel = (id: Channel['id']) =>
-  new Promise((resolve, reject) => {
+  new Promise<Channel>((resolve, reject) => {
     axios
       .get(`channels/${id}/`)
       .then((response) => {
