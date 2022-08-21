@@ -1,8 +1,8 @@
 import './Login.css';
-import { ReactComponent as Logo } from 'resources/logo.svg';
-import { useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuthContext } from 'context/AuthContext';
+import { ReactComponent as Logo } from 'resources/logo.svg';
 import { InputBox } from 'Input';
 import { usernamePattern, pwPattern } from 'Constants';
 import Spinner from 'Spinner';
@@ -23,27 +23,27 @@ const Login = () => {
   } = useAuthContext();
   const processLogin = () => {
     setIsProcessing(true);
-    login({ username, password })
-      .then((data) => {
-        navigate(location.state?.prev ? -1 : '/');
-      })
-      .catch((status) => {
-        console.log(status);
-        setIsProcessing(false);
-        setShowMessage(true);
-      });
+    login({ username, password }).catch((status) => {
+      console.log(status);
+      setIsProcessing(false);
+      setShowMessage(true);
+    });
   };
   useEffect(() => {
     setShowMessage(false);
   }, [username, password]);
   useEffect(() => {
-    console.log(isLoggedIn, isLoading);
-    if (isLoggedIn) {
-      navigate(location.state?.prev ? -1 : '/');
-      console.log('goback');
-    } //FIX: 이미 로그인시 이전 페이지 유지
+    if (isLoggedIn)
+      if (location.state?.prev) {
+        navigate(-1);
+        console.log('goback');
+      } else {
+        navigate('/');
+        console.log('gohome');
+      }
+    //FIX: 이미 로그인시 이전 페이지 유지
   }, [isLoggedIn, isLoading]);
-  if (isLoggedIn) return <></>;
+  if (isLoggedIn | isLoading) return <></>;
   return (
     <div className="login-page">
       <div className="login-header">
