@@ -11,7 +11,7 @@ class ChannelAPI {
     q: string;
     cursor?: string;
   }) =>
-    new Promise((resolve, reject) => {
+    new Promise<ChannelsResponse>((resolve, reject) => {
       cursor = cursor?.substring(cursor.indexOf('?cursor='));
       axios
         .get(`channels/search/${cursor ?? ''}`, {
@@ -29,7 +29,7 @@ class ChannelAPI {
         });
     });
   static getChannels = (cursor?: string) =>
-    new Promise((resolve, reject) => {
+    new Promise<ChannelsResponse>((resolve, reject) => {
       cursor = cursor?.substring(cursor.indexOf('?cursor='));
       axios
         .get(`channels/${cursor ?? ''}`)

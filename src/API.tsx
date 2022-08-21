@@ -365,7 +365,7 @@ export const getAwaitingChannels = () =>
       });
   });
 export const getSubscribedChannels = () =>
-  new Promise((resolve, reject) => {
+  new Promise<Channel[]>((resolve, reject) => {
     axios
       .get(`users/me/subscribing_channels/`)
       .then((response) => {
@@ -377,7 +377,7 @@ export const getSubscribedChannels = () =>
       });
   });
 export const getManagingChannels = () =>
-  new Promise((resolve, reject) => {
+  new Promise<Channel[]>((resolve, reject) => {
     axios
       .get(`users/me/managing_channels/`)
       .then((response) => {
@@ -397,7 +397,7 @@ export const searchChannels = ({
   q: string;
   cursor?: string;
 }) =>
-  new Promise((resolve, reject) => {
+  new Promise<ChannelsResponse>((resolve, reject) => {
     cursor = cursor?.substring(cursor.indexOf('?cursor='));
     axios
       .get(`channels/search/${cursor ?? ''}`, {
@@ -415,7 +415,7 @@ export const searchChannels = ({
       });
   });
 export const getChannels = (cursor?: string) =>
-  new Promise((resolve, reject) => {
+  new Promise<ChannelsResponse>((resolve, reject) => {
     cursor = cursor?.substring(cursor.indexOf('?cursor='));
     axios
       .get(`channels/${cursor ?? ''}`)

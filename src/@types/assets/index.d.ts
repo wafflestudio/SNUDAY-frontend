@@ -51,5 +51,11 @@ interface Notice {
   created_at: string;
   updated_at: string;
 }
+interface ChannelsResponse {
+  next?: string;
+  previous?: string;
+  results: Channel[];
+}
 type SearchChannelType = 'all' | 'name' | 'description';
 type SearchNoticeType = 'all' | 'title' | 'contents';
+type ChannelType = 'subscribed' | 'managed';

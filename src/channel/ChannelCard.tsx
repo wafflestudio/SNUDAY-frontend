@@ -17,10 +17,10 @@ const ChannelAvatar = ({ name, image }: Pick<Channel, 'name' | 'image'>) => (
 );
 const ChannelCard = ({
   channelData: initialData,
-  verbose,
+  verbose = false,
 }: {
   channelData: Channel;
-  verbose: boolean;
+  verbose?: boolean;
 }) => {
   const [channelData, setChannelData] = useState(initialData);
   const navigate = useNavigate();

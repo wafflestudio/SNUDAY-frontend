@@ -202,7 +202,7 @@ class UserAPI {
         });
     });
   static getSubscribedChannels = () =>
-    new Promise((resolve, reject) => {
+    new Promise<Channel[]>((resolve, reject) => {
       axios
         .get(`users/me/subscribing_channels/`)
         .then((response) => {
@@ -214,7 +214,7 @@ class UserAPI {
         });
     });
   static getManagingChannels = () =>
-    new Promise((resolve, reject) => {
+    new Promise<Channel[]>((resolve, reject) => {
       axios
         .get(`users/me/managing_channels/`)
         .then((response) => {
