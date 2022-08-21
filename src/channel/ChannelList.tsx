@@ -17,11 +17,11 @@ const ChannelList = ({
   keyword,
   style,
 }: {
-  category: ChannelType;
+  category?: ChannelType;
   isLoggedIn: boolean;
-  type: SearchChannelType;
-  keyword: string;
-  style: React.CSSProperties;
+  type?: SearchChannelType;
+  keyword?: string;
+  style?: React.CSSProperties;
 }) => {
   const listRef = useRef(null);
   const [channels, setChannels] = useState<ChannelsResponse>();
