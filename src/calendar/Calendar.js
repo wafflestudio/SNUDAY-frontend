@@ -4,10 +4,7 @@ import TagBar from './TagBar';
 import './Calendar.css';
 import { getNumDaysofMonth } from 'Constants';
 import ModalButton from 'AddButton';
-import {
-  CalendarContextProvider,
-  useCalendarContext,
-} from 'context/CalendarContext';
+import { CalendarContextProvider } from 'context/CalendarContext';
 import { useAuthContext } from 'context/AuthContext';
 import AddEventModal from 'AddEventModal';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
@@ -37,12 +34,13 @@ export const AndroidCalendar = () => {
 };
 
 export const Calendar = ({ type, channelId }) => {
-  const today = new Date();
-  const [year, setYear] = useState(today.getFullYear());
-  const [monthIndex, setMonthIndex] = useState(today.getMonth());
-  const [day, setDay] = useState(today.getDate());
-  const [numDays, setNumDays] = useState(getNumDaysofMonth(year, monthIndex));
   const [channelList, setChannelList] = useState([]);
+  const today = new Date();
+  const [date, setDate] = useState(today);
+  const year = date.getFullYear();
+  const monthIndex = date.getMonth();
+  const day = date.getDate();
+  const numDays = getNumDaysofMonth(year, monthIndex);
   const {
     value: { isLoggedIn, userInfo, default_channels },
   } = useAuthContext();
@@ -57,12 +55,6 @@ export const Calendar = ({ type, channelId }) => {
   }, [type, channelId, userInfo, isLoggedIn, default_channels]);
   const navigate = useNavigate();
   const location = useLocation();
-  // useEffect(() => {
-  //   getMyEvents().then((events) => {
-  //     calendar.registerEvents(events);
-  //   });
-  //   console.log(calendar.getEvents());
-  // }, []);
   //// DATE Util Function
   const moveMonth = (direction) => {
     if (direction < 0) {
@@ -80,24 +72,19 @@ export const Calendar = ({ type, channelId }) => {
   const chooseDay = (d) => {
     //전후 달
     if (d < 1) {
-      if (monthIndex === 0) {
-        setYear((year) => year - 1);
-        setMonthIndex(() => 11);
-      } else setMonthIndex((monthIndex) => monthIndex - 1);
+      const day = getNumDaysofMonth(year, monthIndex - 1) + d;
+      if (monthIndex === 0) setDate((date) => new Date(year - 1, 11, day));
+      else setDate((date) => new Date(year, monthIndex - 1, day));
 
-      setDay(() => getNumDaysofMonth(year, monthIndex - 1) + d);
       return;
     }
     if (d > numDays) {
-      setDay(d - numDays);
-      if (monthIndex > 10) {
-        setYear((year) => year + 1);
-        setMonthIndex(() => 0);
-      } else setMonthIndex((monthIndex) => monthIndex + 1);
+      const day = d - numDays;
+      if (monthIndex > 10) setDate((date) => new Date(year + 1, 0, day));
+      else setDate((date) => new Date(year, monthIndex + 1, day));
 
       return;
     }
-    setDay(d);
   };
   const goToday = () => {
     if (
@@ -106,22 +93,17 @@ export const Calendar = ({ type, channelId }) => {
       year === today.getFullYear()
     )
       return;
-    setYear(today.getFullYear());
-    setMonthIndex(today.getMonth());
-    setDay(today.getDate());
+    setDate(today);
     //document.getElementById(today.toLocaleDateString('ko-KR'))?.classList.remove('active');
   };
   ////
   useEffect(() => {
-    setNumDays(getNumDaysofMonth(year, monthIndex));
     document.getElementById('Calendar-content').scrollLeft = window.innerWidth;
   }, [year, monthIndex]);
   const chooseMonth = (value) => {
     if (!value.match(/^\d{4}[-](0?[1-9]|1[012])$/)) return;
-    const date = value.split('-');
-    setYear(parseInt(date[0]));
-    setMonthIndex(parseInt(date[1]) - 1);
-    setDay(undefined);
+    const [yyyy, mm] = value.split('-').map((s) => parseInt(s, 10));
+    setDate(new Date(yyyy, mm - 1));
   };
   useEffect(() => {
     Array.from(document.getElementsByClassName('active')).forEach((element) => {
@@ -285,52 +267,12 @@ export const CalendarBody = ({
             moveMonth(-movedPositionX);
         }}
       >
-        {/* <div
-          style={{
-            minWidth: '100vw',
-            height: '100%',
-            textAlign: 'center',
-            backgroundColor: 'pink',
-          }}
-        >
-          1
-        </div>
-        <div
-          style={{
-            minWidth: '100vw',
-            height: '100%',
-            textAlign: 'center',
-            backgroundColor: 'yellowgreen',
-          }}
-        >
-          2
-        </div>
-        <div
-          style={{
-            minWidth: '100vw',
-            height: '100%',
-            textAlign: 'center',
-            backgroundColor: 'lightblue',
-          }}
-        >
-          3
-        </div> */}
-        {/* <Month
-          key={`${year}-${monthIndex - 1}-`}
-          year={year}
-          monthIndex={monthIndex - 1}
-        /> */}
         <Month
           key={`${year}-${monthIndex}`}
           year={year}
           monthIndex={monthIndex}
           channelList={type === 'main' ? null : activeChannelList}
         />
-        {/* <Month
-          key={`${year}-${monthIndex + 1}-`}
-          year={year}
-          monthIndex={monthIndex + 1}
-        /> */}
       </div>
     </div>
   );
