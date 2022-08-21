@@ -43,7 +43,8 @@ const EventContent = ({ isActive, event, modify }) => {
       <h3 className="event-title">{event.title}</h3>
       <div className="event-date">{eventDateString(event)}</div>
       <div>{parseURL(event.memo)}</div>
-      {userInfo?.managing_channels.has(event.channel) ? (
+      {userInfo?.managing_channels.has(event.channel) ||
+      userInfo.my_channel === event.channel ? (
         <div
           style={{
             display: 'flex',
@@ -69,8 +70,8 @@ const EventContent = ({ isActive, event, modify }) => {
                 deleteEvent(event.channel, event.id).then((response) => {
                   // events
                   console.log(response);
-                  delEvent(event);
                   isActive(false);
+                  delEvent(event);
                 });
             }}
             className="button"
