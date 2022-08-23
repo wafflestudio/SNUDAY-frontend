@@ -1,6 +1,3 @@
-import { useNavigate } from 'react-router-dom';
-import { useAuthContext } from 'context/AuthContext';
-import { ChannelStatusButton, WaitingListButton } from 'channel/ChannelButton';
 import { deleteRejectAwaiters, postAllowAwaiters } from 'API';
 const ChannelInfoHeader = ({
   channelData: { name, is_official, is_private },

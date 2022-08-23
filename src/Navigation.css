@@ -16,7 +16,12 @@
 .nav-container.hide {
   transform: translateY(100%);
 }
-
+@media only screen and (display-mode: standalone) {
+  .nav-container {
+    position: sticky;
+    bottom: 0;
+  }
+}
 @media screen and (orientation: landscape) {
   .nav-container {
     bottom: 0;
@@ -51,11 +56,11 @@
 .nav-item:active {
   background-color: rgb(237, 237, 237);
 }
-@media (hover: hover) {
+/* @media (hover: hover) {
   .nav-item:hover {
     background-color: rgb(237, 237, 237);
   }
-}
+} */
 .nav-item:active,
 .nav-item.active {
   color: var(--blue);

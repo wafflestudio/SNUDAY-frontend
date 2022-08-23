@@ -10,7 +10,15 @@ const NoticeHome = () => {
     <>
       <Header left={<></>}>공지</Header>
       <div className="main-container" style={{ height: 'calc(100% - 3rem)' }}>
-        <div style={{ padding: ' 0 20px', margin: '10px 0' }}>
+        <div
+          style={{
+            padding: '10px 20px',
+            margin: 0,
+            position: 'sticky',
+            top: 0,
+            backgroundColor: '#ededed',
+          }}
+        >
           <SearchBox
             searchValue={searchValue}
             setSearchValue={setSearchValue}
@@ -18,7 +26,7 @@ const NoticeHome = () => {
             setSearchOption={setSearchOption}
           />
         </div>
-        <div className="card">
+        <div className="card" style={{ flexShrink: 1, overflowY: 'auto' }}>
           <NoticeList type={searchOption} keyword={searchValue} />
         </div>
       </div>

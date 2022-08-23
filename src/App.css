@@ -54,15 +54,15 @@
 } */
 .mobile-max-container {
   max-width: 480px;
-  margin: auto;
+  margin: 0 auto;
 }
 .main-container {
   /* width: 100vw; */
   width: 100%;
-  max-height: calc(100% - 3rem);
   overflow: auto;
   display: flex;
   flex-direction: column;
+  flex: 1 1 auto;
   background-color: #ededed;
 }
 .main-container > *:not(:last-child) {
@@ -133,7 +133,7 @@
   height: 3rem;
   border-radius: 3rem;
   font-size: 1.2rem;
-  margin: 0.66rem 0;
+  margin: 10px 0;
 }
 .button-blue {
   background-color: white;
@@ -177,7 +177,8 @@ button:active {
   opacity: 0.8;
 }
 .header-background {
-  height: 3rem;
+  min-height: 3rem;
+  max-height: 3rem;
 }
 .header {
   z-index: 99;

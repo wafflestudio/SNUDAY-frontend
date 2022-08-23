@@ -39,6 +39,7 @@ input[type='time']::-webkit-clear-button {
   height: 1.5rem;
   padding: 0;
   border: none;
+  background-color: var(--blue);
   transition: background-color 0.3s;
 }
 .button-off {
@@ -188,6 +189,7 @@ input[type='time']::-webkit-clear-button {
   user-select: none;
   display: flex;
   flex-direction: column;
+  flex: 1 1 auto;
   overflow: hidden;
 }
 .Calendar.main {
@@ -358,7 +360,7 @@ input[type='time']::-webkit-clear-button {
 }
 .day-todo-box {
   position: relative;
-  height: 6em;
+  height: 5.5em;
 }
 .day.active {
   box-sizing: content-box;

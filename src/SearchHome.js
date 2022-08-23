@@ -8,9 +8,7 @@ const SearchHome = () => {
   const searchOptions = { all: '전체', name: '이름', description: '소개' };
   const [searchOption, setSearchOption] = useState('all');
   const [searchValue, setSearchValue] = useState('');
-  const {
-    value: { isLoggedIn },
-  } = useAuthContext();
+
   return (
     <>
       <Header left={<></>}>채널 찾기</Header>

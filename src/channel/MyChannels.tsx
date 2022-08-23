@@ -6,8 +6,9 @@ import { useAuthContext } from 'context/AuthContext';
 import ChannelList from 'channel/ChannelList';
 import { useNavigate } from 'react-router-dom';
 import Header from 'Header';
+const TAB = { SUBSCRIBED: 'subscribed', MANAGED: 'managed' };
 const MyChannels = () => {
-  const [activeTab, setActiveTab] = useState('subscribed');
+  const [activeTab, setActiveTab] = useState<ChannelType>('subscribed');
   const listRef = useRef(null);
   const {
     value: { isLoggedIn },
@@ -17,12 +18,13 @@ const MyChannels = () => {
   return (
     <>
       <Header left={<></>}>내 채널</Header>
-      {activeTab === 'managed' ? (
+      {activeTab === TAB.MANAGED ? (
         <ModalButton component={AddChannelModal} />
       ) : (
         <></>
       )}
       <div
+        className="main-container"
         ref={listRef}
         style={{
           width: '100%',
@@ -30,6 +32,7 @@ const MyChannels = () => {
           //   listRef.current?.parentElement.getBoundingClientRect().height
           // }px - 3rem)`,
           // position: 'absolute',
+          position: 'sticky',
           top: '3rem',
           backgroundColor: 'white',
         }}
@@ -40,20 +43,29 @@ const MyChannels = () => {
           activeTab={activeTab}
           setActiveTab={setActiveTab}
         ></MyChannelsTab>
-        <section style={{ height: 'calc(100% - 3rem - 18px)' }}>
+        <section
+          className="my-channels"
+          // style={{ transform: 'translateX(100%)' }}
+        >
           <ChannelList category={activeTab} isLoggedIn={isLoggedIn} />
         </section>
       </div>
     </>
   );
 };
-const MyChannelsTab = ({ activeTab, setActiveTab }) => {
+const MyChannelsTab = ({
+  activeTab,
+  setActiveTab,
+}: {
+  activeTab: ChannelType;
+  setActiveTab: React.Dispatch<React.SetStateAction<ChannelType>>;
+}) => {
   return (
     <div className="channel-tabs">
       <ul className="channel-tabs-list">
         <li
           className={
-            activeTab === 'subscribed' ? 'channel-tab active' : 'channel-tab'
+            activeTab === TAB.SUBSCRIBED ? 'channel-tab active' : 'channel-tab'
           }
           onClick={() => setActiveTab(() => 'subscribed')}
           onScroll={(e) => e.stopPropagation()}
@@ -62,7 +74,7 @@ const MyChannelsTab = ({ activeTab, setActiveTab }) => {
         </li>
         <li
           className={
-            activeTab === 'managed' ? 'channel-tab active' : 'channel-tab'
+            activeTab === TAB.MANAGED ? 'channel-tab active' : 'channel-tab'
           }
           onClick={() => setActiveTab(() => 'managed')}
         >

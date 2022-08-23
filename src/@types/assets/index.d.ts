@@ -1,3 +1,4 @@
+declare module '*';
 declare module '*.svg' {
   import React = require('react');
   export const ReactComponent: React.SFC<React.SVGProps<SVGSVGElement>>;
@@ -50,5 +51,11 @@ interface Notice {
   created_at: string;
   updated_at: string;
 }
+interface ChannelsResponse {
+  next?: string;
+  previous?: string;
+  results: Channel[];
+}
 type SearchChannelType = 'all' | 'name' | 'description';
 type SearchNoticeType = 'all' | 'title' | 'contents';
+type ChannelType = 'subscribed' | 'managed';

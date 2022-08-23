@@ -24,9 +24,14 @@ const DayEventsModalHeader = ({ date }) => {
           <h2 className="date-title">{`${
             date.getMonth() + 1
           }월 ${date.getDate()}일`}</h2>
-          <div className="date-small">
+          <time
+            className="date-small"
+            dateTime={`${date.getFullYear()}-${
+              date.getMonth() + 1
+            }-${date.getDate()}`}
+          >
             {date.toLocaleDateString('ko-KR', options)}
-          </div>
+          </time>
         </div>
         {isLoggedIn ? (
           <ModalButton

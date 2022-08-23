@@ -26,14 +26,6 @@ const Tag = ({
           COLORS[channelColors.get(id)] ?? channelColors.get(id) ?? '#b8b8b8',
       };
     }
-    // channelColors
-    //   ? { value: COLORS[channelColors.get(id)]??channelColors.get(id) }
-    //   : {
-    //       value:
-    //         COLORS[
-    //           new Map(JSON.parse(localStorage.getItem('channelColors'))).get(id)
-    //         ],
-    //     }
   };
   const { channelColors, setChannelColor } = useCalendarContext();
   const [channel, setChannel] = useState(null);

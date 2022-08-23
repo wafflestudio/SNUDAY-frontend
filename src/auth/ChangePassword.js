@@ -30,7 +30,7 @@ const ChangePassword = () => {
     <>
       <Header>비밀번호 변경</Header>
       <div
-        className="card"
+        className="card main-container mobile-max-container"
         style={{
           display: 'flex',
           flexDirection: 'column',
@@ -74,7 +74,7 @@ const ChangePassword = () => {
             disabled={!(pw.match(pwPattern) && pw === pwAgain)}
             className="button-big"
             onClick={() => sendPassword()}
-            style={{ width: '100%', marginTop: '45px' }}
+            style={{ width: '100%', marginTop: '10px' }}
           >
             변경
           </button>

@@ -11,6 +11,7 @@ const ChannelCalendar = ({ id }) => {
   const channelId = id || +params.channelId;
   const [channelName, setChannelName] = useState('');
   useEffect(() => {
+    window.scrollTo(0, 0);
     getChannel(channelId).then((channel) => setChannelName(channel.name));
   }, []);
   // const [year, setYear] = useState(new Date().getFullYear());

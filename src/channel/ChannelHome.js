@@ -24,38 +24,46 @@ const ChannelHome = () => {
       calendar.scrollTo({ top: today.offsetTop, behavior: 'smooth' });
     }
   });
-  return channelData ? (
+  return (
     <div className="main-container">
-      <ChannelCard channelData={channelData} verbose={true} />
-      <section className="card">
-        <header
-          className="card-header"
-          onClick={() => navigate(`/channel/${channelId}/notice/`)}
-        >
-          공지사항
-          <img className="arrow" src="/resources/right-arrow.svg" alt="more" />
-        </header>
-        <NoticeList channelId={channelId} limit={3} />
-      </section>
-      <section className="card">
-        <header
-          className="card-header"
-          onClick={() => navigate(`/channel/${channelId}/events/`)}
-        >
-          채널 일정
-          <img
-            className="arrow"
-            src="/resources/right-arrow.svg"
-            alt="see more events"
-          />
-        </header>
-        <div style={{ height: 'calc(14rem + 2px)', overflow: 'hidden' }}>
-          <Calendar channelId={channelId} type="mini" />
-        </div>
-      </section>
+      {channelData ? (
+        <>
+          <ChannelCard channelData={channelData} verbose={true} />
+          <section className="card">
+            <header
+              className="card-header"
+              onClick={() => navigate(`/channel/${channelId}/notice/`)}
+            >
+              공지사항
+              <img
+                className="arrow"
+                src="/resources/right-arrow.svg"
+                alt="more"
+              />
+            </header>
+            <NoticeList channelId={channelId} limit={3} />
+          </section>
+          <section className="card">
+            <header
+              className="card-header"
+              onClick={() => navigate(`/channel/${channelId}/events/`)}
+            >
+              채널 일정
+              <img
+                className="arrow"
+                src="/resources/right-arrow.svg"
+                alt="see more events"
+              />
+            </header>
+            <div style={{ height: 'calc(14rem + 2px)', overflow: 'hidden' }}>
+              <Calendar channelId={channelId} type="mini" />
+            </div>
+          </section>
+        </>
+      ) : (
+        <></>
+      )}
     </div>
-  ) : (
-    <></>
   );
 };
 export default ChannelHome;

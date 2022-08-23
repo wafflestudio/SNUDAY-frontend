@@ -31,7 +31,7 @@ const ChangeUsername = () => {
   return (
     <>
       <Header>아이디 변경</Header>
-      <div className="card">
+      <div className="card main-container mobile-max-container">
         <div
           style={{
             fontWeight: 'bold',
@@ -56,7 +56,7 @@ const ChangeUsername = () => {
           disabled={!usernamePattern.test(username) || isDuplicateId}
           className="button-big"
           onClick={() => sendUsername()}
-          style={{ width: '100%', marginTop: '45px' }}
+          style={{ width: '100%', marginTop: '10px' }}
         >
           변경
         </button>

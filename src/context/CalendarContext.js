@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { getChannelEvents } from '../API';
 import { useAuthContext } from './AuthContext';
 import { Calendar } from '../calendar/cal';
 import {
@@ -9,13 +8,7 @@ import {
   defaultColors,
 } from '../Constants';
 import useEvents from './useEvents';
-const CalendarContext = React.createContext({
-  getNumDays: () => {},
-  day: null,
-  setDay: () => {},
-  calendar: null,
-  events: null,
-});
+const CalendarContext = React.createContext({});
 export const CalendarContextProvider = ({ value, children }) => {
   const {
     events,

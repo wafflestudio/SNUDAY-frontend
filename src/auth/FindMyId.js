@@ -20,7 +20,7 @@ const FindMyId = () => {
   return (
     <>
       <Header>아이디 찾기</Header>
-      <div className="card">
+      <div className="card mobile-max-container">
         <div
           style={{
             padding: '16px',

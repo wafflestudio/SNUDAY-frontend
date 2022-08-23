@@ -43,45 +43,49 @@ const Notice = () => {
   ) : (
     <>
       <Header>공지</Header>
-      {notice ? (
-        <div className="card">
-          <div className="notice-info">
-            <Tag
-              id={notice.channel}
-              name={notice.channel_name}
-              onClick={() => navigate(`/channel/${notice.channel}`)}
-            />
-            <h3>{notice?.title}</h3>
-            <div>
-              {new Date(notice.created_at).toLocaleString('ko-kr').slice(0, -3)}
+      <div className="card main-container">
+        {notice ? (
+          <>
+            <div className="notice-info">
+              <Tag
+                id={notice.channel}
+                name={notice.channel_name}
+                onClick={() => navigate(`/channel/${notice.channel}`)}
+              />
+              <h3>{notice?.title}</h3>
+              <time dateTime={notice.created_at}>
+                {new Date(notice.created_at)
+                  .toLocaleString('ko-kr')
+                  .slice(0, -3)}
+              </time>
+              <div style={{ color: 'var(--grey-text)' }}>
+                {notice.writer_name}
+              </div>
             </div>
-            <div style={{ color: 'var(--grey-text)' }}>
-              {notice.writer_name}
-            </div>
-          </div>
-          <div className="notice-content">{parseURL(notice.contents)}</div>
-          {userInfo?.managing_channels.has(channelId) ? (
-            <div className="notice-menu">
-              <button
-                className="button-big button-delete"
-                onClick={deleteNotice}
-              >
-                삭제
-              </button>
-              <button
-                className="button-big"
-                onClick={() => setIsModifying(true)}
-              >
-                수정
-              </button>
-            </div>
-          ) : (
-            <></>
-          )}
-        </div>
-      ) : (
-        <></>
-      )}
+            <div className="notice-content">{parseURL(notice.contents)}</div>
+            {userInfo?.managing_channels.has(channelId) ? (
+              <div className="notice-menu">
+                <button
+                  className="button-big button-delete"
+                  onClick={deleteNotice}
+                >
+                  삭제
+                </button>
+                <button
+                  className="button-big"
+                  onClick={() => setIsModifying(true)}
+                >
+                  수정
+                </button>
+              </div>
+            ) : (
+              <></>
+            )}
+          </>
+        ) : (
+          <></>
+        )}
+      </div>
     </>
   );
 };

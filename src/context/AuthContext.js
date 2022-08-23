@@ -60,10 +60,6 @@ const AuthProvider = (props) => {
         .then((data) => {
           setToken(data);
           initUserInfo()
-            .catch((e) => {
-              setValue({ type: 'isLoading', value: false });
-              reject(e);
-            })
             .then(() => {
               // setIsLoggedIn(true);
               // setValue({ type: 'isLoading', value: false });
@@ -72,6 +68,10 @@ const AuthProvider = (props) => {
                 value: { ...prev.value, isLoggedIn: true, isLoading: false },
               }));
               resolve(data);
+            })
+            .catch((e) => {
+              setValue({ type: 'isLoading', value: false });
+              reject(e);
             });
         })
         .catch(reject);
@@ -127,9 +127,11 @@ const AuthProvider = (props) => {
       refresh()
         .then((data) => {
           console.log(data);
-          setValue({ type: 'isLoading', value: false });
           setToken(data); //data.access
-          setIsLoggedIn(true);
+          setState((prev) => ({
+            ...prev,
+            value: { ...prev.value, isLoggedIn: true, isLoading: false },
+          }));
           console.log('welcome back');
         })
         .catch(() => {

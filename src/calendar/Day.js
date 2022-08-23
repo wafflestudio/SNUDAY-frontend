@@ -13,8 +13,6 @@ const Day = ({ year, monthIndex, day, channelId, events, eventPositions }) => {
   const holiday = isHoliday(date);
   let dateClass = 'date';
   if (holiday) dateClass += ' holiday';
-  //api/v1/channels/{channel_id}/events/?date=2021-03-16
-  // console.log('events', date.getDate(), events);
   //event numbers
   let overflow = false;
   let dayEvents = events?.dailyEventsMap.get(date.getDate());
