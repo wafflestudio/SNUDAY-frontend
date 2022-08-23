@@ -15,6 +15,7 @@ const DateTimePicker = ({ dateString, setDate, timeString, setTime }) => {
         <div className="input-date-container">
           {dateDate.toLocaleDateString('ko-KR', dateOptions)}
           <input
+            required
             className="input-date"
             type="date"
             value={dateString}
@@ -28,6 +29,7 @@ const DateTimePicker = ({ dateString, setDate, timeString, setTime }) => {
         <div className="input-date-container">
           {timeString}
           <input
+            required
             className="input-time"
             type="time"
             value={timeString}

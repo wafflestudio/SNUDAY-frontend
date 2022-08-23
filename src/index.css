@@ -47,17 +47,6 @@ body.modal-open {
     filter: invert(1);
   }
 } */
-@media only screen and (display-mode: standalone) {
-  /*PWA*/
-  /* @supports (-webkit-touch-callout: none) { */
-  /*iOS*/
-  body {
-    padding-bottom: calc(
-      49.5px + max(10px, env(safe-area-inset-bottom))
-    ) !important;
-  }
-  /* } */
-}
 #root {
   box-sizing: content-box;
   position: relative;
@@ -75,12 +64,6 @@ body.modal-open {
 @media screen and (display-mode: standalone) {
   body {
     position: fixed;
-  }
-  document,
-  body,
-  #root {
-    min-height: calc(100svh - env(safe-area-inset-top));
-    max-height: calc(100svh - env(safe-area-inset-top));
   }
 }
 a {
