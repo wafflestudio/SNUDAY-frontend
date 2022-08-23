@@ -105,7 +105,7 @@ const FindMyPassword = () => {
             }
             className="button-big"
             onClick={() => sendPassword()}
-            style={{ width: '100%', marginTop: '32px' }}
+            style={{ width: '100%', marginTop: '10px' }}
           >
             비밀번호 받기
           </button>

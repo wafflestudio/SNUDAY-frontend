@@ -24,6 +24,7 @@ const MyChannels = () => {
         <></>
       )}
       <div
+        className="main-container"
         ref={listRef}
         style={{
           width: '100%',
@@ -31,6 +32,7 @@ const MyChannels = () => {
           //   listRef.current?.parentElement.getBoundingClientRect().height
           // }px - 3rem)`,
           // position: 'absolute',
+          position: 'sticky',
           top: '3rem',
           backgroundColor: 'white',
         }}
@@ -41,8 +43,10 @@ const MyChannels = () => {
           activeTab={activeTab}
           setActiveTab={setActiveTab}
         ></MyChannelsTab>
-        <section style={{ height: 'calc(100% - 3rem - 18px)' }}>
-          <ChannelList category={activeTab} isLoggedIn={isLoggedIn} />
+        <section
+          className="my-channels"
+          // style={{ transform: 'translateX(100%)' }}
+        >
           <ChannelList category={activeTab} isLoggedIn={isLoggedIn} />
         </section>
       </div>

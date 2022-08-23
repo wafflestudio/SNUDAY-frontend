@@ -16,7 +16,12 @@
 .nav-container.hide {
   transform: translateY(100%);
 }
-
+@media only screen and (display-mode: standalone) {
+  .nav-container {
+    position: sticky;
+    bottom: 0;
+  }
+}
 @media screen and (orientation: landscape) {
   .nav-container {
     bottom: 0;

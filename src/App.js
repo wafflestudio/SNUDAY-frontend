@@ -16,7 +16,7 @@ import FindMyPassword from 'auth/FindMyPassword';
 import MyPage from 'auth/MyPage';
 import ChangeUsername from 'auth/ChangeUsername';
 import ChangePassword from 'auth/ChangePassword';
-
+import Policy from 'policy/Policy';
 function App() {
   let lastScrollTop = 0;
   const stickNav = (e) => {
@@ -120,6 +120,7 @@ function App() {
         <Route path="findmypw" element={<FindMyPassword />} />
         <Route path="/" element={<Home />} />
         <Route path="channel/:channelId/*" element={<ChannelPortal />} />
+        <Route path="policy/:type" element={<Policy />} />
         <Route
           path="*"
           element={<Navigate to="signin" state={{ prev: location.pathname }} />}
@@ -141,12 +142,12 @@ function App() {
         <Route path="signin" element={<Login />} />
         <Route path="findmyid" element={<FindMyId />} />
         <Route path="findmypw" element={<FindMyPassword />} />
+        <Route path="policy/:type" element={<Policy />} />
         <Route
           path="*"
           element={<Home />} //FIXIT:404 Page 만들기
         />
       </Routes>
-      <footer />
       <Navigation />
     </>
   );

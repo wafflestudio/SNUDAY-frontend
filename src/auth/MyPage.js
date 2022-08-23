@@ -49,6 +49,14 @@ const MyPage = () => {
           <header className="card-header card-header-small">정보</header>
           <ul className="menu-list">
             <li>
+              공지사항
+              <img
+                className="arrow"
+                src="/resources/right-arrow.svg"
+                alt="more"
+              />
+            </li>
+            <li>
               서비스 이용약관
               <img
                 className="arrow"

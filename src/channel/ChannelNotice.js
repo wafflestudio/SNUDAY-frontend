@@ -36,7 +36,7 @@ const ChannelNotice = () => {
       >
         공지사항
       </Header>
-      <div className="card">
+      <div className="card main-container">
         <NoticeList channelId={channelId} />
       </div>
     </>
