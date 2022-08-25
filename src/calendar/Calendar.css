@@ -14,7 +14,6 @@ input[type='time']::-webkit-clear-button {
   right: env(safe-area-inset-right);
   z-index: 10;
   transition: bottom 0.3s, transform 0.15s;
-  user-select: none;
 }
 .button-add {
   position: relative;
@@ -186,7 +185,6 @@ input[type='time']::-webkit-clear-button {
 .Calendar {
   position: relative;
   width: 100%;
-  user-select: none;
   display: flex;
   flex-direction: column;
   flex: 1 1 auto;
@@ -262,7 +260,6 @@ input[type='time']::-webkit-clear-button {
   flex: 1;
   z-index: 0;
   -webkit-touch-callout: none; /* iOS Safari */
-  user-select: none;
 }
 .main .Calendar-body,
 .channel .Calendar-body {
