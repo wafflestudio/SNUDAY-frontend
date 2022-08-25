@@ -6,6 +6,7 @@
   box-sizing: border-box;
   scroll-behavior: smooth;
   -webkit-tap-highlight-color: transparent;
+  user-select: none;
 }
 /* @media all and (display-mode: standalone) {
   body {
@@ -66,6 +67,7 @@ body.modal-open {
     position: fixed;
   }
 }
+/*To style links appropriately, define by LVHA-order*/
 a {
   width: 100%;
   overflow-wrap: break-word;
@@ -86,6 +88,9 @@ a:active {
   text-decoration: underline;
   -webkit-tap-highlight-color: transparent;
 }
+a:any-link {
+  cursor: pointer;
+}
 button {
   display: flex;
   align-items: center;
@@ -98,7 +103,7 @@ button {
   background-color: var(--blue);
   color: white;
   outline: none;
-  user-select: none;
+  cursor: pointer;
 }
 button:active,
 button.progress:disabled {
