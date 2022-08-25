@@ -16,6 +16,7 @@ export const COLORS = {
   AMETHYST: '#a45eae',
   LAVENDER: '#4b4dbd',
 };
+export const CHANNEL_SNUDAY = 64;
 export const CHANNEL_ACADEMIC_CALENDAR = 65;
 export const CHANNEL_HOLIDAYS = 73;
 export const defaultColors = {

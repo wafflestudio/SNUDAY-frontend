@@ -11,7 +11,6 @@
   padding: 2px;
   background-color: white;
   transition: transform 0.3s;
-  user-select: none;
 }
 .nav-container.hide {
   transform: translateY(100%);

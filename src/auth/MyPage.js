@@ -1,5 +1,6 @@
 import { Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { useAuthContext } from 'context/AuthContext';
+import { CHANNEL_SNUDAY } from 'Constants';
 import Header from 'Header';
 const MyPage = () => {
   let navigate = useNavigate();
@@ -48,7 +49,7 @@ const MyPage = () => {
         <div className="card">
           <header className="card-header card-header-small">정보</header>
           <ul className="menu-list">
-            <li>
+            <li onClick={() => navigate(`/channel/${CHANNEL_SNUDAY}/notice`)}>
               공지사항
               <img
                 className="arrow"
@@ -56,7 +57,7 @@ const MyPage = () => {
                 alt="more"
               />
             </li>
-            <li>
+            <li onClick={() => navigate('/policy/terms')}>
               서비스 이용약관
               <img
                 className="arrow"
@@ -64,7 +65,7 @@ const MyPage = () => {
                 alt="more"
               />
             </li>
-            <li>
+            <li onClick={() => navigate('/policy/privacy')}>
               개인정보 처리방침
               <img
                 className="arrow"

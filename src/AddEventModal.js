@@ -9,6 +9,7 @@ import Tag from 'Tag';
 import TagBar from 'calendar/TagBar';
 import { toDateString, toTimeString, useUpdateLogger } from 'Constants';
 import { Event } from 'context/useEvents';
+import { useParams } from 'react-router-dom';
 const AddEventModalHeader = ({ isModifying }) => {
   return (
     <>
@@ -110,11 +111,13 @@ const AddEventModalButton = ({ addEvent }) => {
     </div>
   );
 };
-const AddEventModal = ({ isActive, date, event: existingEvent, channelId }) => {
+const AddEventModal = ({ isActive, date, event: existingEvent }) => {
   const {
     value: { userInfo },
   } = useAuthContext();
   const { updateEvent } = useCalendarContext();
+  let { channelId } = useParams();
+  channelId = +channelId || undefined;
   const today = new Date();
   const initialDate = date ? toDateString(date) : toDateString(today);
   const initialState = existingEvent
