@@ -16,26 +16,24 @@ const getUserInfo = async () =>
     getManagingChannels(),
     getSubscribedChannels(),
     getAwaitingChannels(),
-  ]).then(
-    ([userInfo, managingChannels, subscribingChannels, awaitingChannels]) => {
-      const disabledChannels = JSON.parse(
-        localStorage.getItem('disabled_channels')
-      )?.[userInfo.id];
-      const newUserInfo = {
-        ...userInfo,
-        my_channel: userInfo.private_channel_id,
-        managing_channels: new Set(managingChannels.map((ch) => ch.id)),
-        subscribing_channels: new Set(subscribingChannels.map((ch) => ch.id)),
-        awaiting_channels: new Set(awaitingChannels.map((ch) => ch.id)),
-        disabled_channels: disabledChannels ?? [],
-      };
-      newUserInfo.managing_channels.delete(newUserInfo.my_channel);
-      delete newUserInfo.private_channel_id;
-      // if (disabledChannels)
-      //   setValue({ type: 'disabled_channels', value: disabledChannels });
-      return newUserInfo;
-    }
-  );
+  ]).then(([user, managingChannels, subscribingChannels, awaitingChannels]) => {
+    const disabledChannels = JSON.parse(
+      localStorage.getItem('disabled_channels')
+    )?.[user.id];
+    user = {
+      ...user,
+      my_channel: user.private_channel_id,
+      managing_channels: new Set(managingChannels.map((ch) => ch.id)),
+      subscribing_channels: new Set(subscribingChannels.map((ch) => ch.id)),
+      awaiting_channels: new Set(awaitingChannels.map((ch) => ch.id)),
+      disabled_channels: disabledChannels ?? [],
+    };
+    user.managing_channels.delete(user.my_channel);
+    delete user.private_channel_id;
+    // if (disabledChannels)
+    //   setValue({ type: 'disabled_channels', value: disabledChannels });
+    return user;
+  });
 const AuthProvider = (props) => {
   const queryClient = useQueryClient();
   const useToken = useQuery(
@@ -77,8 +75,8 @@ const AuthProvider = (props) => {
   };
   const setIsLoggedIn = (isLoggedIn) =>
     setValue({ type: 'isLoggedIn', value: isLoggedIn });
-  const setUserInfo = (userInfo) =>
-    setValue({ type: 'userInfo', value: userInfo });
+
+  const setUser = (user) => queryClient.setQueryData(['user'], user);
   const initUserInfo = async () => {
     const userInfo = await getUserMe();
     const managingChannels = await getManagingChannels();
@@ -96,7 +94,7 @@ const AuthProvider = (props) => {
     // newUserInfo.managing_channels.delete(36);
     // newUserInfo.managing_channels.delete(46);
     //
-    setUserInfo(newUserInfo);
+    setUser(newUserInfo);
     const disabledChannels = JSON.parse(
       localStorage.getItem('disabled_channels')
     )?.[userInfo.id];
@@ -153,6 +151,7 @@ const AuthProvider = (props) => {
     isLoggedIn: false,
     access: undefined,
     refresh: undefined,
+    user: undefined,
     userInfo: null,
     default_channels: new Set([65, 73]),
     disabled_channels: [],
@@ -165,7 +164,7 @@ const AuthProvider = (props) => {
     logout,
     setIsLoggedIn,
     setToken,
-    setUserInfo,
+    setUser,
     getUserInfo,
     setValue,
   };
@@ -182,9 +181,9 @@ const AuthProvider = (props) => {
         prev
           ? {
               ...prev,
-              [state.value.userInfo?.id]: state.value.disabled_channels,
+              [state.value.user?.id]: state.value.disabled_channels,
             }
-          : { [state.value.userInfo?.id]: state.value.disabled_channels }
+          : { [state.value.user?.id]: state.value.disabled_channels }
       )
     );
   }, [state.value.disabled_channels]);

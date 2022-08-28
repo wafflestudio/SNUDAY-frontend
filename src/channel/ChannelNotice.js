@@ -9,7 +9,7 @@ const ChannelNotice = () => {
   const { channelId } = useParams();
   const [addNotice, setAddNotice] = useState(false);
   const {
-    value: { userInfo },
+    value: { user },
   } = useAuthContext();
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -23,7 +23,7 @@ const ChannelNotice = () => {
     <>
       <Header
         right={
-          userInfo?.managing_channels.has(parseInt(channelId)) ? (
+          user?.managing_channels.has(parseInt(channelId)) ? (
             <img
               alt="add notice"
               width="58"

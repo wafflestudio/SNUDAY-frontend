@@ -25,14 +25,14 @@ export const CalendarContextProvider = ({ value, children }) => {
   });
   const [channelColors, setChannelColors] = useState(undefined);
   const {
-    value: { userInfo, default_channels, disabled_channels },
+    value: { user, default_channels, disabled_channels },
   } = useAuthContext();
   useEffect(() => {
     // fetchMonthlyEvents();
-  }, [userInfo]);
+  }, [user]);
   useEffect(() => {
     // get/set channel colors
-    if (!userInfo) {
+    if (!user) {
       console.log(defaultColors);
       const presetColors = new Map();
       Object.entries(defaultColors).forEach(([channel, color]) =>
@@ -45,8 +45,8 @@ export const CalendarContextProvider = ({ value, children }) => {
     const savedColors = localStorage.getItem('channelColors');
     if (savedColors) {
       const presetColors = new Map(JSON.parse(savedColors));
-      userInfo?.subscribing_channels
-        .add(userInfo.my_channel)
+      user?.subscribing_channels
+        .add(user.my_channel)
         .forEach((channel, index) => {
           if (!presetColors.has(channel))
             presetColors.set(
@@ -60,10 +60,10 @@ export const CalendarContextProvider = ({ value, children }) => {
     } else {
       const presetColors = new Map();
       presetColors.set(
-        userInfo.my_channel,
+        user.my_channel,
         colors[Math.floor(Math.random() * colors.length)]
       );
-      userInfo?.subscribing_channels.forEach((channel, index) =>
+      user?.subscribing_channels.forEach((channel, index) =>
         presetColors.set(channel, colors[index % colors.length])
       );
       //Default colors for public channel
@@ -75,7 +75,7 @@ export const CalendarContextProvider = ({ value, children }) => {
       localStorage.setItem('channelColors', JSON.stringify([...presetColors]));
       // console.log(presetColors);
     }
-  }, [userInfo?.subscribing_channels, default_channels]);
+  }, [user?.subscribing_channels, default_channels]);
 
   const setChannelColor = (channel, color) => {
     const newColors = new Map([...channelColors, [channel, color]]);
@@ -99,7 +99,7 @@ export const CalendarContextProvider = ({ value, children }) => {
       const [subscribing_channels, other_channels] = channelList.reduce(
         // Use "deconstruction" style assignment
         (result, channelId) => {
-          result[userInfo?.subscribing_channels?.has(channelId) ? 0 : 1].push(
+          result[user?.subscribing_channels?.has(channelId) ? 0 : 1].push(
             channelId
           ); // Determine and push to small/large arr
           return result;
@@ -126,7 +126,7 @@ export const CalendarContextProvider = ({ value, children }) => {
       // activeChannelEvents.push(...other_channels_events.flat());
 
       // for (const channelId of channelList) {
-      //   if (userInfo?.subscribing_channels?.has(channelId)) {
+      //   if (user?.subscribing_channels?.has(channelId)) {
       //     //구독 중인 채널
       //     activeChannelEvents = channelEvents.get(parseInt(channelId, 10));
       //     if (activeChannelEvents !== undefined)

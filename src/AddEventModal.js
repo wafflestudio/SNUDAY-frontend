@@ -20,7 +20,7 @@ const AddEventModalHeader = ({ isModifying }) => {
 const AddEventModalContent = ({ eventObj, setEvent, isModifying }) => {
   const [isSettingChannel, setIsSettingChannel] = useState(false);
   const {
-    value: { userInfo },
+    value: { user },
   } = useAuthContext();
   return (
     <div
@@ -113,7 +113,7 @@ const AddEventModalButton = ({ addEvent }) => {
 };
 const AddEventModal = ({ isActive, date, event: existingEvent }) => {
   const {
-    value: { userInfo },
+    value: { user },
   } = useAuthContext();
   const { updateEvent } = useCalendarContext();
   let { channelId } = useParams();
@@ -133,9 +133,9 @@ const AddEventModal = ({ isActive, date, event: existingEvent }) => {
     : {
         channel:
           channelId ??
-          [...userInfo.managing_channels][userInfo.managing_channels.size - 1],
+          [...user.managing_channels][user.managing_channels.size - 1],
         //FIX
-        //userInfo.managing_channels.values().next().value,
+        //user.managing_channels.values().next().value,
         title: '',
         has_time: true,
         start_date: initialDate,

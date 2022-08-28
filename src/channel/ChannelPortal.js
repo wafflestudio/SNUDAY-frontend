@@ -10,13 +10,13 @@ import { useAuthContext } from '../context/AuthContext';
 const ChannelPortal = () => {
   let { channelId } = useParams();
   const {
-    value: { isLoggedIn, isLoading },
+    value: { user, isLoading },
   } = useAuthContext();
   channelId = +channelId;
   console.log(channelId);
   const [channelData, setChannelData] = useState(null);
   const [error, setError] = useState(null);
-  console.log(isLoggedIn, isLoading);
+  console.log(user, isLoading);
   useEffect(() => {
     if (!isLoading)
       getChannel(channelId)
@@ -28,7 +28,7 @@ const ChannelPortal = () => {
           setError(error.response?.data?.error);
         });
     // return () => setError(null);
-  }, [isLoggedIn, isLoading]);
+  }, [user, isLoading]);
   if (isLoading) return <></>;
   if (error) {
     switch (error) {

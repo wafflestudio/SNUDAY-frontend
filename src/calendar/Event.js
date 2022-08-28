@@ -12,7 +12,7 @@ import { deleteEvent } from 'API';
 const EventTag = ({ event }) => {
   const navigate = useNavigate();
   const {
-    value: { userInfo },
+    value: { user },
   } = useAuthContext();
   return (
     <div className="event-modal-header">
@@ -20,7 +20,7 @@ const EventTag = ({ event }) => {
         id={event.channel}
         name={event.channelName}
         onClick={() => {
-          if (userInfo.my_channel !== event.channel)
+          if (user.my_channel !== event.channel)
             navigate(`/channel/${event.channel}`);
         }}
       />
@@ -29,7 +29,7 @@ const EventTag = ({ event }) => {
 };
 const EventContent = ({ isActive, event, modify }) => {
   const {
-    value: { userInfo },
+    value: { user },
   } = useAuthContext();
   const { deleteEvent: delEvent } = useCalendarContext();
   const options = {
@@ -43,8 +43,8 @@ const EventContent = ({ isActive, event, modify }) => {
       <h3 className="event-title">{event.title}</h3>
       <div className="event-date">{eventDateString(event)}</div>
       <div>{parseURL(event.memo)}</div>
-      {userInfo?.managing_channels.has(event.channel) ||
-      userInfo.my_channel === event.channel ? (
+      {user?.managing_channels.has(event.channel) ||
+      user.my_channel === event.channel ? (
         <div
           style={{
             display: 'flex',

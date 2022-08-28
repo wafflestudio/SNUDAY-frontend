@@ -40,7 +40,7 @@ const NoticeList = ({ channelId, type, keyword, limit, ...rest }) => {
     console.log('isFetching');
   }, listRef.current); //??
   const {
-    value: { isLoggedIn, userInfo },
+    value: { user },
   } = useAuthContext();
   const fetchNotices = async (cursor) => {
     if (channelId)
@@ -54,7 +54,7 @@ const NoticeList = ({ channelId, type, keyword, limit, ...rest }) => {
             : response
         );
       });
-    else if (isLoggedIn && userInfo)
+    else if (user)
       if (keyword)
         searchUserNotices({ type, q: keyword, cursor })
           .then((response) => {
@@ -85,7 +85,7 @@ const NoticeList = ({ channelId, type, keyword, limit, ...rest }) => {
   };
   useEffect(() => {
     fetchNotices();
-  }, [channelId, type, keyword, limit, userInfo]);
+  }, [channelId, type, keyword, limit, user]);
   // if (!notices?.results)
   //   return (
   //     // <ul className="notice-list loading">

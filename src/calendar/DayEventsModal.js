@@ -9,7 +9,7 @@ import { toDateString } from 'Constants';
 
 const DayEventsModalHeader = ({ date }) => {
   const {
-    value: { isLoggedIn },
+    value: { user },
   } = useAuthContext();
   const options = {
     weekday: 'short',
@@ -33,7 +33,7 @@ const DayEventsModalHeader = ({ date }) => {
             {date.toLocaleDateString('ko-KR', options)}
           </time>
         </div>
-        {isLoggedIn ? (
+        {user ? (
           <ModalButton
             style={{
               position: 'absolute',

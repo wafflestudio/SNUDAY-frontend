@@ -37,7 +37,7 @@ const Tag = ({
   const [boundingRect, setBoundingRect] = useState(undefined);
   const [color, setColor] = useState(defaultColor ?? findColor(id));
   const {
-    value: { userInfo },
+    value: { user },
   } = useAuthContext();
   useEffect(() => {
     if (!name) {
@@ -103,7 +103,7 @@ const Tag = ({
           console.log('click');
         }}
       >
-        {userInfo?.my_channel === id ? '나의 일정' : name ?? channel.name}
+        {user?.my_channel === id ? '나의 일정' : name ?? channel.name}
         {showColorPicker ? (
           <Modal
             isActive={setLongPress}

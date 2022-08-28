@@ -31,8 +31,8 @@ const ChannelList = ({
   // console.log(listRef.current?.getBoundingClientRect().top);
   // console.log(listRef.current?.parentElement.getBoundingClientRect());
   const {
-    action: { setUserInfo },
-    value: { userInfo },
+    action: { setUser },
+    value: { user },
   } = useAuthContext();
   const fetchChannels = async ({
     cursor,
@@ -61,8 +61,8 @@ const ChannelList = ({
       if (category === 'managed')
         getManagingChannels().then((channelsData) => {
           if (!signal) setChannels(() => ({ results: channelsData }));
-          setUserInfo({
-            ...userInfo,
+          setUser({
+            ...user,
             managing_channels: new Set(
               channelsData.map((channel) => channel.id)
             ),
@@ -72,8 +72,8 @@ const ChannelList = ({
       else
         getSubscribedChannels().then((channelsData) => {
           if (!signal) setChannels(() => ({ results: channelsData }));
-          setUserInfo({
-            ...userInfo,
+          setUser({
+            ...user,
             subscribing_channels: new Set(
               channelsData.map((channel) => channel.id)
             ),

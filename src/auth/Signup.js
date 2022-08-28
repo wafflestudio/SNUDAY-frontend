@@ -99,9 +99,9 @@ const Signup = () => {
   };
 
   const {
-    value: { isLoggedIn },
+    value: { user },
   } = useAuthContext();
-  if (isLoggedIn) {
+  if (user) {
     navigate(-1);
     return <></>;
   }

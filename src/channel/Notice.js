@@ -13,7 +13,7 @@ const Notice = () => {
   const [notice, setNotice] = useState(null);
   const [isModifying, setIsModifying] = useState(false);
   const {
-    value: { userInfo },
+    value: { user },
   } = useAuthContext();
   const navigate = useNavigate();
   const deleteNotice = () => {
@@ -63,7 +63,7 @@ const Notice = () => {
               </div>
             </div>
             <div className="notice-content">{parseURL(notice.contents)}</div>
-            {userInfo?.managing_channels.has(channelId) ? (
+            {user?.managing_channels.has(channelId) ? (
               <div className="notice-menu">
                 <button
                   className="button-big button-delete"

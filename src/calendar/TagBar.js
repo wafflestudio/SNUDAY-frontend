@@ -9,7 +9,7 @@ const TagBar = ({ category, onTagClick, isMain, ...props }) => {
   const tagbarRef = useRef(null);
   const {
     action: { setValue },
-    value: { userInfo, default_channels, disabled_channels },
+    value: { user, default_channels, disabled_channels },
   } = useAuthContext();
   if (category === 'active')
     onTagClick = (channel) => {
@@ -34,8 +34,8 @@ const TagBar = ({ category, onTagClick, isMain, ...props }) => {
     switch (category) {
       case 'active':
         const subscribingChannels = Array.from(
-          userInfo
-            ? userInfo.subscribing_channels.add(userInfo.my_channel)
+          user
+            ? user.subscribing_channels.add(user.my_channel)
             : [...default_channels]
         );
         subscribingChannels.sort(
@@ -45,24 +45,20 @@ const TagBar = ({ category, onTagClick, isMain, ...props }) => {
         setChannels(subscribingChannels);
         break;
       case 'managing':
-        if (userInfo?.managing_channels)
+        if (user?.managing_channels)
           setChannels(
-            Array.from(
-              userInfo.managing_channels.add(userInfo.my_channel) ?? []
-            )
+            Array.from(user.managing_channels.add(user.my_channel) ?? [])
           );
         break;
       case 'subscribing':
         setChannels(
-          Array.from(
-            userInfo.subscribing_channels.add(userInfo.my_channel) ?? []
-          )
+          Array.from(user.subscribing_channels.add(user.my_channel) ?? [])
         );
         break;
       default:
         break;
     }
-  }, [userInfo]);
+  }, [user]);
   useEffect(() => {
     const callback = (mutationList, observer) => {
       if (

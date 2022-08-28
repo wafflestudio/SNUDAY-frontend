@@ -25,7 +25,7 @@ const ChannelCard = ({
   const [channelData, setChannelData] = useState(initialData);
   const navigate = useNavigate();
   const {
-    value: { userInfo },
+    value: { user },
   } = useAuthContext();
   const {
     id,
@@ -43,7 +43,7 @@ const ChannelCard = ({
     <div
       className="grid-channel-card"
       onClick={() =>
-        verbose || (is_private && !userInfo?.subscribing_channels?.has(id))
+        verbose || (is_private && !user?.subscribing_channels?.has(id))
           ? undefined
           : navigate(`/channel/${id}`)
       }
@@ -72,7 +72,7 @@ const ChannelCard = ({
           <></>
         ) : (
           <>
-            {userInfo?.managing_channels?.has(channelData.id) ? (
+            {user?.managing_channels?.has(channelData.id) ? (
               <WaitingListButton channelData={channelData} />
             ) : (
               <></>
