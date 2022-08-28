@@ -1,31 +1,34 @@
 import { useState } from 'react';
-import { InputBox } from 'Input';
+import { useLocation, useNavigate, Navigate } from 'react-router-dom';
+import { useQueryClient, useMutation } from '@tanstack/react-query';
+import { useAuthContext } from 'context/AuthContext';
 import { patchUserPassword } from 'API';
 import { pwPattern } from 'Constants';
+import { InputBox } from 'Input';
 import Header from 'Header';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { useAuthContext } from 'context/AuthContext';
-const ChangePassword = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const {
-    value: { isLoggedIn },
-    action: { initUserInfo },
-  } = useAuthContext();
-  const [oldPw, setOldPw] = useState('');
-  const [pw, setPw] = useState('');
-  const [pwAgain, setPwAgain] = useState('');
 
-  const sendPassword = () => {
-    patchUserPassword({ old_password: oldPw, new_password: pw })
-      .then((response) => {
-        initUserInfo();
-        alert('비밀번호가 변경되었습니다.');
-        navigate('/mypage');
-      })
-      .catch(() => alert('다시 시도해주세요.'));
-  };
-  if (!isLoggedIn) navigate('/signin', { state: { prev: location.pathname } });
+const ChangePassword = () => {
+  const [oldPw, setOldPw] = useState('');
+  const [newPw, setNewPw] = useState('');
+  const [newPwAgain, setNewPwAgain] = useState('');
+  const [navigate, location] = [useNavigate(), useLocation()];
+  const queryClient = useQueryClient();
+  const {
+    value: { user },
+  } = useAuthContext();
+  const { mutate: patchPassword } = useMutation(patchUserPassword, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['user']);
+      alert('비밀번호가 변경되었습니다.');
+      navigate('/mypage');
+    },
+    onError: (e) => {
+      if (e.response.data.old_password) alert('비밀번호가 올바르지 않습니다.');
+      else alert('다시 시도해주세요.');
+    },
+  });
+  if (!user)
+    return <Navigate to="signin" state={{ prev: location.pathname }} />;
   return (
     <>
       <Header>비밀번호 변경</Header>
@@ -52,28 +55,29 @@ const ChangePassword = () => {
             type="password"
             value={oldPw}
             setValue={setOldPw}
-            pattern={pwPattern}
           />
           <InputBox
             label="새 비밀번호"
             type="password"
-            value={pw}
-            setValue={setPw}
+            value={newPw}
+            setValue={setNewPw}
             pattern={pwPattern}
             message="8자 이상의 숫자와 영문자"
           />
           <InputBox
             label="새 비밀번호 확인"
             type="password"
-            value={pwAgain}
-            setValue={setPwAgain}
-            pattern={'^' + pw + '$'}
+            value={newPwAgain}
+            setValue={setNewPwAgain}
+            pattern={'^' + newPw + '$'}
             message="비밀번호가 일치하지 않습니다."
           />
           <button
-            disabled={!(pw.match(pwPattern) && pw === pwAgain)}
+            disabled={!(newPw.match(pwPattern) && newPw === newPwAgain)}
             className="button-big"
-            onClick={() => sendPassword()}
+            onClick={() =>
+              patchPassword({ old_password: oldPw, new_password: newPw })
+            }
             style={{ width: '100%', marginTop: '10px' }}
           >
             변경

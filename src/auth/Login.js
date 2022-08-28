@@ -1,6 +1,7 @@
 import './Login.css';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
 import { useAuthContext } from 'context/AuthContext';
 import { ReactComponent as Logo } from 'resources/logo.svg';
 import { InputBox } from 'Input';
@@ -9,6 +10,9 @@ import Spinner from 'Spinner';
 const Login = () => {
   let navigate = useNavigate();
   let location = useLocation();
+  const {
+    value: { user },
+  } = useAuthContext();
   useEffect(() => {
     document.title = '로그인 | SNUDAY';
   }, []);
@@ -18,22 +22,27 @@ const Login = () => {
   const [showMessage, setShowMessage] = useState(false);
   const isInvalidAccount = showMessage && username !== '' && password !== '';
   const {
-    value: { isLoggedIn, isLoading },
-    action: { login },
+    action: { login, qlogin },
   } = useAuthContext();
   const processLogin = () => {
     setIsProcessing(true);
-    login({ username, password }).catch((status) => {
-      console.log(status);
-      setIsProcessing(false);
-      setShowMessage(true);
-    });
+    qlogin(
+      { username, password },
+      {
+        onError: (status) => {
+          console.log(status);
+          setIsProcessing(false);
+          setShowMessage(true);
+        },
+      }
+    );
+    login({ username, password });
   };
   useEffect(() => {
     setShowMessage(false);
   }, [username, password]);
   useEffect(() => {
-    if (isLoggedIn)
+    if (user)
       if (location.state?.prev) {
         navigate(-1);
         console.log('goback');
@@ -42,8 +51,8 @@ const Login = () => {
         console.log('gohome');
       }
     //FIX: 이미 로그인시 이전 페이지 유지
-  }, [isLoggedIn, isLoading]);
-  if (isLoggedIn | isLoading) return <></>;
+  }, [user]);
+  if (user) return <></>;
   return (
     <div className="login-page">
       <div className="login-header">
@@ -94,8 +103,8 @@ const Login = () => {
             className={`button-big ${isProcessing ? 'progress' : ''}`}
             onClick={(e) => {
               processLogin();
-              e.preventDefault();
             }}
+            onSubmit={console.log}
           >
             {isProcessing ? <Spinner size={30} /> : '로그인'}
           </button>

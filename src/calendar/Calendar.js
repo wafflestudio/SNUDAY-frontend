@@ -1,22 +1,24 @@
 import React, { useState, useEffect } from 'react';
-import Month from './Month';
-import TagBar from './TagBar';
-import './Calendar.css';
-import { getNumDaysofMonth } from 'Constants';
-import ModalButton from 'AddButton';
-import { CalendarContextProvider } from 'context/CalendarContext';
-import { useAuthContext } from 'context/AuthContext';
-import AddEventModal from 'AddEventModal';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import axios from 'axios';
+import { CalendarContextProvider } from 'context/CalendarContext';
+import { useAuthContext } from 'context/AuthContext';
+import { getNumDaysofMonth } from 'Constants';
+import './Calendar.css';
+import AddEventModal from 'AddEventModal';
+import ModalButton from 'AddButton';
+import Month from './Month';
+import TagBar from './TagBar';
+
 export const AndroidCalendar = () => {
-  let [searchParams, setSearchParams] = useSearchParams();
+  let [searchParams] = useSearchParams();
   const token = searchParams.get('token');
   axios.defaults.headers['Authorization'] = `Bearer ${token}`;
   const {
     value: { isLoggedIn },
     action: { setIsLoggedIn, setToken },
   } = useAuthContext();
+
   useEffect(() => {
     setToken({ access: token });
     setIsLoggedIn(true);
@@ -42,17 +44,16 @@ export const Calendar = ({ type, channelId }) => {
   const day = date.getDate();
   const numDays = getNumDaysofMonth(year, monthIndex);
   const {
-    value: { isLoggedIn, userInfo, default_channels },
+    value: { default_channels, user },
   } = useAuthContext();
   useEffect(() => {
     if (type === 'main')
-      if (isLoggedIn && userInfo)
-        setChannelList([...userInfo.subscribing_channels]);
+      if (user) setChannelList([...user.subscribing_channels]);
       else setChannelList([...default_channels]);
     if (type === 'channel' || type === 'mini')
       if (Number.isInteger(channelId)) setChannelList([channelId]);
       else if (Array.isArray()) setChannelList(channelId);
-  }, [type, channelId, userInfo, isLoggedIn, default_channels]);
+  }, [type, channelId, user, default_channels]);
   const navigate = useNavigate();
   const location = useLocation();
   //// DATE Util Function
@@ -142,9 +143,7 @@ export const Calendar = ({ type, channelId }) => {
           channelList,
         }}
       >
-        {isLoggedIn &&
-        userInfo &&
-        (!channelId || userInfo.managing_channels.has(channelId)) ? (
+        {user && (!channelId || user.managing_channels.has(channelId)) ? (
           <ModalButton component={AddEventModal} />
         ) : (
           <></>
@@ -165,7 +164,7 @@ export const Calendar = ({ type, channelId }) => {
               />
             </h1>
             <button onClick={() => goToday()}>오늘</button>
-            {!isLoggedIn && type == 'main' ? (
+            {!user && type === 'main' ? (
               <button
                 onClick={() =>
                   navigate('/signin', { state: { prev: location.pathname } })

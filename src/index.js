@@ -6,14 +6,20 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { AuthProvider } from 'context/AuthContext';
 import smoothscroll from 'smoothscroll-polyfill';
-smoothscroll.polyfill();
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
+const queryClient = new QueryClient();
+smoothscroll.polyfill();
 ReactDOM.render(
   <React.StrictMode>
     <Router>
-      <AuthProvider>
-        <App />
-      </AuthProvider>
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider>
+          <App />
+        </AuthProvider>
+        <ReactQueryDevtools />
+      </QueryClientProvider>
     </Router>
   </React.StrictMode>,
   document.getElementById('root')
