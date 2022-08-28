@@ -152,26 +152,23 @@ const AuthProvider = (props) => {
     access: undefined,
     refresh: undefined,
     user: undefined,
-    userInfo: null,
     default_channels: new Set([65, 73]),
     disabled_channels: [],
     useUser,
   };
   const action = {
-    initUserInfo,
     login,
     qlogin: useLogin.mutate,
     logout,
     setIsLoggedIn,
     setToken,
     setUser,
+    updateUser: () => queryClient.invalidateQueries(['user']),
     getUserInfo,
     setValue,
   };
   const [state, setState] = useState({ value: defaultValue, action });
-  useEffect(() => {
-    if (state.value.access) initUserInfo();
-  }, [state.value.access]);
+
   useEffect(() => {
     let prev = localStorage.getItem('disabled_channels');
     if (prev) prev = JSON.parse(prev);

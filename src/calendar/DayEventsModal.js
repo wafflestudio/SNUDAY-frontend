@@ -5,7 +5,6 @@ import { EventListItem, EventModal } from './Event';
 import Modal from 'Modal';
 import ModalButton from 'AddButton';
 import AddEventModal from 'AddEventModal';
-import { toDateString } from 'Constants';
 
 const DayEventsModalHeader = ({ date }) => {
   const {
@@ -43,7 +42,11 @@ const DayEventsModalHeader = ({ date }) => {
             }}
             component={AddEventModal}
             button={
-              <img src="/resources\plus.svg" style={{ height: '100%' }} />
+              <img
+                alt="+"
+                src="/resources\plus.svg"
+                style={{ height: '100%' }}
+              />
             }
             date={date}
           />

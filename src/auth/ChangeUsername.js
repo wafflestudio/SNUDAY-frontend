@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate, Navigate } from 'react-router-dom';
-import { useQueryClient, useQuery, useMutation } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { useAuthContext } from 'context/AuthContext';
 import { checkDuplicateID, patchUser } from 'API';
 import { usernamePattern } from 'Constants';
@@ -11,13 +11,13 @@ const ChangeUsername = () => {
   const [username, setUsername] = useState('');
   const [isDuplicateId, setIsDuplicateId] = useState(false);
   const [navigate, location] = [useNavigate(), useLocation()];
-  const queryClient = useQueryClient();
   const {
+    action: { updateUser },
     value: { user },
   } = useAuthContext();
   const { mutate: patchUsername } = useMutation(patchUser, {
     onSuccess: () => {
-      queryClient.invalidateQueries(['user']);
+      updateUser();
       alert('아이디가 변경되었습니다.');
       navigate('/mypage');
     },

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useLocation, useNavigate, Navigate } from 'react-router-dom';
-import { useQueryClient, useMutation } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { useAuthContext } from 'context/AuthContext';
 import { patchUserPassword } from 'API';
 import { pwPattern } from 'Constants';
@@ -12,13 +12,12 @@ const ChangePassword = () => {
   const [newPw, setNewPw] = useState('');
   const [newPwAgain, setNewPwAgain] = useState('');
   const [navigate, location] = [useNavigate(), useLocation()];
-  const queryClient = useQueryClient();
   const {
-    value: { user },
+    value: { user, updateUser },
   } = useAuthContext();
   const { mutate: patchPassword } = useMutation(patchUserPassword, {
     onSuccess: () => {
-      queryClient.invalidateQueries(['user']);
+      updateUser();
       alert('비밀번호가 변경되었습니다.');
       navigate('/mypage');
     },

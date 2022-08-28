@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
 import { getChannel, subscribeChannel, unsubscribeChannel } from 'API';
 import { useAuthContext } from 'context/AuthContext';
 import { EditChannelModal } from 'channel/AddChannelModal';
@@ -91,7 +92,7 @@ export const CancelSubscriptionButton = ({
 }) => {
   const { id, name, is_private, subscribers_count } = channelData;
   const {
-    action: { initUserInfo },
+    action: { updateUser },
   } = useAuthContext();
   return (
     <button
@@ -99,7 +100,7 @@ export const CancelSubscriptionButton = ({
       onClick={(e) => {
         e.stopPropagation();
         if (window.confirm(`'${name}'의 구독을 그만둘까요?`))
-          unsubscribeChannel(id).then((response) => {
+          unsubscribeChannel(id).then(() => {
             if (is_private) {
               setChannelData({
                 ...channelData,
@@ -111,7 +112,7 @@ export const CancelSubscriptionButton = ({
                 setChannelData(response);
               });
             }
-            initUserInfo();
+            updateUser();
             // const subscribing_channels = user.subscribing_channels;
             // if (subscribing_channels.delete(id))
             //   setUser({

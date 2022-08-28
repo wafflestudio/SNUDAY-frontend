@@ -1,7 +1,6 @@
 import './Login.css';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useQueryClient } from '@tanstack/react-query';
 import { useAuthContext } from 'context/AuthContext';
 import { ReactComponent as Logo } from 'resources/logo.svg';
 import { InputBox } from 'Input';

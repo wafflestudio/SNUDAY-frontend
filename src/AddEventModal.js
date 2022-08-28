@@ -19,9 +19,6 @@ const AddEventModalHeader = ({ isModifying }) => {
 };
 const AddEventModalContent = ({ eventObj, setEvent, isModifying }) => {
   const [isSettingChannel, setIsSettingChannel] = useState(false);
-  const {
-    value: { user },
-  } = useAuthContext();
   return (
     <div
       className="event-input-container"

@@ -242,7 +242,7 @@ const AddChannelModal = ({ isActive, init }) => {
   console.log(init);
   const {
     value: { user },
-    action: { initUserInfo },
+    action: { updateUser },
   } = useAuthContext();
   console.table(user);
   const initialState = init ?? {
@@ -298,7 +298,7 @@ const AddChannelModal = ({ isActive, init }) => {
             ? '채널을 수정하였습니다.'
             : `${channel.name} 채널을 만들었습니다.`
         );
-        initUserInfo();
+        updateUser();
         isActive(false);
       })
       .catch((e) => {
@@ -308,7 +308,7 @@ const AddChannelModal = ({ isActive, init }) => {
           return;
         }
         let message = '';
-        for (const [key, value] of Object.entries(error)) {
+        for (const [key, value] of Object.entries(error))
           switch (key) {
             case 'name':
               message += `채널 이름: ${value}\n`;
@@ -323,7 +323,7 @@ const AddChannelModal = ({ isActive, init }) => {
             default:
               message += `${key}: ${value}\n`;
           }
-        }
+
         alert(message);
       });
   };
