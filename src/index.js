@@ -9,7 +9,13 @@ import smoothscroll from 'smoothscroll-polyfill';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
+    },
+  },
+});
 smoothscroll.polyfill();
 ReactDOM.render(
   <React.StrictMode>
