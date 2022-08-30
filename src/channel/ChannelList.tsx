@@ -9,6 +9,37 @@ import ChannelCard from 'channel/ChannelCard';
 import { useAuthContext } from 'context/AuthContext';
 import useInfiniteScroll from 'useInfiniteScroll';
 import Spinner from 'Spinner';
+import { useQueryClient } from '@tanstack/react-query';
+
+const fetchMyChannels = async ({
+  category,
+  signal,
+}: {
+  category: string;
+  signal?: boolean;
+}) => {
+  let get;
+  if (category === 'managed') get = getManagingChannels;
+  if (category === 'subscribed') get = getSubscribedChannels;
+  //setQueryData(['user',managing_channels]);return 채널;}
+  return get?.().then((channels) => {
+    if (!signal) return { results: channels } as ChannelsResponse;
+  });
+};
+
+const fetchChannels = async ({
+  body: { type, keyword, cursor },
+  signal,
+}: {
+  body: { type?: SearchChannelType; keyword?: string; cursor?: string };
+  signal?: boolean;
+}) => {
+  let response;
+  if (keyword && type)
+    response = await searchChannels({ type, q: keyword, cursor });
+  else response = await getChannels(cursor);
+  if (!signal) return response;
+};
 
 const ChannelList = ({
   category,
@@ -25,8 +56,20 @@ const ChannelList = ({
 }) => {
   const listRef = useRef(null);
   const [channels, setChannels] = useState<ChannelsResponse>();
+  const cursor = channels?.next;
   const [isFetching, setIsFetching] = useInfiniteScroll(() => {
-    if (channels?.next) fetchChannels({ cursor: channels.next });
+    if (channels?.next)
+      fetchChannels({ body: { type, keyword, cursor } }).then((response) => {
+        if (response) {
+          setChannels((channels) => ({
+            ...response,
+            results: [...(channels?.results ?? []), ...response.results],
+          }));
+          response?.results?.forEach((channel) =>
+            queryClient.setQueryData(['channel', channel.id], channel)
+          );
+        }
+      });
   }, listRef.current);
   // console.log(listRef.current?.getBoundingClientRect().top);
   // console.log(listRef.current?.parentElement.getBoundingClientRect());
@@ -34,69 +77,52 @@ const ChannelList = ({
     action: { setUser },
     value: { user },
   } = useAuthContext();
-  const fetchChannels = async ({
-    cursor,
-    signal,
-  }: {
-    cursor?: string;
-    signal?: boolean;
-  }) => {
-    if (keyword) {
-      if (type)
-        searchChannels({ type, q: keyword, cursor }).then((response) => {
-          if (!signal)
-            setChannels((channels) =>
-              cursor
-                ? {
-                    ...response,
-                    results: [
-                      ...(channels?.results ?? []),
-                      ...response.results,
-                    ],
-                  }
-                : response
-            );
-        });
-    } else if (isLoggedIn)
-      if (category === 'managed')
-        getManagingChannels().then((channelsData) => {
-          if (!signal) setChannels(() => ({ results: channelsData }));
-          setUser({
-            ...user,
-            managing_channels: new Set(
-              channelsData.map((channel) => channel.id)
-            ),
-          });
-          console.log(channelsData);
-        });
-      else
-        getSubscribedChannels().then((channelsData) => {
-          if (!signal) setChannels(() => ({ results: channelsData }));
-          setUser({
-            ...user,
-            subscribing_channels: new Set(
-              channelsData.map((channel) => channel.id)
-            ),
-          });
-        });
-    else
-      getChannels(cursor).then((response) => {
-        if (!signal)
-          setChannels((channels) =>
-            cursor
-              ? {
-                  ...response,
-                  results: [...(channels?.results ?? []), ...response.results],
-                }
-              : response
-          );
-      });
-  };
+  const queryClient = useQueryClient();
   useEffect(() => {
     let isCancelled = false;
-    fetchChannels({ signal: isCancelled });
+    (() => {
+      if (isLoggedIn && category && !type && !keyword) {
+        return fetchMyChannels({ category, signal: isCancelled }).then(
+          (response) => {
+            if (response) {
+              setChannels(response);
+              if (category === 'managed')
+                setUser({
+                  ...user,
+                  managing_channels: new Set(
+                    response.results.map((channel) => channel.id)
+                  ),
+                });
+              if (category === 'subscribed')
+                setUser({
+                  ...user,
+                  subscribing_channels: new Set(
+                    response.results.map((channel) => channel.id)
+                  ),
+                });
+              return response;
+            }
+          }
+        );
+      } else {
+        return fetchChannels({
+          body: { type, keyword },
+          signal: isCancelled,
+        }).then((response) => {
+          if (response) {
+            setChannels(response);
+            return response;
+          }
+        });
+      }
+    })().then((response) =>
+      response?.results?.forEach((channel) =>
+        queryClient.setQueryData(['channel', channel.id], channel)
+      )
+    );
     return () => {
       isCancelled = true;
+      setChannels(undefined);
     };
   }, [category, isLoggedIn, type, keyword]);
 
