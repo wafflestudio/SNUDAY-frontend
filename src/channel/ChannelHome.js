@@ -1,8 +1,7 @@
 import './Channel.css';
-import { getChannel } from 'API';
-import ChannelCard from 'channel/ChannelCard';
+import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import ChannelCard from 'channel/ChannelCard';
 import NoticeList from 'channel/NoticeList';
 import Calendar from 'calendar/Calendar';
 const ChannelHome = () => {
@@ -10,29 +9,22 @@ const ChannelHome = () => {
   let { channelId } = useParams();
   channelId = +channelId;
   console.log(channelId);
-  const [channelData, setChannelData] = useState(null);
-  useEffect(() => {
-    getChannel(channelId).then((channel) => {
-      document.title = channel.name + ' | SNUDAY';
-      setChannelData(() => channel);
-    });
-  }, []);
   useEffect(() => {
     const today = document.getElementsByClassName('day today')[0];
     const calendar = document.getElementsByClassName('Calendar-content')[0];
-    if (today) {
-      calendar.scrollTo({ top: today.offsetTop, behavior: 'smooth' });
-    }
+    if (today) calendar.scrollTo({ top: today.offsetTop, behavior: 'smooth' });
   });
   return (
     <div className="main-container">
-      {channelData ? (
+      {
         <>
-          <ChannelCard channelData={channelData} verbose={true} />
+          <ChannelCard channelId={channelId} verbose={true} />
           <section className="card">
             <header
               className="card-header"
-              onClick={() => navigate(`/channel/${channelId}/notice/`)}
+              onClick={() => {
+                if (channelId) navigate(`/channel/${channelId}/notice/`);
+              }}
             >
               공지사항
               <img
@@ -46,7 +38,9 @@ const ChannelHome = () => {
           <section className="card">
             <header
               className="card-header"
-              onClick={() => navigate(`/channel/${channelId}/events/`)}
+              onClick={() => {
+                if (channelId) navigate(`/channel/${channelId}/events/`);
+              }}
             >
               채널 일정
               <img
@@ -60,9 +54,7 @@ const ChannelHome = () => {
             </div>
           </section>
         </>
-      ) : (
-        <></>
-      )}
+      }
     </div>
   );
 };

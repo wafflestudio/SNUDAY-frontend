@@ -111,7 +111,11 @@ const ChannelList = ({
     <div ref={listRef} className="channel-list" style={style}>
       {channels ? (
         channels.results.map((channelData) => (
-          <ChannelCard key={channelData.id} channelData={channelData} />
+          <ChannelCard
+            key={channelData.id}
+            channelId={channelData.id}
+            channelData={channelData}
+          />
         ))
       ) : (
         <Spinner color="var(--grey)" size={40} delay="1s" />
