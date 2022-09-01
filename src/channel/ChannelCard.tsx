@@ -35,7 +35,6 @@ const ChannelCard = ({
       enabled: !channelData && channelId !== undefined,
     }
   );
-  // const [channelData, setChannelData] = useState(initialData ?? {});
   const navigate = useNavigate();
   const {
     value: { user },

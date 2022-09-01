@@ -1,4 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
+import { useAuthContext } from 'context/AuthContext';
+import useInfiniteScroll from 'useInfiniteScroll';
 import {
   getChannels,
   getManagingChannels,
@@ -6,10 +9,7 @@ import {
   searchChannels,
 } from 'API';
 import ChannelCard from 'channel/ChannelCard';
-import { useAuthContext } from 'context/AuthContext';
-import useInfiniteScroll from 'useInfiniteScroll';
 import Spinner from 'Spinner';
-import { useQueryClient } from '@tanstack/react-query';
 
 const fetchMyChannels = async ({
   category,
@@ -21,7 +21,6 @@ const fetchMyChannels = async ({
   let get;
   if (category === 'managed') get = getManagingChannels;
   if (category === 'subscribed') get = getSubscribedChannels;
-  //setQueryData(['user',managing_channels]);return 채널;}
   return get?.().then((channels) => {
     if (!signal) return { results: channels } as ChannelsResponse;
   });
