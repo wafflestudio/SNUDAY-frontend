@@ -1,19 +1,11 @@
 .spinner {
-  animation: rotate 2s linear infinite, delay 0.5s linear forwards;
+  animation: rotate 2s linear infinite, fade-in 0.5s linear forwards;
   margin: auto;
   opacity: 0;
 }
 .spinner .path {
   stroke-linecap: round;
   animation: dash 1.5s ease-in-out infinite;
-}
-@keyframes delay {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
 }
 @keyframes rotate {
   100% {

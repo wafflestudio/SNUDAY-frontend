@@ -10,20 +10,8 @@
   right: 0;
   /*  */
   z-index: 999;
-  /* animation: dim 0.2s forwards; */
   background-color: rgba(0, 0, 0, 0.3);
 }
-@keyframes dim {
-  from {
-    background-color: transparent;
-  }
-  to {
-    background-color: rgba(0, 0, 0, 0.3);
-  }
-}
-/* .modal-background ~ * {
-  filter: blur(4px);
-} */
 .modal-container {
   /*align center*/
   margin: 0;

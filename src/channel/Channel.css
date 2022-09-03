@@ -61,6 +61,20 @@
   font-size: 0.8rem;
   color: var(--grey-dark);
 }
+.notice-card.loading > .notice-list-title {
+  animation: fade-in 0.5s linear,
+    loading 1s ease 0.5s infinite alternate backwards;
+  border-radius: 0.4rem;
+  color: transparent;
+  min-width: 100px;
+  min-height: 1rem;
+}
+.notice-card.loading > .notice-list-date {
+  animation: fade-in 0.5s linear,
+    loading 1s ease 0.5s infinite alternate backwards;
+  border-radius: 0.4rem;
+  color: transparent;
+}
 .notice-info {
   padding: 10px 0 20px 16px;
   border-bottom: 1px solid var(--grey);
@@ -82,4 +96,12 @@
 }
 .notice-menu button {
   width: 48%;
+}
+@keyframes loading {
+  from {
+    background-color: #eeeeee;
+  }
+  to {
+    background-color: var(--grey-light);
+  }
 }
