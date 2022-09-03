@@ -1,9 +1,9 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import { logError } from './api';
 class UserAPI {
-  static refresh = () =>
+  static refresh = (token: string) =>
     new Promise((resolve, reject) => {
-      const token = localStorage.getItem('refresh');
+      token = token ?? localStorage.getItem('refresh');
       if (!token) reject('no refresh token available');
       axios
         .post('users/refresh/', { refresh: token })
@@ -11,10 +11,16 @@ class UserAPI {
           axios.defaults.headers.common[
             'Authorization'
           ] = `Bearer ${response.data.access}`;
-          resolve(response.data);
+          resolve({
+            ...response.data,
+            refresh: response.data.refresh ?? token,
+          });
         })
-        .catch(reject);
+        .catch((e) => {
+          reject(e.response);
+        });
     });
+
   static loginUser = (data: {
     username: User['username'];
     password: User['password'];

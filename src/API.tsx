@@ -12,9 +12,9 @@ axios.defaults.headers.common['Accept'] = 'application/json';
 axios.defaults.baseURL =
   'http://ec2-52-79-115-201.ap-northeast-2.compute.amazonaws.com/api/v1/';
 //USERS
-export const refresh = () =>
+export const refresh = (token: string) =>
   new Promise((resolve, reject) => {
-    const token = localStorage.getItem('refresh');
+    token = token ?? localStorage.getItem('refresh');
     if (!token) reject('no refresh token available');
     axios
       .post('users/refresh/', { refresh: token })
@@ -22,7 +22,7 @@ export const refresh = () =>
         axios.defaults.headers.common[
           'Authorization'
         ] = `Bearer ${response.data.access}`;
-        resolve(response.data);
+        resolve({ ...response.data, refresh: response.data.refresh ?? token });
       })
       .catch((e) => {
         reject(e.response);
@@ -474,7 +474,7 @@ export const patchChannel = (data: FormData) =>
   });
 
 //NOTICES
-export const getUserNotices = ({ cursor }: { cursor?: string }) =>
+export const getUserNotices = ({ cursor }: { cursor: string | undefined }) =>
   new Promise((resolve, reject) => {
     cursor = cursor?.substring(cursor.indexOf('?cursor='));
 
@@ -495,7 +495,7 @@ export const searchUserNotices = ({
 }: {
   type: SearchNoticeType;
   q: string;
-  cursor?: string;
+  cursor: string | undefined;
 }) =>
   new Promise((resolve, reject) => {
     cursor = cursor?.substring(cursor.indexOf('?cursor='));
@@ -512,7 +512,7 @@ export const getChannelNotices = ({
   cursor,
 }: {
   id: Channel['id'];
-  cursor: string;
+  cursor: string | undefined;
 }) =>
   new Promise((resolve, reject) => {
     cursor = cursor?.substring(cursor.indexOf('?cursor='));
