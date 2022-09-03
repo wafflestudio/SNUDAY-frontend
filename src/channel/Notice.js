@@ -1,20 +1,38 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import AddNotice from 'channel/AddNotice';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { getNotice, deleteNotice as deleteNoticeAPI } from 'API';
 import { useAuthContext } from 'context/AuthContext';
+import { parseURL } from 'Constants';
+import AddNotice from 'channel/AddNotice';
 import Header from 'Header';
 import Tag from 'Tag';
-import { parseURL } from 'Constants';
 const Notice = () => {
   let { channelId, noticeId } = useParams();
   channelId = +channelId;
   noticeId = +noticeId;
-  const [notice, setNotice] = useState(null);
   const [isModifying, setIsModifying] = useState(false);
   const {
     value: { user },
   } = useAuthContext();
+  const queryClient = useQueryClient();
+  const { data: notice, isLoading } = useQuery(
+    ['notice', noticeId],
+    () => getNotice({ channelId, noticeId }),
+    {
+      onSuccess: (notice) => {
+        document.title = notice.title + ' | SNUDAY';
+      },
+    }
+  );
+  const { mutate: updateNotice } = useMutation(
+    () => getNotice({ channelId, noticeId }),
+    {
+      onSuccess: (notice) => {
+        queryClient.setQueryData(['notice', noticeId], notice);
+      },
+    }
+  );
   const navigate = useNavigate();
   const deleteNotice = () => {
     const confirm = window.confirm('정말 공지를 삭제할까요?');
@@ -25,13 +43,11 @@ const Notice = () => {
       });
   };
   useEffect(() => {
-    getNotice({ channelId, noticeId }).then((response) => {
-      setNotice(response);
-      console.log(response);
-    });
+    if (!isModifying) updateNotice();
     window.scrollTo(0, 0);
   }, [isModifying]);
   console.log(parseURL(notice?.contents));
+  // if (isLoading) return <></>;
   return isModifying ? (
     <AddNotice
       channelId={channelId}
