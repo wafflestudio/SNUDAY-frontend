@@ -5,11 +5,10 @@ import { EventListItem, EventModal } from './Event';
 import Modal from 'Modal';
 import ModalButton from 'AddButton';
 import AddEventModal from 'AddEventModal';
-import { toDateString } from 'Constants';
 
 const DayEventsModalHeader = ({ date }) => {
   const {
-    value: { isLoggedIn },
+    value: { user },
   } = useAuthContext();
   const options = {
     weekday: 'short',
@@ -33,7 +32,7 @@ const DayEventsModalHeader = ({ date }) => {
             {date.toLocaleDateString('ko-KR', options)}
           </time>
         </div>
-        {isLoggedIn ? (
+        {user ? (
           <ModalButton
             style={{
               position: 'absolute',
@@ -43,7 +42,11 @@ const DayEventsModalHeader = ({ date }) => {
             }}
             component={AddEventModal}
             button={
-              <img src="/resources\plus.svg" style={{ height: '100%' }} />
+              <img
+                alt="+"
+                src="/resources\plus.svg"
+                style={{ height: '100%' }}
+              />
             }
             date={date}
           />

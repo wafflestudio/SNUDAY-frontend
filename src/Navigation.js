@@ -38,7 +38,7 @@ const Menu = ({ name, image, route }) => {
 };
 const Navigation = () => {
   const {
-    value: { isLoggedIn },
+    value: { user },
   } = useAuthContext();
   useEffect(() => {
     window.addEventListener('orientationchange', (e) => {
@@ -47,7 +47,7 @@ const Navigation = () => {
       }, 0);
     });
   }, []);
-  const menuList = isLoggedIn
+  const menuList = user
     ? [
         { name: '내 일정', image: MyCal, route: '/' },
         { name: '공지사항', image: Notice, route: '/notice' },

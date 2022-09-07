@@ -1,33 +1,33 @@
 import { useEffect, useState } from 'react';
-import { InputBox } from 'Input';
+import { useLocation, useNavigate, Navigate } from 'react-router-dom';
+import { useMutation } from '@tanstack/react-query';
+import { useAuthContext } from 'context/AuthContext';
 import { checkDuplicateID, patchUser } from 'API';
 import { usernamePattern } from 'Constants';
+import { InputBox } from 'Input';
 import Header from 'Header';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { useAuthContext } from 'context/AuthContext';
+
 const ChangeUsername = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const {
-    value: { isLoggedIn },
-    action: { initUserInfo },
-  } = useAuthContext();
   const [username, setUsername] = useState('');
   const [isDuplicateId, setIsDuplicateId] = useState(false);
-  const [] = useState(false);
-  const sendUsername = () => {
-    patchUser({ username })
-      .then(() => {
-        initUserInfo();
-        alert('아이디가 변경되었습니다.');
-        navigate('/mypage');
-      })
-      .catch(() => alert('다시 시도해주세요.'));
-  };
+  const [navigate, location] = [useNavigate(), useLocation()];
+  const {
+    action: { updateUser },
+    value: { user },
+  } = useAuthContext();
+  const { mutate: patchUsername } = useMutation(patchUser, {
+    onSuccess: () => {
+      updateUser();
+      alert('아이디가 변경되었습니다.');
+      navigate('/mypage');
+    },
+    onError: () => alert('다시 시도해주세요.'),
+  });
   useEffect(() => {
     checkDuplicateID(username).then(setIsDuplicateId);
   }, [username]);
-  if (!isLoggedIn) navigate('/signin', { state: { prev: location.pathname } });
+  if (!user)
+    return <Navigate to="signin" state={{ prev: location.pathname }} />;
   return (
     <>
       <Header>아이디 변경</Header>
@@ -55,7 +55,7 @@ const ChangeUsername = () => {
         <button
           disabled={!usernamePattern.test(username) || isDuplicateId}
           className="button-big"
-          onClick={() => sendUsername()}
+          onClick={() => patchUsername({ username })}
           style={{ width: '100%', marginTop: '10px' }}
         >
           변경

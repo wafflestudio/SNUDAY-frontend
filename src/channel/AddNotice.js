@@ -1,7 +1,8 @@
-import Header from 'Header';
-import { useEffect, useRef, useState } from 'react';
-import { InputBox } from 'Input';
+import { useState } from 'react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { patchNotice, postNotice } from 'API';
+import Header from 'Header';
+import { InputBox } from 'Input';
 
 const AddNotice = ({
   channelId,
@@ -10,27 +11,25 @@ const AddNotice = ({
   title: t,
   contents: c,
 }) => {
-  const [title, setTitle] = useState(t ? t : '');
-  const [contents, setContents] = useState(c ? c : '');
-  console.log(decodeURI(encodeURI(title)));
+  const [title, setTitle] = useState(t ?? '');
+  const [contents, setContents] = useState(c ?? '');
   const saveNotice = () => {
-    noticeId
+    return noticeId
       ? patchNotice({ title, contents, channelId, noticeId }).then(
           (response) => {
             alert('공지가 수정되었습니다.');
-            setIsDone(true);
+            return response;
           }
         )
-      : postNotice({ title, contents, channelId }).then((response) => {
-          console.log(response);
-          setIsDone(true);
-        });
+      : postNotice({ title, contents, channelId }).then((response) => response);
   };
-  // const contentsRef = useRef(null);
-  // useEffect(() => {
-  //   contentsRef.current.height = '';
-  //   contentsRef.current.style.height = contentsRef.current.scrollHeight + 'px';
-  // }, [contents]);
+  const queryClient = useQueryClient();
+  const { mutate: updateNotice } = useMutation(saveNotice, {
+    onSuccess: (notice) => {
+      queryClient.setQueryData(['notice', noticeId], notice);
+      setIsDone(true);
+    },
+  });
   return (
     <>
       <Header
@@ -61,7 +60,7 @@ const AddNotice = ({
         />
         <button
           className="button-big"
-          onClick={saveNotice}
+          onClick={updateNotice}
           disabled={!title.trim() || !contents.trim()}
         >
           {noticeId ? '수정하기' : '올리기'}

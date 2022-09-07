@@ -11,10 +11,10 @@ const MyChannels = () => {
   const [activeTab, setActiveTab] = useState<ChannelType>('subscribed');
   const listRef = useRef(null);
   const {
-    value: { isLoggedIn },
+    value: { user },
   } = useAuthContext();
   const navigate = useNavigate();
-  if (!isLoggedIn) navigate('/search');
+  if (!user) navigate('/search');
   return (
     <>
       <Header left={<></>}>내 채널</Header>
@@ -47,7 +47,7 @@ const MyChannels = () => {
           className="my-channels"
           // style={{ transform: 'translateX(100%)' }}
         >
-          <ChannelList category={activeTab} isLoggedIn={isLoggedIn} />
+          <ChannelList category={activeTab} isLoggedIn={!!user} />
         </section>
       </div>
     </>

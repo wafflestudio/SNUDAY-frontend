@@ -153,6 +153,9 @@ h1 {
   font-weight: bold;
   padding: 0 16px;
 }
+input {
+  user-select: auto;
+}
 label {
   padding-right: 0.5rem;
   font-weight: 500;

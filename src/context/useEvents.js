@@ -108,7 +108,7 @@ const useEvents = ({ year, monthIndex, channelList }) => {
   const [monthlyEvents, setMonthlyEvents] = useState(null);
   const [channelEvents, setChannelEvents] = useState(null);
   const {
-    value: { isLoggedIn, default_channels },
+    value: { user, default_channels },
   } = useAuthContext();
   useUpdateLogger('events', events);
   useUpdateLogger('monthlyEvents', monthlyEvents);
@@ -150,8 +150,7 @@ const useEvents = ({ year, monthIndex, channelList }) => {
       );
       return;
     }
-    if (isLoggedIn)
-      getMyEvents({ month }).then((events) => filterNewEvents(events));
+    if (user) getMyEvents({ month }).then((events) => filterNewEvents(events));
     else
       Promise.all(
         [...default_channels].map((channelId) =>
@@ -165,7 +164,7 @@ const useEvents = ({ year, monthIndex, channelList }) => {
           )
         )
       );
-  }, [year, monthIndex, channelList, isLoggedIn, default_channels]);
+  }, [year, monthIndex, channelList, user, default_channels]);
 
   useEffect(() => {
     //update new events

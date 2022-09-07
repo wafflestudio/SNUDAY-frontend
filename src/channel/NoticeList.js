@@ -1,14 +1,15 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import { getUserNotices, getChannelNotices, searchUserNotices } from 'API';
 import { useAuthContext } from 'context/AuthContext';
-import Tag from 'Tag';
 import useInfiniteScroll from 'useInfiniteScroll';
+import Tag from 'Tag';
 const NoticeCard = ({ notice, includeChannelName }) => {
   const navigate = useNavigate();
   return (
     <li
-      className="selectable card"
+      className={`selectable card notice-card ${notice ? '' : 'loading'}`}
       onClick={() => {
         if (notice) navigate(`/channel/${notice.channel}/notice/${notice.id}`);
       }}
@@ -25,84 +26,73 @@ const NoticeCard = ({ notice, includeChannelName }) => {
       ) : (
         <></>
       )}
-      <div className="notice-list-title">{notice?.title}</div>
-      <time className="notice-list-date" dateTime={notice.created_at}>
-        {notice ? new Date(notice.created_at).toLocaleDateString() : ''}
+      <div className="notice-list-title">{notice?.title ?? '제목'}</div>
+      <time className="notice-list-date" dateTime={notice?.created_at}>
+        {notice
+          ? new Date(notice.created_at).toLocaleDateString()
+          : '0000.00.00.'}
       </time>
     </li>
   );
 };
+const useNotices = ({ channelId, type, keyword }) => {
+  const {
+    value: { user },
+  } = useAuthContext();
+  const queryClient = useQueryClient();
+  let getNotices;
+  if (channelId)
+    getNotices = ({ pageParam }) =>
+      getChannelNotices({ id: channelId, cursor: pageParam });
+  else if (user)
+    if (keyword)
+      getNotices = ({ pageParam }) =>
+        searchUserNotices({ type, q: keyword, cursor: pageParam });
+    else
+      getNotices = ({ pageParam }) => {
+        console.log(pageParam);
+        return getUserNotices({ cursor: pageParam });
+      };
+  else getNotices = () => Promise.reject('invalid parameter');
+
+  return useInfiniteQuery(
+    ['notices', { channelId, type, keyword }],
+    getNotices,
+    {
+      onSuccess: (response) => {
+        response.pages
+          .at(-1)
+          .results.forEach((notice) =>
+            queryClient.setQueryData(['notice', notice.id], notice)
+          );
+      },
+      getNextPageParam: (lastPage, pages) => lastPage.next,
+    }
+  );
+};
 const NoticeList = ({ channelId, type, keyword, limit, ...rest }) => {
   const listRef = useRef(null);
-  const [notices, setNotices] = useState(null);
-  const [isFetching, setIsFetching] = useInfiniteScroll(() => {
-    if (notices?.next) fetchNotices(notices.next);
-    console.log('isFetching');
-  }, listRef.current); //??
-  const {
-    value: { isLoggedIn, userInfo },
-  } = useAuthContext();
-  const fetchNotices = async (cursor) => {
-    if (channelId)
-      getChannelNotices({ id: channelId, cursor }).then((response) => {
-        setNotices((notices) =>
-          cursor
-            ? {
-                ...response,
-                results: [...notices.results, ...response.results],
-              }
-            : response
-        );
-      });
-    else if (isLoggedIn && userInfo)
-      if (keyword)
-        searchUserNotices({ type, q: keyword, cursor })
-          .then((response) => {
-            setNotices(() =>
-              cursor
-                ? {
-                    ...response,
-                    results: [...notices.results, ...response.results],
-                  }
-                : response
-            );
-          })
-          .catch((error) => {
-            setNotices(() => null);
-          });
-      else
-        getUserNotices({ cursor }).then((response) => {
-          setNotices((notices) =>
-            cursor
-              ? {
-                  ...response,
-                  results: [...notices.results, ...response.results],
-                }
-              : response
-          );
-          console.log(response);
-        });
-  };
-  useEffect(() => {
-    fetchNotices();
-  }, [channelId, type, keyword, limit, userInfo]);
-  // if (!notices?.results)
-  //   return (
-  //     // <ul className="notice-list loading">
-  //     //   {[...Array(limit ?? 0)].map(() => (
-  //     //     <NoticeCard />
-  //     //   ))}
-  //     // </ul>
-  //     <div className="error"></div>
-  //   );
+  const notices = useNotices({
+    channelId,
+    type,
+    keyword,
+  });
+  const results = notices.data?.pages.map((page) => page.results).flat(1);
+  const [isFetching, setIsFetching] = useInfiniteScroll(
+    notices.hasNextPage ? notices.fetchNextPage : undefined,
+    listRef.current
+  ); //??
+
   return (
     <ul ref={listRef} className="notice-list" {...rest}>
-      {!notices?.results ? (
-        <div className="error"></div>
-      ) : notices.results.length === 0 ? (
+      {!results ? (
+        [...Array(limit ?? 10)].map((v, i) => (
+          <NoticeCard key={i} includeChannelName={!channelId} />
+        ))
+      ) : results.length === 0 ? (
         <div className="error">공지사항이 없습니다.</div>
       ) : (
-        notices.results
+        results
           .slice(0, limit)
           .map((notice) => (
             <NoticeCard

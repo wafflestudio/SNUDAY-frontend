@@ -1,54 +1,48 @@
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { getChannel, subscribeChannel, unsubscribeChannel } from 'API';
 import { useAuthContext } from 'context/AuthContext';
 import { EditChannelModal } from 'channel/AddChannelModal';
 import ChannelAwaitersModal from 'channel/ChannelAwaitersModal';
+
+export const useChannel = (id: number) => {
+  const queryClient = useQueryClient();
+  const { mutate } = useMutation(getChannel, {
+    onSuccess: (freshData) => {
+      queryClient.setQueryData(['channel', id], freshData);
+    },
+  });
+  return { set: () => mutate(id) };
+};
+
 export const ChannelStatusButton = ({
   channelData,
-  setChannelData,
 }: {
   channelData: Channel;
-  setChannelData: React.Dispatch<React.SetStateAction<Channel>>;
 }) => {
   //채널 구독 상태에 따라 [구독 버튼], [구독 대기 버튼] [구독 취소 버튼]
   const {
-    value: { userInfo },
+    value: { user },
   } = useAuthContext();
-  if (userInfo?.managing_channels?.has(channelData.id))
-    return (
-      <EditChannelButton
-        channelData={channelData}
-        setChannelData={setChannelData}
-      />
-    );
-  if (userInfo?.subscribing_channels?.has(channelData.id))
-    return (
-      <CancelSubscriptionButton
-        channelData={channelData}
-        setChannelData={setChannelData}
-      />
-    );
-  if (userInfo?.awaiting_channels?.has(channelData.id))
+  if (user?.managing_channels?.has(channelData?.id))
+    return <EditChannelButton channelData={channelData} />;
+  if (user?.subscribing_channels?.has(channelData?.id))
+    return <CancelSubscriptionButton channelData={channelData} />;
+  if (user?.awaiting_channels?.has(channelData?.id))
     return <AwaitSubscriptionButton channelData={channelData} />;
-  return (
-    <SubscribeButton
-      channelData={channelData}
-      setChannelData={setChannelData}
-    />
-  );
+  return <SubscribeButton channelData={channelData ?? {}} />;
 };
 export const SubscribeButton = ({
   channelData: { id, is_private },
-  setChannelData,
 }: {
   channelData: Channel;
-  setChannelData: React.Dispatch<React.SetStateAction<Channel>>;
 }) => {
   const {
-    value: { userInfo },
-    action: { setUserInfo },
+    value: { user },
+    action: { setUser },
   } = useAuthContext();
+  const channel = useChannel(id);
   let navigate = useNavigate();
   let location = useLocation();
   return (
@@ -56,25 +50,23 @@ export const SubscribeButton = ({
       className="subscribe-button"
       onClick={(e) => {
         e.stopPropagation();
-        if (!userInfo) {
+        if (!user) {
           navigate('/signin', { state: { prev: location.pathname } });
           return;
         }
-        subscribeChannel(id).then((response) => {
-          console.log(response);
-          getChannel(id).then((response) => {
-            setChannelData(response);
+        if (id)
+          subscribeChannel(id).then((response) => {
+            channel.set();
+            is_private
+              ? setUser({
+                  ...user,
+                  awaiting_channels: user.awaiting_channels.add(id),
+                })
+              : setUser({
+                  ...user,
+                  subscribing_channels: user.subscribing_channels.add(id),
+                });
           });
-          is_private
-            ? setUserInfo({
-                ...userInfo,
-                awaiting_channels: userInfo.awaiting_channels.add(id),
-              })
-            : setUserInfo({
-                ...userInfo,
-                subscribing_channels: userInfo.subscribing_channels.add(id),
-              });
-        });
       }}
       style={{ fontSize: '0.8rem' }}
     >
@@ -84,40 +76,37 @@ export const SubscribeButton = ({
 };
 export const CancelSubscriptionButton = ({
   channelData,
-  setChannelData,
 }: {
   channelData: Channel;
-  setChannelData: React.Dispatch<React.SetStateAction<Channel>>;
 }) => {
   const { id, name, is_private, subscribers_count } = channelData;
   const {
-    value: { userInfo },
-    action: { setUserInfo, initUserInfo },
+    action: { updateUser },
   } = useAuthContext();
+  const queryClient = useQueryClient();
+  const channel = useChannel(id);
   return (
     <button
       className="button-blue cancel-subscription-button"
       onClick={(e) => {
         e.stopPropagation();
-        if (window.confirm(`'${name}'의 구독을 그만둘까요?`))
-          unsubscribeChannel(id).then((response) => {
+        if (id && window.confirm(`'${name}'의 구독을 그만둘까요?`))
+          unsubscribeChannel(id).then(() => {
             if (is_private) {
-              setChannelData({
-                ...channelData,
-                subscribers_count: subscribers_count - 1,
+              queryClient.setQueryData<Channel>(['channel', id], (oldData) => {
+                if (oldData)
+                  return {
+                    ...oldData,
+                    subscribers_count: subscribers_count - 1,
+                  };
               });
-            } else {
-              getChannel(id).then((response) => {
-                console.log(response);
-                setChannelData(response);
-              });
-            }
-            initUserInfo();
-            // const subscribing_channels = userInfo.subscribing_channels;
+            } else channel.set();
+            updateUser();
+            // const subscribing_channels = user.subscribing_channels;
             // if (subscribing_channels.delete(id))
-            //   setUserInfo({
+            //   setUser({
             //     //setter 설정해보기
-            //     ...userInfo,
+            //     ...user,
             //     subscribing_channels,
             //   });
           });
@@ -134,8 +123,8 @@ export const AwaitSubscriptionButton = ({
   channelData: Channel;
 }) => {
   const {
-    value: { userInfo },
-    action: { setUserInfo },
+    value: { user },
+    action: { setUser },
   } = useAuthContext();
   return (
     <button
@@ -144,10 +133,10 @@ export const AwaitSubscriptionButton = ({
         e.stopPropagation();
         if (window.confirm(`'${name}'의 구독 신청을 취소할까요?`))
           unsubscribeChannel(id).then(() => {
-            const awaiting_channels = userInfo.awaiting_channels;
+            const awaiting_channels = user.awaiting_channels;
             if (awaiting_channels.delete(id))
-              setUserInfo({
-                ...userInfo,
+              setUser({
+                ...user,
                 awaiting_channels: awaiting_channels,
               });
           });
@@ -190,15 +179,14 @@ export const WaitingListButton = ({
 };
 export const EditChannelButton = ({
   channelData,
-  setChannelData,
 }: {
   channelData: Channel;
-  setChannelData: React.Dispatch<React.SetStateAction<Channel>>;
 }) => {
   const [onEdit, setOnEdit] = useState(false);
+  const channel = useChannel(channelData.id);
   useEffect(() => {
     if (!onEdit) {
-      getChannel(channelData.id).then((newData) => setChannelData(newData));
+      channel.set();
     }
   }, [onEdit]);
   return (

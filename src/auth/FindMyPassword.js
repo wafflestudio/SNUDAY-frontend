@@ -1,21 +1,20 @@
 import { useState } from 'react';
-import { InputBox } from 'Input';
-import { findUserPassword, patchUser } from 'API';
-import { usernamePattern, namePattern, pwPattern } from 'Constants';
-import Header from 'Header';
-import { useNavigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import { useAuthContext } from 'context/AuthContext';
+import { findUserPassword } from 'API';
+import { usernamePattern, namePattern } from 'Constants';
+import { InputBox } from 'Input';
+import Header from 'Header';
+
 const FindMyPassword = () => {
-  const navigate = useNavigate();
-  const {
-    value: { isLoggedIn },
-    action: { initUserInfo },
-  } = useAuthContext();
   const [username, setUsername] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [isSent, setIsSent] = useState(false);
+  const {
+    value: { user },
+  } = useAuthContext();
   const sendPassword = () => {
     setIsSent(() => true);
     findUserPassword({
@@ -24,7 +23,7 @@ const FindMyPassword = () => {
       last_name: lastName,
       email,
     })
-      .then((response) => {
+      .then(() => {
         alert('메일이 전송되었습니다.');
         setTimeout(() => setIsSent(() => false), 60000);
       })
@@ -34,10 +33,7 @@ const FindMyPassword = () => {
       });
   };
 
-  if (isLoggedIn) {
-    navigate('/mypage');
-    return <></>;
-  }
+  if (user) return <Navigate to="/mypage" replace={false} />;
   return (
     <>
       <Header>비밀번호 재발급</Header>

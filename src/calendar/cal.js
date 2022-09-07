@@ -1,4 +1,4 @@
-import holidays from 'resources/holidays';
+import holidays from 'resources/holidays.json';
 export class Calendar {
   constructor() {
     this.today = new Date();

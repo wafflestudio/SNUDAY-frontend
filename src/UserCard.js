@@ -17,8 +17,8 @@ const UserAvatar = ({ name, image }) => (
   />
 );
 
-const UserCard = ({ userInfo, channelId, sendResult }) => {
-  const { id, email, username, last_name, first_name } = userInfo;
+const UserCard = ({ user, channelId, sendResult }) => {
+  const { id, email, username, last_name, first_name } = user;
   return (
     <div
       className="channel-card"

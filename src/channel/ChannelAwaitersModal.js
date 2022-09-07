@@ -38,7 +38,7 @@ const ChannelAwaitersList = ({ channelId, isLoading }) => {
       {awaitersList.map((awaiter) => (
         <UserCard
           key={awaiter.id}
-          userInfo={awaiter}
+          user={awaiter}
           channelId={channelId}
           sendResult={sendResult}
         />

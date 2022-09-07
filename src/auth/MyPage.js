@@ -6,16 +6,15 @@ const MyPage = () => {
   let navigate = useNavigate();
   let location = useLocation();
   const {
-    value: { isLoggedIn, isLoading, userInfo },
+    value: { user, isLoading },
     action: { logout },
   } = useAuthContext();
   if (isLoading) return <></>;
-  if (!isLoggedIn)
+  if (!user)
     return <Navigate to="/signin" state={{ prev: location.pathname }} />;
-  if (!userInfo) return <></>;
-  const name = /[a-zA-Z]+/.test(userInfo.last_name + userInfo.first_name)
-    ? `${userInfo.first_name} ${userInfo.last_name}`
-    : userInfo.last_name + userInfo.first_name;
+  const name = /[a-zA-Z]+/.test(user.last_name + user.first_name)
+    ? `${user.first_name} ${user.last_name}`
+    : user.last_name + user.first_name;
   return (
     <>
       <Header left={<></>}>My Page</Header>
@@ -25,7 +24,7 @@ const MyPage = () => {
           <ul className="menu-list">
             <li>
               <div>{`${name} 님`}</div>
-              <div>{userInfo.username}</div>
+              <div>{user.username}</div>
             </li>
             <li onClick={() => navigate('/mypage/changeId')}>
               아이디 변경{' '}

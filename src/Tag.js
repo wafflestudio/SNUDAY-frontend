@@ -1,10 +1,11 @@
-import ColorPicker from 'ColorPicker';
-import Modal from 'Modal';
 import { useEffect, useState } from 'react';
-import { getChannel } from './API';
-import { COLORS } from './Constants';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { useAuthContext } from './context/AuthContext';
 import { useCalendarContext } from './context/CalendarContext';
+import { getChannel } from './API';
+import { COLORS } from './Constants';
+import ColorPicker from 'ColorPicker';
+import Modal from 'Modal';
 
 const Tag = ({
   id,
@@ -15,9 +16,9 @@ const Tag = ({
   ...props
 }) => {
   const findColor = (id) => {
-    if (channelColors) {
+    if (channelColors)
       return { value: COLORS[channelColors.get(id)] ?? channelColors.get(id) };
-    } else {
+    else {
       const channelColors = new Map(
         JSON.parse(localStorage.getItem('channelColors'))
       );
@@ -28,7 +29,6 @@ const Tag = ({
     }
   };
   const { channelColors, setChannelColor } = useCalendarContext();
-  const [channel, setChannel] = useState(null);
   const [longPress, setLongPress] = useState(false);
   const showColorPicker = !readonly && longPress;
   if (showColorPicker) window.navigator.vibrate?.(5);
@@ -37,17 +37,17 @@ const Tag = ({
   const [boundingRect, setBoundingRect] = useState(undefined);
   const [color, setColor] = useState(defaultColor ?? findColor(id));
   const {
-    value: { userInfo },
+    value: { user },
   } = useAuthContext();
+  const { data: channel } = useQuery(['channel', id], () => getChannel(id), {
+    initialData: { name: JSON.parse(localStorage.getItem('channel'))?.[id] },
+    enabled: !name,
+  });
+  const { mutate } = useMutation(() => getChannel(id));
   useEffect(() => {
-    if (!name) {
-      name = JSON.parse(localStorage.getItem('channel'))?.[id];
-      getChannel(id).then(setChannel);
-    }
     setColor(findColor(id));
     return () => {
-      setChannel(null);
-      name = null;
+      name = undefined;
     };
   }, [id, name]);
   useEffect(() => {
@@ -87,7 +87,6 @@ const Tag = ({
         }}
         onTouchMove={(e) => {
           if (e.target === e.currentTarget && !longPress) {
-            // console.log(e);
             setLongPress(false);
             clearTimeout(timerId);
           }
@@ -100,10 +99,9 @@ const Tag = ({
           props.onClick?.(e);
           setLongPress(false);
           clearTimeout(timerId);
-          console.log('click');
         }}
       >
-        {userInfo?.my_channel === id ? '나의 일정' : name ?? channel.name}
+        {user?.my_channel === id ? '나의 일정' : name ?? channel.name}
         {showColorPicker ? (
           <Modal
             isActive={setLongPress}

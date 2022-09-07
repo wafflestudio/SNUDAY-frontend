@@ -6,10 +6,11 @@ import { useAuthContext } from 'context/AuthContext';
 import { useParams } from 'react-router-dom';
 
 const ChannelNotice = () => {
-  const { channelId } = useParams();
+  let { channelId } = useParams();
+  channelId = +channelId;
   const [addNotice, setAddNotice] = useState(false);
   const {
-    value: { userInfo },
+    value: { user },
   } = useAuthContext();
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -23,7 +24,7 @@ const ChannelNotice = () => {
     <>
       <Header
         right={
-          userInfo?.managing_channels.has(parseInt(channelId)) ? (
+          user?.managing_channels.has(channelId) ? (
             <img
               alt="add notice"
               width="58"

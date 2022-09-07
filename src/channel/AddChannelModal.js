@@ -162,7 +162,7 @@ const AddChannelModalContent = ({ channel, setChannel }) => {
         {managers.map((manager) => (
           <li key={manager.id}>
             {manager.username}
-            {userInfo.username === manager.username ? (
+            {user.username === manager.username ? (
               <></>
             ) : (
               <X onClick={() => deleteManager(manager.id)} />
@@ -241,14 +241,14 @@ export const EditChannelModal = ({ isActive, channelId }) => {
 const AddChannelModal = ({ isActive, init }) => {
   console.log(init);
   const {
-    value: { userInfo },
-    action: { initUserInfo },
+    value: { user },
+    action: { updateUser },
   } = useAuthContext();
-  console.table(userInfo);
+  console.table(user);
   const initialState = init ?? {
     name: '',
     description: '',
-    managers_id: userInfo.username, //[userInfo],
+    managers_id: user.username, //[user],
     is_private: false,
     image: null,
     //is_official:false
@@ -298,7 +298,7 @@ const AddChannelModal = ({ isActive, init }) => {
             ? '채널을 수정하였습니다.'
             : `${channel.name} 채널을 만들었습니다.`
         );
-        initUserInfo();
+        updateUser();
         isActive(false);
       })
       .catch((e) => {
@@ -308,7 +308,7 @@ const AddChannelModal = ({ isActive, init }) => {
           return;
         }
         let message = '';
-        for (const [key, value] of Object.entries(error)) {
+        for (const [key, value] of Object.entries(error))
           switch (key) {
             case 'name':
               message += `채널 이름: ${value}\n`;
@@ -323,7 +323,7 @@ const AddChannelModal = ({ isActive, init }) => {
             default:
               message += `${key}: ${value}\n`;
           }
-        }
+
         alert(message);
       });
   };

@@ -28,11 +28,6 @@ input[type='time']::-webkit-clear-button {
 .button-shrink {
   transform: scale(0.9);
 }
-/* @keyframes off {
-  to {
-    transform: translate(-48%, 0);
-  }
-} */
 .button-toggle {
   width: 2.8rem;
   height: 1.5rem;
@@ -115,14 +110,6 @@ input[type='time']::-webkit-clear-button {
   width: 100%;
   overflow: hidden;
   /* padding-right: 28px; */
-}
-@keyframes fade-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
 }
 .tag {
   list-style-type: none;

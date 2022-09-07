@@ -27,6 +27,7 @@ const useInfiniteScroll = (
     if (containerElement) {
       console.log(containerElement);
       io = new IntersectionObserver(ioCallback, options);
+      console.log(containerElement.lastElementChild);
       if (containerElement.lastElementChild !== lastElementRef.current) {
         lastElementRef.current = containerElement.lastElementChild;
         console.log(lastElementRef.current);
@@ -36,7 +37,7 @@ const useInfiniteScroll = (
     return () => io?.disconnect();
   });
   useEffect(() => {
-    if (isFetching) fetchCallback();
+    if (isFetching && typeof fetchCallback === 'function') fetchCallback();
   }, [isFetching]);
   return [isFetching, setIsFetching];
 };

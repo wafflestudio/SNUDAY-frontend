@@ -7,9 +7,57 @@ import {
   getUserMe,
   loginUser,
 } from 'API';
+import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 import { refresh } from '../API';
 const AuthContext = React.createContext();
+const getUserInfo = async () =>
+  Promise.all([
+    getUserMe(),
+    getManagingChannels(),
+    getSubscribedChannels(),
+    getAwaitingChannels(),
+  ]).then(([user, managingChannels, subscribingChannels, awaitingChannels]) => {
+    const disabledChannels = JSON.parse(
+      localStorage.getItem('disabled_channels')
+    )?.[user.id];
+    user = {
+      ...user,
+      my_channel: user.private_channel_id,
+      managing_channels: new Set(managingChannels.map((ch) => ch.id)),
+      subscribing_channels: new Set(subscribingChannels.map((ch) => ch.id)),
+      awaiting_channels: new Set(awaitingChannels.map((ch) => ch.id)),
+      disabled_channels: disabledChannels ?? [],
+    };
+    user.managing_channels.delete(user.my_channel);
+    delete user.private_channel_id;
+    // if (disabledChannels)
+    //   setValue({ type: 'disabled_channels', value: disabledChannels });
+    return user;
+  });
 const AuthProvider = (props) => {
+  const queryClient = useQueryClient();
+  const useToken = useQuery(
+    ['token'],
+    () => refresh(queryClient.getQueryData(['token'])?.refresh),
+    {
+      // initialData: localStorage.getItem('refresh')
+      //   ? { refresh: localStorage.getItem('refresh') }
+      //   : undefined,
+      staleTime: Infinity,
+    }
+  );
+  const token = useToken.data?.access;
+  console.log(token);
+  const useUser = useQuery(['user'], getUserInfo, {
+    onError: () => {
+      refresh(queryClient.getQueryData(['token'])?.refresh).then(console.log);
+    },
+    enabled: !!token,
+    staleTime: Infinity,
+  });
+  useEffect(() => {
+    setValue({ type: 'user', value: useUser.data });
+  }, [useUser.data]);
   const setValue = ({ type, value }) => {
     setState((prev) => ({
       ...prev,
@@ -27,8 +75,8 @@ const AuthProvider = (props) => {
   };
   const setIsLoggedIn = (isLoggedIn) =>
     setValue({ type: 'isLoggedIn', value: isLoggedIn });
-  const setUserInfo = (userInfo) =>
-    setValue({ type: 'userInfo', value: userInfo });
+
+  const setUser = (user) => queryClient.setQueryData(['user'], user);
   const initUserInfo = async () => {
     const userInfo = await getUserMe();
     const managingChannels = await getManagingChannels();
@@ -46,16 +94,25 @@ const AuthProvider = (props) => {
     // newUserInfo.managing_channels.delete(36);
     // newUserInfo.managing_channels.delete(46);
     //
-    setUserInfo(newUserInfo);
+    setUser(newUserInfo);
     const disabledChannels = JSON.parse(
       localStorage.getItem('disabled_channels')
     )?.[userInfo.id];
     if (disabledChannels)
       setValue({ type: 'disabled_channels', value: disabledChannels });
   };
+
+  const useLogin = useMutation(loginUser, {
+    onSuccess: async (token) => {
+      queryClient.invalidateQueries(['token']);
+      queryClient.setQueryData(['token'], token);
+      const user = await queryClient.fetchQuery(['user'], getUserInfo);
+      console.log(user);
+    },
+  });
   const login = async ({ username, password }) => {
     setValue({ type: 'isLoading', value: true });
-    return new Promise(async (resolve, reject) => {
+    return new Promise((resolve, reject) => {
       loginUser({ username, password })
         .then((data) => {
           setToken(data);
@@ -77,9 +134,13 @@ const AuthProvider = (props) => {
         .catch(reject);
     });
   };
-  const logout = () => {
+  const logoutMutation = () => {
     delete axios.defaults.headers['Authorization'];
     localStorage.removeItem('refresh');
+    queryClient.removeQueries();
+  };
+  const logout = () => {
+    logoutMutation();
     setState((prev) => ({
       ...prev,
       value: { ...defaultValue, isLoading: false },
@@ -90,23 +151,24 @@ const AuthProvider = (props) => {
     isLoggedIn: false,
     access: undefined,
     refresh: undefined,
-    userInfo: null,
+    user: undefined,
     default_channels: new Set([65, 73]),
     disabled_channels: [],
+    useUser,
   };
   const action = {
-    initUserInfo,
     login,
+    qlogin: useLogin.mutate,
     logout,
     setIsLoggedIn,
     setToken,
-    setUserInfo,
+    setUser,
+    updateUser: () => queryClient.invalidateQueries(['user']),
+    getUserInfo,
     setValue,
   };
   const [state, setState] = useState({ value: defaultValue, action });
-  useEffect(() => {
-    if (state.value.access) initUserInfo();
-  }, [state.value.access]);
+
   useEffect(() => {
     let prev = localStorage.getItem('disabled_channels');
     if (prev) prev = JSON.parse(prev);
@@ -116,9 +178,9 @@ const AuthProvider = (props) => {
         prev
           ? {
               ...prev,
-              [state.value.userInfo?.id]: state.value.disabled_channels,
+              [state.value.user?.id]: state.value.disabled_channels,
             }
-          : { [state.value.userInfo?.id]: state.value.disabled_channels }
+          : { [state.value.user?.id]: state.value.disabled_channels }
       )
     );
   }, [state.value.disabled_channels]);

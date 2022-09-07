@@ -1,9 +1,22 @@
 {
-  "extends": ["react-app", "react-app/jest"],
+  "extends": [
+    "react-app",
+    "react-app/jest",
+    "plugin:import/errors",
+    "plugin:import/warnings",
+    "plugin:import/typescript"
+  ],
   "rules": { "curly": ["warn", "multi"] },
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "moduleDirectory": ["node_modules", "src"]
+      }
+    }
+  },
   "overrides": [
     {
-      "files": ["**/*.[tj]s?(x)"],
+      "files": ["*.[tj]s?(x)"],
       "rules": {
         "react/prop-types": 0,
         "no-unused-vars": "warn"

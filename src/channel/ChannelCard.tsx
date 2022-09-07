@@ -4,29 +4,42 @@ import { ReactComponent as ClosedLock } from 'resources/lock-closed.svg';
 import { ReactComponent as OpenLock } from 'resources/lock-open.svg';
 import { ReactComponent as OfficialMark } from 'resources/checkbox-checked.svg';
 import { useNavigate } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+import { getChannel } from 'API';
 import { useAuthContext } from 'context/AuthContext';
 import { ChannelStatusButton, WaitingListButton } from 'channel/ChannelButton';
-import { useState } from 'react';
 
 const ChannelAvatar = ({ name, image }: Pick<Channel, 'name' | 'image'>) => (
   <img
     className="avatar"
-    alt={name}
+    alt={name ?? 'Channel image'}
     src={image ?? '/resources/default-image.svg'}
   />
 );
 const ChannelCard = ({
-  channelData: initialData,
+  channelId,
+  channelData,
   verbose = false,
 }: {
+  channelId: number;
   channelData: Channel;
   verbose?: boolean;
 }) => {
-  const [channelData, setChannelData] = useState(initialData);
+  const channel = useQuery(
+    ['channel', channelId],
+    () => getChannel(channelId),
+    {
+      onSuccess: (channel) => {
+        document.title = channel.name + ' | SNUDAY';
+      },
+      enabled: !channelData && channelId !== undefined,
+    }
+  );
   const navigate = useNavigate();
   const {
-    value: { userInfo },
+    value: { user },
   } = useAuthContext();
+  channelData = channelData || channel.data;
   const {
     id,
     name,
@@ -38,26 +51,19 @@ const ChannelCard = ({
     //is_personal,
     //created_at,
     //updated_at,
-  } = channelData;
+  } = channelData ?? {};
   return (
     <div
       className="grid-channel-card"
       onClick={() =>
-        verbose || (is_private && !userInfo?.subscribing_channels?.has(id))
+        !id || verbose || (is_private && !user?.subscribing_channels?.has(id))
           ? undefined
           : navigate(`/channel/${id}`)
       }
     >
       {/* <div className="channel-image-with-button"> */}
       <ChannelAvatar name={name} image={image} />
-      {verbose ? (
-        <ChannelStatusButton
-          channelData={channelData}
-          setChannelData={setChannelData}
-        />
-      ) : (
-        <></>
-      )}
+      {verbose ? <ChannelStatusButton channelData={channelData} /> : <></>}
       {/* </div> */}
       <div className="channel-card-info-row first">
         <span className="channel-card-name"># {name}</span>
@@ -66,21 +72,18 @@ const ChannelCard = ({
       </div>
       <div className="channel-card-info-row second">
         <div className="channel-card-main-text">
-          구독자 {subscribers_count}명
+          구독자 {subscribers_count ?? ''}명
         </div>
         {verbose ? (
           <></>
         ) : (
           <>
-            {userInfo?.managing_channels?.has(channelData.id) ? (
+            {channelData?.id && user?.managing_channels?.has(channelData.id) ? (
               <WaitingListButton channelData={channelData} />
             ) : (
               <></>
             )}
-            <ChannelStatusButton
-              channelData={channelData}
-              setChannelData={setChannelData}
-            />
+            <ChannelStatusButton channelData={channelData} />
           </>
         )}
       </div>
