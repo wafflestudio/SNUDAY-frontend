@@ -1,11 +1,10 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import { getUserNotices, getChannelNotices, searchUserNotices } from 'API';
 import { useAuthContext } from 'context/AuthContext';
 import useInfiniteScroll from 'useInfiniteScroll';
 import Tag from 'Tag';
-import Spinner from 'Spinner';
 const NoticeCard = ({ notice, includeChannelName }) => {
   const navigate = useNavigate();
   return (
@@ -40,7 +39,6 @@ const useNotices = ({ channelId, type, keyword }) => {
   const {
     value: { user },
   } = useAuthContext();
-  const [prev, setPrev] = useState(undefined);
   const queryClient = useQueryClient();
   let getNotices;
   if (channelId)
@@ -68,7 +66,6 @@ const useNotices = ({ channelId, type, keyword }) => {
             queryClient.setQueryData(['notice', notice.id], notice)
           );
       },
-      onError: () => setPrev(),
       getNextPageParam: (lastPage, pages) => lastPage.next,
     }
   );
