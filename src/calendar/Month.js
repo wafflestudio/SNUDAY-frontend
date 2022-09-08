@@ -84,7 +84,7 @@ const Month = ({ year, monthIndex, channelList }) => {
           year={year}
           monthIndex={monthIndex}
           day={startDate + 7 * weekNo}
-          channelId={channelList}
+          channelList={channelList}
           events={monthlyActiveEvents}
           eventPositions={posEvents}
         />

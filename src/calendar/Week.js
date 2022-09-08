@@ -1,6 +1,13 @@
 import { useCalendarContext } from 'context/CalendarContext';
 import Day from './Day';
-const Week = ({ year, monthIndex, day, channelId, events, eventPositions }) => {
+const Week = ({
+  year,
+  monthIndex,
+  day,
+  channelList,
+  events,
+  eventPositions,
+}) => {
   let date = new Date();
   if (year === undefined) {
     year = date.getFullYear();
@@ -28,7 +35,7 @@ const Week = ({ year, monthIndex, day, channelId, events, eventPositions }) => {
           year={year}
           monthIndex={monthIndex}
           day={startDayOfWeek + weekday}
-          channelId={channelId}
+          channelList={channelList}
           events={events}
           eventPositions={eventPositions}
         />

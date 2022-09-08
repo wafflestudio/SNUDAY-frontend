@@ -3,7 +3,14 @@ import { useCalendarContext } from 'context/CalendarContext';
 import DayEventsModal from './DayEventsModal';
 import EventBar from './EventBar';
 import { getNumDaysofMonth } from 'Constants';
-const Day = ({ year, monthIndex, day, channelId, events, eventPositions }) => {
+const Day = ({
+  year,
+  monthIndex,
+  day,
+  channelList,
+  events,
+  eventPositions,
+}) => {
   const date = new Date(year, monthIndex, day);
   const [showEvent, setShowEvent] = useState(false);
   const { setDay, isHoliday } = useCalendarContext();
@@ -84,7 +91,7 @@ const Day = ({ year, monthIndex, day, channelId, events, eventPositions }) => {
             <DayEventsModal
               isActive={setShowEvent}
               date={date}
-              channelId={channelId}
+              channelList={channelList}
             />
           ) : (
             <></>
