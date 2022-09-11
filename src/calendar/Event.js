@@ -1,26 +1,33 @@
+import 'calendar/Event.css';
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
+import { useQueryClient } from '@tanstack/react-query';
 import { useAuthContext } from 'context/AuthContext';
-import 'calendar/Event.css';
+import { useCalendarContext } from 'context/CalendarContext';
+import { deleteEvent } from 'API';
+import { COLORS, parseURL } from 'Constants';
 import Modal from 'Modal';
 import AddEventModal from 'AddEventModal';
 import Tag from 'Tag';
-import { useCalendarContext } from 'context/CalendarContext';
-import { COLORS, parseURL } from 'Constants';
-import { deleteEvent } from 'API';
 
 const EventTag = ({ event }) => {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const {
     value: { user },
   } = useAuthContext();
+  console.log(event.channel);
   return (
     <div className="event-modal-header">
       <Tag
         id={event.channel}
         name={event.channelName}
         onClick={() => {
-          if (user.my_channel !== event.channel)
+          if (
+            queryClient.getQueryData(['channel', event.channel])?.is_private ===
+              false ||
+            user?.my_channel !== event.channel
+          )
             navigate(`/channel/${event.channel}`);
         }}
       />
