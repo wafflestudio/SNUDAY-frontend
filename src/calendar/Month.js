@@ -5,7 +5,12 @@ import Week from './Week';
 import { getNumDaysofMonth } from 'Constants';
 import sortBy from 'lodash-es/sortBy';
 const Month = ({ year, monthIndex, channelList }) => {
-  const { isFetching, getEvent, getMonthlyActiveEvents } = useCalendarContext();
+  const {
+    events,
+    isFetching,
+    getEvent,
+    getMonthlyActiveEvents,
+  } = useCalendarContext();
   const {
     value: { disabled_channels },
   } = useAuthContext();
@@ -35,7 +40,7 @@ const Month = ({ year, monthIndex, channelList }) => {
         console.log(monthlyActiveEvents);
       }
     );
-  }, [isFetching, disabled_channels, year, monthIndex, channelList]);
+  }, [isFetching, events, disabled_channels, year, monthIndex, channelList]);
   useEffect(() => {
     //update position if there is an event update
     //정렬 순서
@@ -84,7 +89,7 @@ const Month = ({ year, monthIndex, channelList }) => {
           year={year}
           monthIndex={monthIndex}
           day={startDate + 7 * weekNo}
-          channelId={channelList}
+          channelList={channelList}
           events={monthlyActiveEvents}
           eventPositions={posEvents}
         />

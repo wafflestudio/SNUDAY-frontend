@@ -44,7 +44,7 @@ const EventContent = ({ isActive, event, modify }) => {
       <div className="event-date">{eventDateString(event)}</div>
       <div>{parseURL(event.memo)}</div>
       {user?.managing_channels.has(event.channel) ||
-      user.my_channel === event.channel ? (
+      user?.my_channel === event.channel ? (
         <div
           style={{
             display: 'flex',

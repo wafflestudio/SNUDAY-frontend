@@ -6,7 +6,7 @@ import Modal from 'Modal';
 import ModalButton from 'AddButton';
 import AddEventModal from 'AddEventModal';
 
-const DayEventsModalHeader = ({ date }) => {
+const DayEventsModalHeader = ({ channelList, date }) => {
   const {
     value: { user },
   } = useAuthContext();
@@ -16,6 +16,7 @@ const DayEventsModalHeader = ({ date }) => {
     month: 'long',
     day: 'numeric',
   };
+  const isManaging = channelList?.some((ch) => user?.managing_channels.has(ch));
   return (
     <>
       <div className="day-events-modal-header">
@@ -42,11 +43,15 @@ const DayEventsModalHeader = ({ date }) => {
             }}
             component={AddEventModal}
             button={
-              <img
-                alt="+"
-                src="/resources\plus.svg"
-                style={{ height: '100%' }}
-              />
+              !channelList || isManaging ? (
+                <img
+                  alt="+"
+                  src="/resources\plus.svg"
+                  style={{ height: '100%' }}
+                />
+              ) : (
+                <></>
+              )
             }
             date={date}
           />
@@ -70,7 +75,7 @@ const DayEventsModalContent = ({ events, showEvent }) => {
     </div>
   );
 };
-const DayEventsModal = ({ isActive, date, channelId }) => {
+const DayEventsModal = ({ isActive, date, channelList }) => {
   const { getDailyEvents, getEvent } = useCalendarContext();
   const [selectedEvent, setSelectedEvent] = useState(null);
   console.log(selectedEvent);
@@ -80,13 +85,13 @@ const DayEventsModal = ({ isActive, date, channelId }) => {
     <Modal
       style={{ padding: '2rem' }}
       isActive={isActive}
-      header={<DayEventsModalHeader date={date} />}
+      header={<DayEventsModalHeader channelList={channelList} date={date} />}
       content={
         <DayEventsModalContent
           events={
-            channelId
+            channelList
               ? getDailyEvents(date).filter((event) =>
-                  channelId.includes(event.channel)
+                  channelList.includes(event.channel)
                 )
               : getDailyEvents(date)
           }

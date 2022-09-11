@@ -19,10 +19,7 @@ export const CalendarContextProvider = ({ value, children }) => {
     getEvent,
     updateEvent,
     deleteEvent,
-  } = useEvents({
-    year: value.year,
-    monthIndex: value.monthIndex,
-  });
+  } = useEvents({ ...value });
   const [channelColors, setChannelColors] = useState(undefined);
   const {
     value: { user, default_channels, disabled_channels },
@@ -111,34 +108,6 @@ export const CalendarContextProvider = ({ value, children }) => {
         const events = channelEvents.get(parseInt(channelId, 10));
         if (events) activeChannelEvents.push(...events);
       });
-      // const other_channels_events = await Promise.all(
-      //   other_channels.map((channelId) =>
-      //     getChannelEvents({
-      //       channelId,
-      //       month: `${year}-${monthIndex}`,
-      //       getAll: true,
-      //     }).then((events) => {
-      //       console.log(`Channel #${channelId} events`, events);
-      //       return events.results.map((event) => event.id);
-      //     })
-      //   )
-      // );
-      // activeChannelEvents.push(...other_channels_events.flat());
-
-      // for (const channelId of channelList) {
-      //   if (user?.subscribing_channels?.has(channelId)) {
-      //     //구독 중인 채널
-      //     activeChannelEvents = channelEvents.get(parseInt(channelId, 10));
-      //     if (activeChannelEvents !== undefined)
-      //       activeChannelEvents = Array.from(activeChannelEvents);
-      //   } else {
-      //     //FIXIT: 채널 이벤트가 10개씩 옴. 전체가 오도록 해야할 듯
-      //     getChannelEvents({ channelId }).then((events) => {
-      //       console.log(`Channel #${channelId} events`, events);
-      //       activeChannelEvents = events.results.map((event) => event.id);
-      //     });
-      //   }
-      // }
     } else {
       //get all monthly active events
       activeChannelEvents = new Map(channelEvents);
