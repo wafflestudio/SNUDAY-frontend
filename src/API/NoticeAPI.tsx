@@ -66,15 +66,7 @@ class NoticeAPI {
     new Promise((resolve, reject) => {
       axios
         .get(`channels/${channelId}/notices/${noticeId}/`)
-        .then((response) => {
-          let notice = response.data;
-          UserAPI.getUser(notice.writer)
-            .then((response) => {
-              notice.username = response.username;
-              resolve(notice);
-            })
-            .then(resolve);
-        })
+        .then((response) => resolve(response.data))
         .catch((e) => {
           logError(e);
           reject(e);
