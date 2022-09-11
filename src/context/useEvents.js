@@ -137,8 +137,13 @@ const useEvents = ({ year, monthIndex, channelList }) => {
         : '';
     if (channelList) {
       Promise.all(
-        channelList.map((channelId) =>
-          getChannelEvents({ channelId, month, getAll: true })
+        channelList.map(
+          (channelId) =>
+            new Promise((resolve, reject) =>
+              getChannelEvents({ channelId, month, getAll: true })
+                .then(resolve)
+                .catch(reject)
+            )
         )
       ).then((eventsArray) =>
         filterNewEvents(
