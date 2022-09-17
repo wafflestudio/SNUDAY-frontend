@@ -6,7 +6,7 @@ import UserAPI from './UserAPI';
 
 axios.defaults.headers.common['Accept'] = 'application/json';
 axios.defaults.baseURL =
-  'http://ec2-52-79-115-201.ap-northeast-2.compute.amazonaws.com/api/v1/';
+  'https://ec2-52-79-115-201.ap-northeast-2.compute.amazonaws.com/api/v1/';
 
 export const logError = (error: AxiosError) => {
   const log = error?.response;
